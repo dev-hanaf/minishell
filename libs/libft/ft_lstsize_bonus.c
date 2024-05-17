@@ -1,27 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_lstsize_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 19:53:01 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/16 22:26:09 by ahanaf           ###   ########.fr       */
+/*   Created: 2023/11/24 02:45:52 by ahanaf            #+#    #+#             */
+/*   Updated: 2023/11/29 16:12:06 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int main(int ac, char **av, char **env)
+int	ft_lstsize(t_list *lst)
 {
-    (void)ac,
-    (void)av;
-    (void)env;
+	t_list	*tmp;
+	int		i;
 
-    while(TRUE)
-    {
-        readline("minishell$");
-        
-    }
-    return (0);
+	if (!lst)
+		return (0);
+	tmp = lst;
+	i = 0;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	return (i);
 }

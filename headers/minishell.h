@@ -13,9 +13,10 @@
 #ifndef MINISHELL_H
 #define MINISHELL_H
 
-# include "history.h"
-# include <readline.h"
+# include <readline/history.h>
+# include <readline/readline.h>
 # include "libft.h"
+# include <stdio.h>
 
 # define TRUE 1
 # define FLASE 0

@@ -1,27 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_isascii.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 19:53:01 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/16 22:26:09 by ahanaf           ###   ########.fr       */
+/*   Created: 2023/11/15 16:19:34 by ahanaf            #+#    #+#             */
+/*   Updated: 2023/11/15 16:26:00 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-int main(int ac, char **av, char **env)
+int	ft_isascii(int c)
 {
-    (void)ac,
-    (void)av;
-    (void)env;
-
-    while(TRUE)
-    {
-        readline("minishell$");
-        
-    }
-    return (0);
+	if (c >= 0 && c <= 127)
+		return (1);
+	return (0);
 }

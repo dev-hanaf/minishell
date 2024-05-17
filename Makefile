@@ -8,26 +8,33 @@ NC = \033[0m
 CC = cc
 CFLAGS = -Wall -Wextra -Werror #-g3 -fasanitize=address
 NAME = minishell
-INCLUDES = -Iheaders -I~/readline/include/readline -Ilibs/libft
-REDLINE = -L~/readline/lib -lreadline
-SRC =  $(wildcard src/*.c)
 
+LIBFT = ./libs/libft
+GARBAGE = ./libs/garbage_collector
+GNL = libs/get_next_line
+
+LIBS = -L$(LIBFT) -lft
+
+INC = -Ilibs/libft -Iheaders
+REDLINE = -lreadline
+
+SRC =  $(wildcard src/*.c)
 OBJ = $(SRC:.c=.o)
 
-all : $(NAME)
+all : header $(NAME)
 
 $(NAME) : $(OBJ)
-	make -C libs/libft
-	$(CC) $(CFLAGS) $(INCLUDES) $(REDLINE) $(OBJ) -o $(NAME) 
+	@make -C $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBS) $(REDLINE) $(INC) -o $(NAME) 
 
 %.o:%.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(INC)  -c $< -o $@
 
 clean:
-	make clean -C libs/libft
+	@make clean -C $(LIBFT)
 	rm -rf $(OBJ)
-flcean: clean
-	make fclean -C libs/libft
+fclean: clean
+	@make fclean -C $(LIBFT)
 	rm -rf $(NAME)
 
 re: fclean all
@@ -35,7 +42,7 @@ re: fclean all
 .SECONDARY : $(OBJ)
 
 header:
-	@echo $(RED)
+	@echo "$(RED)"
 	@echo "   ▄▄▄▄███▄▄▄▄    ▄█  ███▄▄▄▄    ▄█     ▄████████    ▄█    █▄       ▄████████  ▄█        ▄█       "
 	@echo " ▄██▀▀▀███▀▀▀██▄ ███  ███▀▀▀██▄ ███    ███    ███   ███    ███     ███    ███ ███       ███       "
 	@echo " ███   ███   ███ ███▌ ███   ███ ███▌   ███    █▀    ███    ███     ███    █▀  ███       ███       "
@@ -46,4 +53,4 @@ header:
 	@echo "  ▀█   ███   █▀  █▀    ▀█   █▀  █▀    ▄████████▀    ███    █▀      ██████████ █████▄▄██ █████▄▄██ "
 	@echo "                                                                              ▀         ▀         "
 	@echo "$(NC)"  
-	@echo "$(GREEN)############################### MINISHELL MANDATORY ###############################$(NC)\n"
+	@echo "$(RED)############################### MINISHELL MANDATORY ###############################$(NC)\n"

@@ -1,0 +1,7 @@
+*.o
+libs/*/*.o
+src/*.o
+src/*/*.o
+.tldr
+.vscode/c_cpp_properties.json
+.vscode/settings.json

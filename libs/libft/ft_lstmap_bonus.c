@@ -1,27 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 19:53:01 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/16 22:26:09 by ahanaf           ###   ########.fr       */
+/*   Created: 2023/11/24 13:29:53 by ahanaf            #+#    #+#             */
+/*   Updated: 2023/11/24 13:44:47 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int main(int ac, char **av, char **env)
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
-    (void)ac,
-    (void)av;
-    (void)env;
+	t_list	*new_list;
+	t_list	*new_obj;
 
-    while(TRUE)
-    {
-        readline("minishell$");
-        
-    }
-    return (0);
+	if (!lst || !f || !del)
+		return (NULL);
+	new_list = NULL;
+	while (lst)
+	{
+		new_obj = ft_lstnew(f(lst->content));
+		if (!new_obj)
+		{
+			ft_lstclear(&new_list, del);
+			return (NULL);
+		}
+		ft_lstadd_back(&new_list, new_obj);
+		lst = lst->next;
+	}
+	return (new_list);
 }

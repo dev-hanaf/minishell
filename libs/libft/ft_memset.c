@@ -1,27 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 19:53:01 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/16 22:26:09 by ahanaf           ###   ########.fr       */
+/*   Created: 2023/11/15 20:17:49 by ahanaf            #+#    #+#             */
+/*   Updated: 2023/11/27 18:05:34 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int main(int ac, char **av, char **env)
+void	*ft_memset(void *s, int c, size_t n)
 {
-    (void)ac,
-    (void)av;
-    (void)env;
+	unsigned char	*tmp_ptr;
 
-    while(TRUE)
-    {
-        readline("minishell$");
-        
-    }
-    return (0);
+	tmp_ptr = (unsigned char *)s;
+	while (n > 0)
+	{
+		*(tmp_ptr++) = (unsigned char)c;
+		n--;
+	}
+	return (s);
 }
