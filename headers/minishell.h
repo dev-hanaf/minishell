@@ -11,15 +11,48 @@
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
-#define MINISHELL_H
+# define MINISHELL_H
 
+# include "libft.h"
 # include <readline/history.h>
 # include <readline/readline.h>
-# include "libft.h"
 # include <stdio.h>
 
 # define TRUE 1
 # define FLASE 0
+
+typedef enum s_type
+{
+	WORD = 0,
+	PIPE = 1,
+	HERDOC = 2,
+	BIGGER = 3,
+	LESS = 4,
+	DBIGGER = 5,
+	DLESS = 6,
+	ERROR = 7
+}					t_type;
+
+typedef struct s_tokenizer
+{
+	char			*name;
+	t_type			*type;
+}					t_tokenizer;
+
+typedef struct s_cmd
+{
+	struct s_cmd	*prev;
+	char			*cmd;
+	struct s_cmd	*next;
+}					t_cmd;
+
+typedef struct s_minishell
+{
+	char			**env;
+	char			*line;
+	int				status;
+}					t_minishell;
+
 // enum t_token
 // {
 //     PIPE = 1;
