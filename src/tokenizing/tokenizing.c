@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 19:43:49 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/19 10:21:16 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/05/19 13:13:42 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	is_redirection(t_tokenizer **lexer, char *line, size_t *i)
 		}
 		else
 		{
-			token = new_token(">", OUT);
+			token = new_token(">", REDIR_OUT);
 			add_to_back(lexer, token);
 		}
 		(*i)++;
@@ -60,7 +60,7 @@ void	is_redirection(t_tokenizer **lexer, char *line, size_t *i)
 		}
 		else
 		{
-			token = new_token("<", IN);
+			token = new_token("<", REDIR_IN);
 			add_to_back(lexer, token);
 		}
 		(*i)++;
@@ -99,7 +99,6 @@ void	tokenization(char *line)
 {
 	size_t		i;
 	t_tokenizer	*lexer;
-	t_tokenizer	*temp;
 
 	i = 0;
 	lexer = ft_allocator(sizeof(t_tokenizer), "lexer");
@@ -118,10 +117,6 @@ void	tokenization(char *line)
 		skip_whitespaces(line, &i);
 		is_redirection(&lexer, line, &i);
 	}
-	temp = lexer;
-	while (temp)
-	{
-		printf("value-->|%s|  type-->|%d|\n", temp->value, temp->type);
-		temp = temp->next;
-	}
+	display_tokens(lexer);
+	
 }

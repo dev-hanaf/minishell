@@ -1,23 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   input_validation.c                                 :+:      :+:    :+:   */
+/*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/19 09:43:40 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/19 13:04:40 by ahanaf           ###   ########.fr       */
+/*   Created: 2024/05/19 18:23:55 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/05/19 18:42:30 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* 
-1. unclosed quotes.
-2. misuse of redirection or pipe symbols.
- */
-void input_validation(char *line)
+void _cmd()
 {
-    (void)line;
     return ;
 }

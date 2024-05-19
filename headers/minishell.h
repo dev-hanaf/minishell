@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/19 10:10:20 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/05/19 18:40:36 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdio.h>
+# include <signal.h>
 
 /* It is not required to use uppercase, but often considered as good practice.
 	Enum is short for "enumerations", which means "specifically listed".	
@@ -35,8 +36,8 @@ typedef enum s_type
 	WORD = 1,
 	PIPE = 2,
 	HERDOC = 3,
-	IN = 4,
-	OUT = 5,
+	REDIR_IN = 4,
+	REDIR_OUT = 5,
 	APPEND = 6
 }						t_type;
 
@@ -49,20 +50,14 @@ typedef struct s_tokenizer
 
 }						t_tokenizer;
 
-// typedef struct s_lexer
-// {
-// 	struct s_lexer	*prev;
-// 	// char			*cmd;
-// 	t_tokenizer		*token;
-// 	struct s_lexer	*next;
-// }					t_lexer;
-
 typedef struct s_minishell
 {
 	char				**env;
 	char				*line;
 	int					status;
 }						t_minishell;
+
+t_minishell	g_minishell;
 
 //input_validation
 void input_validation(char *line);
@@ -74,5 +69,9 @@ void					add_to_back(t_tokenizer **token, t_tokenizer *new);
 void					add_to_front(t_tokenizer **token, t_tokenizer *new);
 int						stack_size(t_tokenizer **token);
 void					tokenization(char *line);
+void					display_tokens(t_tokenizer *tokens);
+//builtins
+
+
 
 #endif
