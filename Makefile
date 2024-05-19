@@ -10,20 +10,21 @@ CFLAGS = -Wall -Wextra -Werror -g3 #-fasanitize=address
 NAME = minishell
 
 LIBFT = ./libs/libft
-GARBAGE = ./libs/garbage_collector
+GARBAGE = ./libs/gc
 GNL = libs/get_next_line
 
-LIBS = -L$(LIBFT) -lft
+LIBS = -L$(LIBFT) -lft -L$(GARBAGE) -lgarbage
 
-INC = -Ilibs/libft -Iheaders
+INC = -Ilibs/libft -Ilibs/gc -Iheaders
 REDLINE = -lreadline
 
-SRC =  $(wildcard src/*.c)
+SRC =  $(wildcard src/*.c) $(wildcard src/tokenizing/*.c)
 OBJ = $(SRC:.c=.o)
 
 all : header $(NAME)
 
 $(NAME) : $(OBJ)
+	@make -C $(GARBAGE)
 	@make -C $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) $(REDLINE) $(INC) -o $(NAME) 
 
