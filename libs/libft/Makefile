@@ -12,7 +12,7 @@ OBJ = $(SRC:.c=.o)
 CFLAGS = -Wall -Wextra -Werror
 CC = cc
 
-all: header $(NAME) 
+all:  $(NAME) 
 
 $(NAME): $(OBJ)
 	ar rcs $(NAME) $(OBJ)
@@ -30,19 +30,3 @@ fclean: clean
 re :fclean all 
 
 .SECONDARY : $(OBJ)
-
-header:
-	@echo "$(RED)"
-	@echo " ██░ ██  ▄▄▄       ███▄    █  ▄▄▄        █████▒"
-	@echo "▓██░ ██▒▒████▄     ██ ▀█   █ ▒████▄    ▓██   ▒ "
-	@echo "▒██▀▀██░▒██  ▀█▄  ▓██  ▀█ ██▒▒██  ▀█▄  ▒████ ░ "
-	@echo "░▓█ ░██ ░██▄▄▄▄██ ▓██▒  ▐▌██▒░██▄▄▄▄██ ░▓█▒  ░ "
-	@echo "░▓█▒░██▓ ▓█   ▓██▒▒██░   ▓██░ ▓█   ▓██▒░▒█░    "
-	@echo " ▒ ░░▒░▒ ▒▒   ▓▒█░░ ▒░   ▒ ▒  ▒▒   ▓▒█░ ▒ ░    "
-	@echo " ▒ ░▒░ ░  ▒   ▒▒ ░░ ░░   ░ ▒░  ▒   ▒▒ ░ ░      "
-	@echo " ░  ░░ ░  ░   ▒      ░   ░ ░   ░   ▒    ░ ░    "
-	@echo " ░  ░  ░      ░  ░         ░       ░  ░        "
-    
-	@echo "$(NC)"  
-	
-	@printf "$(YELLOW)###############################LIBFT###############################$(NC)\n"

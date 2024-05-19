@@ -6,7 +6,7 @@ BLUE = \033[0;34m
 NC = \033[0m
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g3 #-fasanitize=address
+CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
 NAME = minishell
 
 LIBFT = ./libs/libft
@@ -18,7 +18,7 @@ LIBS = -L$(LIBFT) -lft -L$(GARBAGE) -lgarbage
 INC = -Ilibs/libft -Ilibs/gc -Iheaders
 REDLINE = -lreadline
 
-SRC =  $(wildcard src/*.c) $(wildcard src/tokenizing/*.c)
+SRC =  $(wildcard src/*.c) $(wildcard src/tokenizing/*.c) $(wildcard src/input_validation/*.c)
 OBJ = $(SRC:.c=.o)
 
 all : header $(NAME)

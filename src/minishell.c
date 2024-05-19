@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:53:01 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/19 00:10:17 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/05/19 09:43:24 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,20 @@ int	main(int ac, char **av, char **env)
 		ft_putstr_fd("Accept only one argument!\n", 1);
 		return (0);
 	}
-	/* g_minishell. */
 	char *line = readline("minishell$ ");
 	while (TRUE)
 	{
-		if (/* g_minishell. */line == NULL)
+		if (line == NULL)
 			break ;
 		/*input validation*/
+		input_validation(line);
         /*tokeniaztion*/
-		tokenization(/* g_minishell. */line);
-		add_history(/* g_minishell. */line);
-		free(/* g_minishell. */line);
-		/* g_minishell. */line = readline("minishell$ ");
+		tokenization(line);
+		add_history(line);
+		free(line);
+		line = readline("minishell$ ");
 	}
-	add_history(/* g_minishell. */line);
-	free(/* g_minishell. */line);
-	// /* g_minishell. */env = env;
+	add_history(line);
+	free(line);
 	return (0);
 }

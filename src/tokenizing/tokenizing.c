@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 19:43:49 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/19 01:35:09 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/05/19 10:21:16 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	is_command(t_tokenizer **lexer, char *line, size_t *i)
 	char		*word;
 
 	start = *i;
-	if (line[*i] != '>' || line[*i] != '<' || line[*i] != '|')
+	if (line[*i] != '>' && line[*i] != '<' && line[*i] != '|')
 	{
 		while (line[*i] != '\0' && line[*i] != '>' && line[*i] != '<'
 			&& line[*i] != '|')
@@ -113,7 +113,9 @@ void	tokenization(char *line)
 	{
 		skip_whitespaces(line, &i);
 		is_command(&lexer, line, &i);
+		skip_whitespaces(line, &i);
 		is_pipe(&lexer, line, &i);
+		skip_whitespaces(line, &i);
 		is_redirection(&lexer, line, &i);
 	}
 	temp = lexer;
