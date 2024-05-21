@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 15:45:50 by ahanaf            #+#    #+#             */
-/*   Updated: 2023/11/29 15:53:34 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/05/21 02:23:47 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,25 @@
 # include <stdint.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include "../gc/header.h"
 
 typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
 }					t_list;
+
+typedef struct s_split
+{
+	int				start;
+	int				end;
+	int				wc;
+	char			**str;
+	char			*word;
+	int				i;
+	int				j;
+}					t_split;
+
 int					ft_isalpha(int c);
 int					ft_isdigit(int c);
 int					ft_isalnum(int c);
@@ -49,7 +62,7 @@ char				*ft_strdup(const char *s);
 char				*ft_substr(char const *s, unsigned int start, size_t len);
 char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strtrim(const char *s1, const char *set);
-char				**ft_split(char const *s, char c);
+char				**ft_split(char *s, char c);
 char				*ft_itoa(int n);
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void				ft_striteri(char *s, void (*f)(unsigned int, char *));

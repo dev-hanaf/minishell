@@ -1,23 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   input_validation.c                                 :+:      :+:    :+:   */
+/*   initilize_envirement.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/19 09:43:40 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/19 13:04:40 by ahanaf           ###   ########.fr       */
+/*   Created: 2024/05/21 02:10:51 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/05/21 02:34:21 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* 
-1. unclosed quotes.
-2. misuse of redirection or pipe symbols.
- */
-void	input_validation(char *line)
+t_env *init_envirement(char **env)
 {
-	(void)line;
-	return ;
+	t_env	 *init_env;
+	size_t	i;
+	char **split;
+	t_env	*new;
+	
+	init_env = ft_allocator(sizeof(t_env), "t_env");
+	init_env->value = NULL;
+	if (!init_env)
+		perror("malloc");
+	i = 0;
+	while(env[i])
+	{
+		split = ft_split(env[i], '=');
+		new = new_env(split[0], split[1]);
+		add_to_back_env(&init_env, new);
+		i++;
+	}
+	return (init_env);
 }
