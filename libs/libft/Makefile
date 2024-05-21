@@ -12,6 +12,8 @@ OBJ = $(SRC:.c=.o)
 CFLAGS = -Wall -Wextra -Werror
 CC = cc
 
+
+
 all:  $(NAME) 
 
 $(NAME): $(OBJ)

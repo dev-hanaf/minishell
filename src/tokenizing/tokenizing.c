@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 19:43:49 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/19 13:13:42 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/05/21 02:35:57 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	is_command(t_tokenizer **lexer, char *line, size_t *i)
 	if (line[*i] != '>' && line[*i] != '<' && line[*i] != '|')
 	{
 		while (line[*i] != '\0' && line[*i] != '>' && line[*i] != '<'
-			&& line[*i] != '|')
+			&& line[*i] != '|' &&   line[*i] != ' ')
 			(*i)++;
 		word = ft_allocator(sizeof(char) * (*i - start + 1), "word");
 		if (!word)
@@ -118,5 +118,4 @@ void	tokenization(char *line)
 		is_redirection(&lexer, line, &i);
 	}
 	display_tokens(lexer);
-	
 }

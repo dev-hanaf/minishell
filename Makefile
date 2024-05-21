@@ -18,7 +18,7 @@ LIBS = -L$(LIBFT) -lft -L$(GARBAGE) -lgarbage
 INC = -Ilibs/libft -Ilibs/gc -Iheaders
 REDLINE = -lreadline
 
-SRC =  $(wildcard src/*.c) $(wildcard src/tokenizing/*.c) $(wildcard src/input_validation/*.c)
+SRC =  $(wildcard src/*.c) $(wildcard src/tokenizing/*.c) $(wildcard src/input_validation/*.c) $(wildcard src/builtins/*/*.c) $(wildcard src/envirement/*.c)
 OBJ = $(SRC:.c=.o)
 
 all : header $(NAME)
