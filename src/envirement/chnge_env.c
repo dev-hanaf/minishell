@@ -1,35 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   initilize_envirement.c                             :+:      :+:    :+:   */
+/*   chnge_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/21 02:10:51 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/21 02:34:21 by ahanaf           ###   ########.fr       */
+/*   Created: 2024/05/21 03:54:18 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/05/21 19:20:50 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_env	*init_envirement(char **env)
+void    change_env(t_env **env, char *key, char *value)
 {
-	t_env	*init_env;
-	size_t	i;
-	char	**split;
-	t_env	*new;
-
-	init_env = ft_allocator(sizeof(t_env), "t_env");
-	init_env->value = NULL;
-	if (!init_env)
-		perror("malloc");
-	i = 0;
-	while (env[i])
-	{
-		split = ft_split(env[i], '=');
-		new = new_env(split[0], split[1]);
-		add_to_back_env(&init_env, new);
-		i++;
-	}
-	return (init_env);
+    t_env   *temp;
+    size_t  len;
+    
+    if (!*env || !key || !value )
+        return;
+    temp = *env;
+    len = ft_strlen(key);
+    while(temp)
+    {
+        if (ft_strncmp(key, temp->key, len) == 0 && len == ft_strlen(temp->key))
+        {
+            temp->value = ft_strdup(value);
+            return;
+        }
+         temp =  temp->next;
+    }    
 }

@@ -1,33 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/18 09:02:25 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/21 19:20:30 by ahanaf           ###   ########.fr       */
+/*   Created: 2024/05/21 03:15:46 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/05/21 03:16:48 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-char	*ft_strdup(const char *s)
+int	ft_strlen_2d_array(char **arr)
 {
-	char	*str;
-	size_t	i;
-	size_t	s_len;
+	int			a;
 
-	s_len = ft_strlen(s);
-	str = ft_allocator(s_len + 1, "dup");
-	if (!str)
-		return (NULL);
-	i = 0;
-	while (s[i])
+	a = 0;
+	while (arr[a] != 0)
+		a++;
+	return (a);
+}
+
+void	free_string_array(char **arr)
+{
+	int				a;
+
+	a = 0;
+	while (arr[a] != 0)
 	{
-		str[i] = s[i];
-		i++;
+		free(arr[a]);
+		a++;
 	}
-	str[i] = 0;
-	return (str);
+	free(arr);
 }

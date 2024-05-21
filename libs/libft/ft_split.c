@@ -15,6 +15,7 @@
 t_split	*getter(void)
 {
 	static t_split	data;
+
 	return (&data);
 }
 

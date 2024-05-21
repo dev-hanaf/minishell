@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   how_to_use_builtins.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 19:53:01 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/21 20:02:11 by ahanaf           ###   ########.fr       */
+/*   Created: 2024/05/21 19:37:42 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/05/21 19:38:01 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_minishell	g_minishell;
 
 t_tokenizer *get_token(t_tokenizer *lexer, char *word)
 {
@@ -47,8 +45,6 @@ void builtin_commands(t_env **env, char *line)
 		cwd = getcwd(NULL, 0);
 		printf(RED"cwd %s\n"NC,cwd);
 		change_env(env, "PWD", cwd);
-		free(cwd);
-		
 		
 		// printf(YELLOW"get env %s\n", get_env(env, "OLDPWD"));
 		// printf(ON_GREEN"OLDPWD %s\n"NC, get_env(env, "OLDPWD"));
@@ -71,44 +67,3 @@ void builtin_commands(t_env **env, char *line)
 	}
 
 }
-
-
-
-void loop(t_env *env)
-{
-	char *line;
-	char *prompt;
-	while (TRUE)
-	{
-		//handle_signals();
-		prompt = ft_strjoin(get_env(&env, "PWD"), "\n");
-		line = readline(prompt);
-		if (line == NULL)
-			break ;
-		// input_validation(line);
-		builtin_commands(&env, line);
-		add_history(line);
-		free(line);
-	}
-}
-
-int	main(int ac, char **av, char **envp)
-{
-	(void)av;
-	t_env *env;
-
-	if (ac > 1)
-		return(1);
-	env = init_envirement(envp);
-	loop(env);
-	free_allocator();
-	return (0);
-}
-
-/*	
-while (env)
-	{
-		printf("key==>%s\nvalue==>%s\n", env->key, env->value);
-		env = env->next;
-	}
-*/
