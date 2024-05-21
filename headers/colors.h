@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #ifndef COLORS_H
-#define COLORS_H
+# define COLORS_H
 
 // Regular Colors
 # define BLACK "\033[38;5;0m"

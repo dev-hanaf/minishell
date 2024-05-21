@@ -1,33 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   get_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/18 09:02:25 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/21 19:20:30 by ahanaf           ###   ########.fr       */
+/*   Created: 2024/05/21 02:41:53 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/05/21 19:11:54 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-char	*ft_strdup(const char *s)
+char	*get_env(t_env **env, char *key)
 {
-	char	*str;
-	size_t	i;
-	size_t	s_len;
+	t_env	*temp;
 
-	s_len = ft_strlen(s);
-	str = ft_allocator(s_len + 1, "dup");
-	if (!str)
+	if (!env || !key)
 		return (NULL);
-	i = 0;
-	while (s[i])
+	temp = *env;
+	while (temp)
 	{
-		str[i] = s[i];
-		i++;
+		if (ft_strncmp(temp->key, key, ft_strlen(key)) == 0)
+        {
+        	return (temp->value);
+        }
+        temp = temp->next;
 	}
-	str[i] = 0;
-	return (str);
+	return ("ahanaf");
 }

@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 19:43:49 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/21 02:35:57 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/05/21 20:28:35 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,36 @@ void	is_command(t_tokenizer **lexer, char *line, size_t *i)
 	char		*word;
 
 	start = *i;
-	if (line[*i] != '>' && line[*i] != '<' && line[*i] != '|')
+	if (line[*i] != '>' && line[*i] != '<' && line[*i] != '|' && line[*i] != 32 && (line[*i] < 9 || line[*i] > 13) && line[*i] != 10 && line[*i] != '\0')
 	{
-		while (line[*i] != '\0' && line[*i] != '>' && line[*i] != '<'
-			&& line[*i] != '|' &&   line[*i] != ' ')
-			(*i)++;
+		if (line[*i] == '\'')
+		{
+			while (line[*i] != '\0')
+			{
+				(*i)++;
+				if (line[*i] == '\'')
+				{
+					(*i)++;
+					break;
+				}
+			}
+		}
+		else if (line[*i] == '\"')
+		{
+			while (line[*i] != '\0')
+			{
+				(*i)++;
+				if (line[*i] == '\"')
+				{
+					(*i)++;
+					break;
+				}
+			}
+		}
+		else
+			while (line[*i] != '\0' && line[*i] != '>' && line[*i] != '<'
+			&& line[*i] != '|' && line[*i] != ' ')
+				(*i)++;
 		word = ft_allocator(sizeof(char) * (*i - start + 1), "word");
 		if (!word)
 		{
@@ -95,7 +120,7 @@ void	is_command(t_tokenizer **lexer, char *line, size_t *i)
 	}
 }
 
-void	tokenization(char *line)
+t_tokenizer	*tokenization(char *line)
 {
 	size_t		i;
 	t_tokenizer	*lexer;
@@ -103,7 +128,10 @@ void	tokenization(char *line)
 	i = 0;
 	lexer = ft_allocator(sizeof(t_tokenizer), "lexer");
 	if (!lexer)
-		return ;
+	{
+			perror("malloc");
+			exit(1);
+	}
 	lexer->next = NULL;
 	lexer->next = NULL;
 	lexer->type = 0;
@@ -118,4 +146,5 @@ void	tokenization(char *line)
 		is_redirection(&lexer, line, &i);
 	}
 	display_tokens(lexer);
+	return (lexer);
 }

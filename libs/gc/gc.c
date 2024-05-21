@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 13:23:42 by eouhrich          #+#    #+#             */
-/*   Updated: 2024/05/20 22:55:09 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/05/21 03:00:05 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 t_data	*get_data(void)
 {
 	static t_data	head;
+
 	return (&head);
 }
 

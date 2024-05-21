@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 18:23:55 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/20 22:47:52 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/05/21 19:40:09 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,3 +50,27 @@ void	_cd(char *path)
     
 
 }
+
+/*
+void _cd(char *path)
+	{
+		path[0] = '~'
+		char *new_path = strcat(getenv(HOME), &path[i + 1]);
+		if (NULL)
+			getenv(HOME);
+		else if (patrh == "..")
+		else if (patrh == ".")
+		else if (patrh == "path")
+		{
+			acces(path, X_OK || F_OK) == 0;
+			{
+				chdir(path);
+			}
+				
+		}
+		else if(path == '_')
+		{
+			chdir(OLD_PWD);
+		}
+	}
+*/
