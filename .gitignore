@@ -1,4 +1,8 @@
 *.o
+*.a
+.nfs*
+minishell
+*.txt
 libs/*/*.o
 src/*.o
 src/*/*.o
