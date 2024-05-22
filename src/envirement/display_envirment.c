@@ -1,29 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   display_envirment.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/21 19:35:13 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/22 05:11:22 by ahanaf           ###   ########.fr       */
+/*   Created: 2024/05/22 05:55:40 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/05/22 05:58:28 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int _pwd(void)
+void display_envirment(t_env **env)
 {
-    char *cwd;
-    
-    cwd = getcwd(NULL, 0);     
-    if (!cwd)
+    t_env *temp;
+
+    if (!*env)
+        return;
+    temp = *env;
+    while (temp)
     {
-        perror("");
-        return(-1);
-    }   
-    printf("%s\n", cwd);   
-    free(cwd);
-    g_minishell.status = 0;
-    return (0);
+        printf("KEY: \033[0;36m %-20s \033[0m |\t \
+			VALUE: \033[0;35m %-18s \033[0m \n",
+				temp->key,
+				temp->value);
+		printf("--------------------------------------------------\n");
+        temp = temp->next;
+    }
 }
