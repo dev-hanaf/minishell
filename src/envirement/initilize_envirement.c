@@ -20,9 +20,9 @@ t_env	*init_envirement(char **env)
 	t_env	*new;
 
 	init_env = ft_allocator(sizeof(t_env), "t_env");
-	init_env->value = NULL;
 	if (!init_env)
-		perror("malloc");
+		printf("error\n"); //TODO add the error handling function
+	init_env->value = NULL;
 	i = 0;
 	while (env[i])
 	{
