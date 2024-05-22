@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:53:01 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/21 20:02:11 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/05/22 06:55:27 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,46 +28,37 @@ t_tokenizer *get_token(t_tokenizer *lexer, char *word)
 		}
 		temp = temp->next;
 	}
-	return (temp);
+	return (NULL);
 }
 void builtin_commands(t_env **env, char *line)
 {
 	if (!*env || !line || !env)
 		return;
-	char *cwd;
+	// char *cwd;
 	t_tokenizer *lexer = tokenization(line);
-	t_tokenizer *token = get_token(lexer, "cd");
+	t_tokenizer *token;
 	// printf(RED"lexer %s\n"NC, token->value);
-	if (token && ft_strncmp(token->value, "..", 2) == 0 && ft_strlen(token->value) == 2 )
-	{
-		printf(YELLOW"PWD-->%s\n"NC, get_env(env, "PWD"));
-		printf(YELLOW"OLDPWD-->%s\n"NC, get_env(env, "OLDPWD"));
-		change_env(env, "OLDPWD", get_env(env, "PWD"));
-		chdir("../");
-		cwd = getcwd(NULL, 0);
-		printf(RED"cwd %s\n"NC,cwd);
-		change_env(env, "PWD", cwd);
-		free(cwd);
-		
-		
-		// printf(YELLOW"get env %s\n", get_env(env, "OLDPWD"));
-		// printf(ON_GREEN"OLDPWD %s\n"NC, get_env(env, "OLDPWD"));
-		// printf(ON_GREEN"PWD %s\n"NC, get_env(env, "PWD"));
-		// change_env(env, "OLDPWD", get_env(env, "PWD"));
-		// printf(ON_BLUE"OLDPWD %s\n"NC, get_env(env, "OLDPWD"));
-		// printf(ON_BLUE"PWD %s\n"NC, get_env(env, "PWD"));
-		
-		// printf(ON_YELLOW"PWD %s\n"NC, getenv("PWD"));
+    // printf("char path[0]--> |%c|\n", token->value[0]);
 
-		// chdir("../");
-		// printf(GREEN"env %s\n", getenv("PWD"));
-		// change_env(env, "PWD", getenv("PWD"));
-	}
-	token = get_token(lexer, "pwd");
-	if (token && ft_strncmp(token->value, "pwd", 3) == 0 /* && ft_strlen(token->value) == 3 */)
+	// if (token && ft_strncmp(token->value, "..", 2) == 0 && ft_strlen(token->value) == 2 )
+	// 	_cd(token->value, env);
+	token = get_token(lexer, "cd");
+	if (token)
+		_cd(token->value,env);
+/* 	else if (!token)    //this condition to means that the input is cd --> so should change derictory to HOME
+		_cd(NULL,env); */
+	// token = get_token(lexer, "pwd");
+	// if (token && ft_strncmp(token->value, "pwd", 3) == 0 && ft_strlen(token->value) == 3 )
+	_pwd();
+	token = get_token(lexer, "unset");
+	if (token/*  && ft_strncmp(token->value, "unset", 5) == 0 && ft_strlen(token->value) == 5 */)
 	{
-		char *line = get_env(env, "PWD");
-		printf("%s\n", line);		
+		_unset(env, "LANG");
+/* 		display_envirment(env);
+		printf(ON_YELLOW"\n-----------------------------------------------------------------------------------------------------------------------------\n"NC);
+		remove_env_element(env, "LANG");
+		display_envirment(env); */
+
 	}
 
 }
@@ -81,7 +72,7 @@ void loop(t_env *env)
 	while (TRUE)
 	{
 		//handle_signals();
-		prompt = ft_strjoin(get_env(&env, "PWD"), "\n");
+		prompt = ft_strjoin(get_env(&env, "PWD"), "$ ");
 		line = readline(prompt);
 		if (line == NULL)
 			break ;
@@ -111,4 +102,29 @@ while (env)
 		printf("key==>%s\nvalue==>%s\n", env->key, env->value);
 		env = env->next;
 	}
+*/
+
+/*
+		// printf(YELLOW"PWD-->%s\n"NC, get_env(env, "PWD"));
+		// printf(YELLOW"OLDPWD-->%s\n"NC, get_env(env, "OLDPWD"));
+		// change_env(env, "OLDPWD", get_env(env, "PWD"));
+		// chdir("../");
+		// cwd = getcwd(NULL, 0);
+		// printf(RED"cwd %s\n"NC,cwd);
+		// change_env(env, "PWD", cwd);
+		// free(cwd);
+		
+		
+		// printf(YELLOW"get env %s\n", get_env(env, "OLDPWD"));
+		// printf(ON_GREEN"OLDPWD %s\n"NC, get_env(env, "OLDPWD"));
+		// printf(ON_GREEN"PWD %s\n"NC, get_env(env, "PWD"));
+		// change_env(env, "OLDPWD", get_env(env, "PWD"));
+		// printf(ON_BLUE"OLDPWD %s\n"NC, get_env(env, "OLDPWD"));
+		// printf(ON_BLUE"PWD %s\n"NC, get_env(env, "PWD"));
+		
+		// printf(ON_YELLOW"PWD %s\n"NC, getenv("PWD"));
+
+		// chdir("../");
+		// printf(GREEN"env %s\n", getenv("PWD"));
+		// change_env(env, "PWD", getenv("PWD"));
 */

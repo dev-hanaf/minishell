@@ -1,29 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/21 19:35:13 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/22 05:11:22 by ahanaf           ###   ########.fr       */
+/*   Created: 2024/05/22 06:50:22 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/05/22 06:52:16 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int _pwd(void)
+int _unset(t_env **env, char *variable)
 {
-    char *cwd;
-    
-    cwd = getcwd(NULL, 0);     
-    if (!cwd)
-    {
-        perror("");
-        return(-1);
-    }   
-    printf("%s\n", cwd);   
-    free(cwd);
-    g_minishell.status = 0;
+    if (!*env || !variable)
+        return (-1);
+    remove_env_element(env, variable);
     return (0);
 }

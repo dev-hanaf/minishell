@@ -5,5 +5,3 @@ src/*/*.o
 .tldr
 .vscode/c_cpp_properties.json
 .vscode/settings.json
-.nfs
-.nfs000000000c360572000098a3

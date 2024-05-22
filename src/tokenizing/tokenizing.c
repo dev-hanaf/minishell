@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 19:43:49 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/21 20:28:35 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/05/22 06:17:48 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,6 @@ t_tokenizer	*tokenization(char *line)
 		skip_whitespaces(line, &i);
 		is_redirection(&lexer, line, &i);
 	}
-	display_tokens(lexer);
+	// display_tokens(lexer);
 	return (lexer);
 }
