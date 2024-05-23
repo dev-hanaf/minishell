@@ -25,18 +25,9 @@ char	*ft_strtrim(char const *s1, char const *set)
 	len = ft_strlen(s1);
 	while (len > 0 && ft_strchr(set, s1[len - 1]))
 		len--;
-	res = (char *)malloc(len + 1);
+	res = ft_allocator(len + 1, "strtrim");
 	if (!res)
 		return (0);
 	ft_strlcpy(res, s1, len + 1);
 	return (res);
 }
-
-/*int main()
-{
-    char *s1 = "!,,'hello world,!'";
-    
-    char *set = "!',";
-
-    printf("%s\n",ft_strtrim(s1,set));
-}*/

@@ -39,7 +39,7 @@ void builtin_commands(t_env **env, char *line)
 	token = get_token(lexer, "cd");
 	if (token)
 		_cd(token->value,env);
-	_pwd();
+	// _pwd();
 	token = get_token(lexer, "unset");
 	if (token/*  && ft_strncmp(token->value, "unset", 5) == 0 && ft_strlen(token->value) == 5 */)
 	{
@@ -62,10 +62,10 @@ void loop(t_env *env)
 		line = readline(prompt);
 		if (line == NULL)
 			break ;
-		// input_validation(line);
-		//builtin_commands(&env, line);
+		// builtin_commands(&env, line);
 		t_tokenizer *lexer = tokenization(line);
 		display_tokens(lexer);
+		input_validation(lexer);
 		add_history(line);
 		free(line);
 	}
