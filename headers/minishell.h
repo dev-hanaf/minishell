@@ -78,7 +78,10 @@ int						ft_strlen_2d_array(char **arr);
 void					free_string_array(char **arr);
 
 /*----------------------------- Input Validation --------------------------*/
-void					input_validation(char *line);
+void					input_validation(t_tokenizer *lexer);
+int						rederections_check(t_tokenizer *lexer);
+int 					pipes_check(t_tokenizer *lexer);
+int 					forbidden_inputs(t_tokenizer *lexer);
 
 /*----------------------------- Syntax Analysis --------------------------*/
 t_tokenizer				*new_token(char *value, int type);

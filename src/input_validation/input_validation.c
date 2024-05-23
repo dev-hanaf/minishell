@@ -16,8 +16,22 @@
 1. unclosed quotes.
 2. misuse of redirection or pipe symbols.
  */
-void	input_validation(char *line)
-{
-	(void)line;
+
+void	input_validation(t_tokenizer *lexer)
+{	
+	t_tokenizer *temp;
+	if (!lexer)
+		return ;
+	temp = lexer;
+	while (temp)
+	{
+		if (forbidden_inputs(temp) == -1)
+			return;
+		else if ( -1 == rederections_check(temp))
+			return ;//TODO is i should return a status and write syntax error on stderr
+		else if(-1 == pipes_check(temp))
+			return ;
+		temp = temp->next;
+	}
 	return ;
 }
