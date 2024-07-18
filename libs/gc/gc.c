@@ -19,7 +19,7 @@ t_data	*get_data(void)
 	return (&head);
 }
 
-t_data	*ft_lstnew(size_t size, void *ptr, char *description)
+t_data	*ft_gc_lstnew(size_t size, void *ptr, char *description)
 {
 	t_data		*node;
 	static int	index;
@@ -57,7 +57,7 @@ void	*ft_allocator(size_t size, char *description)
 	t_data	*node;
 	void	*ptr;
 
-	node = ft_lstnew(size, malloc(size), description);
+	node = ft_gc_lstnew(size, malloc(size), description);
 	if (!node)
 		return (NULL);
 	ptr = node->ptr;
