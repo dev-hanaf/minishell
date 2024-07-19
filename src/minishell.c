@@ -64,8 +64,11 @@ void loop(t_env *env)
 			break ;
 		// builtin_commands(&env, line);
 		t_tokenizer *lexer = tokenization(line);
-		display_tokens(lexer);
-		input_validation(lexer);
+		t_cmd *cmd_list = parse_cmds(lexer);
+		print_cmds(cmd_list);
+		execute_cmds(cmd_list);
+		//display_tokens(lexer);
+		//input_validation(lexer);
 		add_history(line);
 		free(line);
 	}
