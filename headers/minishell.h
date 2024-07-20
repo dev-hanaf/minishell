@@ -80,13 +80,14 @@ extern t_minishell		g_minishell;
 // TODO replace the lists in t_cmd by this 
 typedef struct s_rdr
 {
-    t_list *redir;
+    char *value;
     int type;
     struct s_rdr *next;
 } t_rdr;
 typedef struct s_cmd 
 {
     t_list *args;
+    t_rdr *redir;
     t_list *redir_in;
     t_list *redir_out;
     struct s_cmd *next;

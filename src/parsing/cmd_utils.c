@@ -6,6 +6,7 @@ t_cmd* new_cmd() {
     newCmd->args = NULL; // Copy the name
     newCmd->next = NULL;
     newCmd->redir_in = NULL;
+    newCmd->redir = NULL;
     newCmd->redir_out = NULL;
     return newCmd;
 }
