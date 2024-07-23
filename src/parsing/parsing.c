@@ -13,6 +13,109 @@ t_rdr *ft_redirnew(char *value,int type)
   new->type = type;
   return  new;
 }
+char *ft_strjoin_char(char *s1,char c)
+{
+    char *new = malloc((sizeof(char)* ft_strlen(s1) + 2));
+    if(!new)
+        return ft_strdup("");
+    int i = 0;
+    while(s1[i])
+    {
+        new[i] = s1[i];
+        i++;
+    }
+    //free(s1);
+    new[i++] = c;
+    new[i] = 0;
+    return new;
+}
+char *ft_readline(char *txt)
+{
+    char *line;
+    char buff;
+    char *test = ft_strjoin_char("aloh", 'a');
+    dprintf(2,"str = %s\n",test);
+    write(1,txt,ft_strlen(txt));
+    while(TRUE)
+    {
+        if(read(0,&buff,1) == 0)
+            break;
+        dprintf(2, "buff = %c\n", buff);
+        line = ft_strjoin_char(line,buff);
+        if(buff == '\n' || !buff || buff == 'q')
+            break;
+    }
+    return line;
+}
+
+char	*ft_strjoin_ln(char *s1, char *s2)
+{
+	char	*str;
+	size_t	i;
+	size_t	j;
+
+	if(!s1 && s2)
+	   return ft_strdup(s2);
+	if(!s2 && s1)
+	   return ft_strdup(s2);
+	if (s2 == NULL)
+	{
+		s2 = ft_allocator(sizeof(char), "s2");
+		if (!s2)
+			return (NULL);
+		s2[0] = '\0';
+	}
+	str = ft_allocator((ft_strlen(s1) + ft_strlen(s2) + 1 + 1), "join");
+	if (!str)
+		return (NULL);
+	i = -1;
+	while (s1[++i])
+		str[i] = s1[i];
+	j = 0;
+	while (s2[j])
+		str[i++] = s2[j++];
+	str[i++] = '\n';
+	str[i] = 0;
+	return (str);
+}
+void open_heredoc(t_rdr *redir)
+{
+    dprintf(2,"eof is = %s\n",redir->value);
+    char prompt[] = ">";
+    int pipefd[2];
+    char *str = NULL;
+    char *line = NULL;
+    while(TRUE)
+    {
+        line = readline(prompt);
+        if(!ft_strncmp(line, redir->value, ft_strlen(redir->value)))
+            break;
+        str = ft_strjoin(str, line); //TODO remember to free mate
+        str = ft_strjoin(str,"\n");
+    }
+    pipe(pipefd);
+   //int file = open("ofile", O_RDWR |O_TRUNC| O_CREAT,0644);
+   //write(file,str,ft_strlen(str));
+    close(pipefd[WRITE]);
+    g_minishell.status = pipefd[READ];
+}
+void handle_heredoc(t_cmd *cmd)
+{
+    t_rdr *tmp;
+    while(cmd)
+    {
+        tmp = cmd->redir;
+        while(tmp)
+        {
+            if(tmp->type == HERDOC)
+                {
+                open_heredoc(tmp);
+                }
+            tmp = tmp->next;
+        }
+        cmd = cmd->next;
+    }
+}
 void ft_rdraddback(t_rdr **rdr,t_rdr *new)
 {
     if(!rdr)
@@ -49,5 +152,6 @@ t_cmd *parse_cmds(t_tokenizer *tokens)
         ft_lstadd_back(&curr_cmd->args, ft_lstnew(tokens->value));
         tokens = tokens->next;
     }
+    handle_heredoc(cmd);
     return cmd;
 }

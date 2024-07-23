@@ -15,56 +15,8 @@
 #include <fcntl.h>
 #include <readline/readline.h>
 #include <stdio.h>
+#include <unistd.h>
 
-char *ft_strjoin_char(char *s1,char c)
-{
-    char *new = malloc((sizeof(char)* ft_strlen(s1) + 2));
-    if(!new)
-        return ft_strdup("");
-    int i = 0;
-    while(s1[i])
-    {
-        new[i] = s1[i];
-        i++;
-    }
-    //free(s1);
-    new[i++] = c;
-    new[i] = 0;
-    return new;
-}
-char *ft_readline(char *txt)
-{
-    char *line;
-    char buff;
-    char *test = ft_strjoin_char("aloh", 'a');
-    dprintf(2,"str = %s\n",test);
-    write(1,txt,ft_strlen(txt));
-    while(TRUE)
-    {
-        if(read(0,&buff,1) == 0)
-            break;
-        dprintf(2, "buff = %c\n", buff);
-        line = ft_strjoin_char(line,buff);
-        if(buff == '\n' || !buff || buff == 'q')
-            break;
-    }
-    return line;
-}
-void handle_heredoc(t_rdr *redir)
-{
-    dprintf(2,"eof is = %s\n",redir->value);
-    char prompt[] = ">";
-    char *str = NULL;
-    char *line = NULL;
-    while(TRUE)
-    {
-        line = readline(prompt);
-        if(!ft_strncmp(line, redir->value, ft_strlen(redir->value)))
-            break;
-        str = ft_strjoin(str, line);
-    }
-    dprintf(2,"str = %s",str);
-}
 void handle_rdr(t_rdr *redir)
 {
     int file;
@@ -74,18 +26,33 @@ void handle_rdr(t_rdr *redir)
         if(redir->type == REDIR_IN)
         {
             file = open(redir->value,O_RDONLY);
+            if(file == -1)
+            {
+               perror("khoya  nta rak  mrid");
+               exit(0);
+            };
             dup2(file,STDIN_FILENO);
             close(file);
         }
         if(redir->type == REDIR_OUT)
         {
-            file = open(redir->value, O_RDWR | O_CREAT,0644);
+            file = open(redir->value, O_RDWR |O_TRUNC| O_CREAT,0644);
+            if(file == -1)
+            {
+               perror(redir->value);
+               exit(0);
+            };
             dup2(file,STDOUT_FILENO);
             close(file);
         }
         if(redir->type == APPEND)
         {
             file = open(redir->value,O_APPEND| O_RDWR | O_CREAT,0644);
+            if(file == -1)
+            {
+               perror("khoya  nta rak  mrid");
+               exit(0);
+            };
             dup2(file,STDOUT_FILENO);
             close(file);
         }
@@ -102,11 +69,15 @@ void exec_cmd(t_list *args)
 }
 void exec_child(t_cmd *cmd,int in_fd,int out_fd)
 {
+    
     if(in_fd != STDIN_FILENO)
         {
             dup2(in_fd,STDIN_FILENO);
             close(in_fd);
         };
+    if(cmd->redir->type == HERDOC)
+            dup2(g_minishell.status,STDIN_FILENO);
+    close(g_minishell.status);
     if(out_fd != STDOUT_FILENO)
         {
             dup2(out_fd,STDOUT_FILENO);
@@ -167,12 +138,12 @@ void execute_cmds(t_cmd *cmd)
 {
     int i;
     i = 0;
+    printf("bonjour\n");
     pid_t *pids = (int *)malloc(sizeof(pid_t) * (cmd_nbr(cmd)));
     int pipefd[2];
     int tmp;
     tmp = STDIN_FILENO;
     pipefd[WRITE] = STDOUT_FILENO;
-    //check_heredoc(cmd); TODO check herdoc
     while(cmd)
     {
         if(cmd->next)
