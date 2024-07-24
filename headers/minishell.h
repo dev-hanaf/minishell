@@ -5,9 +5,7 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/22 06:52:34 by ahanaf           ###   ########.fr       */
-/*                                                                            */
+/*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */ /*   Updated: 2024/05/22 06:52:34 by ahanaf           ###   ########.fr       */ /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
@@ -144,6 +142,7 @@ void print_cmds(t_cmd *cmd_list);
 void execute_cmds(t_cmd *cmd);
 void exec_job(t_cmd *cmd);
 char	*get_cmd_path(char *cmd, char **env);
+int	ft_strcmp(const char *s1, const char *s2);
 
 
 #endif

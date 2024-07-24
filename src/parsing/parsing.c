@@ -1,5 +1,6 @@
 #include "libft.h"
 #include "minishell.h"
+#include <fcntl.h>
 #include <stdio.h>
 //todo parse the line and execute the command
 t_rdr *ft_redirnew(char *value,int type)
@@ -82,22 +83,19 @@ void open_heredoc(t_rdr *redir)
 {
     dprintf(2,"eof is = %s\n",redir->value);
     char prompt[] = ">";
-    int pipefd[2];
     char *str = NULL;
     char *line = NULL;
     while(TRUE)
     {
         line = readline(prompt);
-        if(!ft_strncmp(line, redir->value, ft_strlen(redir->value)))
+        if(!ft_strcmp(line, redir->value))
             break;
         str = ft_strjoin(str, line); //TODO remember to free mate
         str = ft_strjoin(str,"\n");
     }
-    pipe(pipefd);
-   //int file = open("ofile", O_RDWR |O_TRUNC| O_CREAT,0644);
-   //write(file,str,ft_strlen(str));
-    close(pipefd[WRITE]);
-    g_minishell.status = pipefd[READ];
+   int file = open("ofile", O_RDWR |O_TRUNC| O_CREAT,0644);
+   redir->value = "ofile";
+   write(file,str,ft_strlen(str));
 }
 void handle_heredoc(t_cmd *cmd)
 {
@@ -152,6 +150,7 @@ t_cmd *parse_cmds(t_tokenizer *tokens)
         ft_lstadd_back(&curr_cmd->args, ft_lstnew(tokens->value));
         tokens = tokens->next;
     }
+    //print_cmds(cmd);
     handle_heredoc(cmd);
     return cmd;
 }

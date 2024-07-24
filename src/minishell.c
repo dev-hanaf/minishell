@@ -50,12 +50,13 @@ void builtin_commands(t_env **env, char *line)
 
 void loop(t_env *env)
 {
+    printf("env - %s\n",get_env(&env, "PWD"));
 	char *line;
 	char *prompt;
 	while (TRUE)
 	{
 		//handle_signals();
-		prompt = ft_strjoin(get_env(&env, "PWD"), "$ ");
+		prompt = ft_strjoin("minishell", "$ ");
 		if(!prompt)
 			printf("error\n"); //TODO add the error handling function
 
@@ -89,4 +90,3 @@ int	main(int ac, char **av, char **envp)
 	free_allocator();
 	return (0);
 }
-

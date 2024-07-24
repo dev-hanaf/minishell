@@ -20,10 +20,12 @@
 void handle_rdr(t_rdr *redir)
 {
     int file;
+    int here_doc = 0;
+    char *here_doc_name = NULL;
     
     while(redir)
     {
-        if(redir->type == REDIR_IN)
+        if(redir->type == REDIR_IN || redir->type == HERDOC)
         {
             file = open(redir->value,O_RDONLY);
             if(file == -1)
@@ -56,8 +58,20 @@ void handle_rdr(t_rdr *redir)
             dup2(file,STDOUT_FILENO);
             close(file);
         }
+        if(redir->type == HERDOC)
+            {
+                here_doc = open(redir->value,O_RDONLY);
+                here_doc_name = redir->value;
+                if(file == -1)
+                {
+                   perror("khoya  nta rak  mrid");
+                   exit(0);
+                };
+                dup2(here_doc,STDIN_FILENO);
+            }
         redir = redir->next;
     }
+        unlink(here_doc_name);
 }
 
 void exec_cmd(t_list *args)
@@ -75,9 +89,6 @@ void exec_child(t_cmd *cmd,int in_fd,int out_fd)
             dup2(in_fd,STDIN_FILENO);
             close(in_fd);
         };
-    if(cmd->redir->type == HERDOC)
-            dup2(g_minishell.status,STDIN_FILENO);
-    close(g_minishell.status);
     if(out_fd != STDOUT_FILENO)
         {
             dup2(out_fd,STDOUT_FILENO);
@@ -138,7 +149,6 @@ void execute_cmds(t_cmd *cmd)
 {
     int i;
     i = 0;
-    printf("bonjour\n");
     pid_t *pids = (int *)malloc(sizeof(pid_t) * (cmd_nbr(cmd)));
     int pipefd[2];
     int tmp;
