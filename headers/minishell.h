@@ -80,14 +80,15 @@ typedef struct s_rdr
 {
     char *value;
     int type;
+    int fd;
     struct s_rdr *next;
 } t_rdr;
 typedef struct s_cmd 
 {
     t_list *args;
     t_rdr *redir;
-    t_list *redir_in;
-    t_list *redir_out;
+    t_rdr *heredoc;
+    int hrdc_fd;
     struct s_cmd *next;
 } t_cmd;
 

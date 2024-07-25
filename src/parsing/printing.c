@@ -66,6 +66,7 @@ void print_cmds(t_cmd *cmd_list) {
     t_cmd *current_cmd = cmd_list;
     while (current_cmd) {
         printf("Command %d:\n", cmd_index++);
+        printf("Command hrdc %d:\n", current_cmd->hrdc_fd);
         print_args(current_cmd->args,"args");
         print_rdr(current_cmd->redir);
         current_cmd = current_cmd->next;

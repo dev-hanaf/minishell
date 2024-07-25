@@ -20,12 +20,11 @@
 void handle_rdr(t_rdr *redir)
 {
     int file;
-    int here_doc = 0;
-    char *here_doc_name = NULL;
+    //char *here_doc_name = NULL;
     
     while(redir)
     {
-        if(redir->type == REDIR_IN || redir->type == HERDOC)
+        if(redir->type == REDIR_IN)
         {
             file = open(redir->value,O_RDONLY);
             if(file == -1)
@@ -60,18 +59,14 @@ void handle_rdr(t_rdr *redir)
         }
         if(redir->type == HERDOC)
             {
-                here_doc = open(redir->value,O_RDONLY);
-                here_doc_name = redir->value;
-                if(file == -1)
+                if(redir->fd != -1)
                 {
-                   perror("khoya  nta rak  mrid");
-                   exit(0);
+                    dup2(redir->fd,STDIN_FILENO);
+                    close(redir->fd);
                 };
-                dup2(here_doc,STDIN_FILENO);
             }
         redir = redir->next;
     }
-        unlink(here_doc_name);
 }
 
 void exec_cmd(t_list *args)
@@ -94,7 +89,7 @@ void exec_child(t_cmd *cmd,int in_fd,int out_fd)
             dup2(out_fd,STDOUT_FILENO);
             close(out_fd);
         }
-    handle_rdr(cmd->redir);
+    ///handle_rdr(cmd->redir);
     exec_cmd(cmd->args);
 }
 
@@ -127,19 +122,16 @@ void read_heredoc(t_rdr *hrdoc)
     printf("-------------------------str---------------------------\n");
     printf("%s",str);
 }
+
 void check_heredoc(t_cmd *cmd)
 {
     t_rdr *temp_rdr;
     while(cmd)
     {
-        temp_rdr =cmd->redir;
+        temp_rdr =cmd->heredoc;
         while(temp_rdr)
         {
-            if(temp_rdr->type == HERDOC) 
-            {
-                printf("heredoc her %s\n",temp_rdr->value);
-                read_heredoc(temp_rdr);
-            }
+            read_heredoc(temp_rdr);
             temp_rdr = temp_rdr->next;
         }
         cmd = cmd->next;

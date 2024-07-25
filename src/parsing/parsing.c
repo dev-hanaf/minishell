@@ -2,6 +2,7 @@
 #include "minishell.h"
 #include <fcntl.h>
 #include <stdio.h>
+#include <unistd.h>
 //todo parse the line and execute the command
 t_rdr *ft_redirnew(char *value,int type)
 {
@@ -11,6 +12,7 @@ t_rdr *ft_redirnew(char *value,int type)
       return NULL;
   new->value = ft_strdup(value);
   new->next = NULL;
+  new->fd = -1;
   new->type = type;
   return  new;
 }
@@ -79,39 +81,62 @@ char	*ft_strjoin_ln(char *s1, char *s2)
 	str[i] = 0;
 	return (str);
 }
-void open_heredoc(t_rdr *redir)
+int is_stillhrdc(t_rdr *tmp)
 {
-    dprintf(2,"eof is = %s\n",redir->value);
+    while(tmp)
+    {
+        if(tmp->type == HERDOC)
+            return 1; 
+    }
+    return 0;
+}
+
+void open_heredoc(t_rdr *heredocs)
+{
     char prompt[] = ">";
     char *str = NULL;
     char *line = NULL;
-    while(TRUE)
+    t_rdr *last_heredoc;
+    last_heredoc = NULL;
+    while(heredocs)
     {
-        line = readline(prompt);
-        if(!ft_strcmp(line, redir->value))
-            break;
-        str = ft_strjoin(str, line); //TODO remember to free mate
-        str = ft_strjoin(str,"\n");
+        if(heredocs->type != HERDOC)
+        {
+            heredocs = heredocs->next;
+            continue;
+        }
+        while(TRUE)
+        {
+            line = readline(prompt);
+            dprintf(2, "heredoc eof = %s\n",heredocs->value);
+            if(!ft_strcmp(line, heredocs->value))
+                break;
+            if(!heredocs->next)
+            {
+                last_heredoc = heredocs;
+                str = ft_strjoin(str, line);
+                str =ft_strjoin(str, "\n");
+            }
+        }
+        heredocs = heredocs->next;
     }
-   int file = open("ofile", O_RDWR |O_TRUNC| O_CREAT,0644);
-   redir->value = "ofile";
-   write(file,str,ft_strlen(str));
+    if(!str)
+        return;
+    int pipefd[2];
+    pipe(pipefd);
+    //printf("str =%s",str);
+    //file = open(name, O_RDWR |O_TRUNC| O_CREAT,0644);
+    write(pipefd[WRITE],str,ft_strlen(str));
+    close(pipefd[WRITE]);
+    last_heredoc->fd = pipefd[READ];
+   //unlink("ofile");
 }
 void handle_heredoc(t_cmd *cmd)
 {
-    t_rdr *tmp;
     while(cmd)
     {
-        tmp = cmd->redir;
-        while(tmp)
-        {
-            if(tmp->type == HERDOC)
-                {
-                open_heredoc(tmp);
-                }
-            tmp = tmp->next;
-        }
-        cmd = cmd->next;
+      open_heredoc(cmd->redir);
+      cmd = cmd->next;
     }
 }
 void ft_rdraddback(t_rdr **rdr,t_rdr *new)
@@ -132,6 +157,8 @@ t_cmd *parse_cmds(t_tokenizer *tokens)
 {
     t_cmd *cmd = new_cmd();
     t_cmd *curr_cmd = cmd;
+    t_rdr *tmp_rdr;
+    tmp_rdr = NULL;
     while(tokens)
     {
         if(tokens->type == PIPE)
@@ -143,7 +170,8 @@ t_cmd *parse_cmds(t_tokenizer *tokens)
         }
         if((tokens->type == REDIR_IN || tokens->type == REDIR_OUT || tokens->type == HERDOC || tokens->type == APPEND) && tokens->next)
         {
-            ft_rdraddback(&curr_cmd->redir, ft_redirnew(tokens->next->value,tokens->type));
+           tmp_rdr = ft_redirnew(tokens->next->value, tokens->type);
+            ft_rdraddback(&curr_cmd->redir, tmp_rdr);
             tokens = tokens->next->next;
             continue;
         }
@@ -151,6 +179,6 @@ t_cmd *parse_cmds(t_tokenizer *tokens)
         tokens = tokens->next;
     }
     //print_cmds(cmd);
-    handle_heredoc(cmd);
+    //handle_heredoc(cmd);
     return cmd;
 }
