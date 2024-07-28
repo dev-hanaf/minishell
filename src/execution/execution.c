@@ -21,7 +21,7 @@ void handle_rdr(t_rdr *redir)
 {
     int file;
     //char *here_doc_name = NULL;
-    
+
     while(redir)
     {
         if(redir->type == REDIR_IN)
@@ -78,7 +78,7 @@ void exec_cmd(t_list *args)
 }
 void exec_child(t_cmd *cmd,int in_fd,int out_fd)
 {
-    
+
     if(in_fd != STDIN_FILENO)
         {
             dup2(in_fd,STDIN_FILENO);
@@ -90,6 +90,24 @@ void exec_child(t_cmd *cmd,int in_fd,int out_fd)
             close(out_fd);
         }
     ///handle_rdr(cmd->redir);
+    exec_cmd(cmd->args);
+}
+void exec_child2(t_cmd *cmd,int in_fd,int out_fd[2])
+{
+
+    if(in_fd != STDIN_FILENO)
+        {
+            dup2(in_fd,STDIN_FILENO);
+            close(in_fd);
+        };
+    if(out_fd[1] != STDOUT_FILENO)
+        {
+            dup2(out_fd[1],STDOUT_FILENO);
+            close(out_fd[1]);
+        }
+    if(out_fd[0] != 0)
+        close(out_fd[0]);
+    handle_rdr(cmd->redir);
     exec_cmd(cmd->args);
 }
 
@@ -143,6 +161,7 @@ void execute_cmds(t_cmd *cmd)
     i = 0;
     pid_t *pids = (int *)malloc(sizeof(pid_t) * (cmd_nbr(cmd)));
     int pipefd[2];
+    pipefd[READ] = 0;
     int tmp;
     tmp = STDIN_FILENO;
     pipefd[WRITE] = STDOUT_FILENO;
@@ -152,13 +171,11 @@ void execute_cmds(t_cmd *cmd)
             pipe(pipefd);
         pids[i] = fork();
         if(pids[i] == CHILD)
-            exec_child(cmd,tmp,pipefd[WRITE]);
+            exec_child2(cmd,tmp,pipefd);
         else
         {
             if(pipefd[WRITE] != 1)
                 close(pipefd[WRITE]);
-            if(!cmd->next)
-                pipefd[WRITE] = STDOUT_FILENO;
             if(tmp != 0)
                 close(tmp);
             tmp = pipefd[READ];
