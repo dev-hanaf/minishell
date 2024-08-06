@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/22 06:52:34 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/06 06:03:40 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,12 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <stdbool.h>
 
 /* It is not required to use uppercase, but often considered as good practice.
 	Enum is short for "enumerations", which means "specifically listed".	
 The typedef is a keyword that is used to provide existing data types with a new name.The C typedef keyword is used to redefine the name of already existing data types.
 */
-enum					e_bool
-{
-	FALSE,
-	TRUE
-};
 
 enum					e_type
 {
@@ -79,9 +75,10 @@ void					free_string_array(char **arr);
 
 /*----------------------------- Input Validation --------------------------*/
 void					input_validation(t_tokenizer *lexer);
-int						rederections_check(t_tokenizer *lexer);
-int 					pipes_check(t_tokenizer *lexer);
-int 					forbidden_inputs(t_tokenizer *lexer);
+bool					rederections_check(t_tokenizer *lexer);
+bool 					pipes_check(t_tokenizer *lexer);
+bool 					forbidden_inputs(t_tokenizer *lexer);
+bool    				check_quotes(t_tokenizer *lexer);
 
 /*----------------------------- Syntax Analysis --------------------------*/
 t_tokenizer				*new_token(char *value, int type);
@@ -97,6 +94,8 @@ int						_cd(char *path, t_env **env);
 int 					_pwd(void);
 int 					_unset(t_env **env, char *variable);
 
+/*----------------------------- Expand --------------------------*/
+void expand(t_env **env, t_tokenizer *lexer);
 
 /*----------------------------- Initilize Envirement --------------------------*/
 t_env					*new_env(char *key, char *value);

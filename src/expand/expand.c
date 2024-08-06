@@ -1,31 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_env.c                                          :+:      :+:    :+:   */
+/*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/21 02:41:53 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/06 06:22:00 by ahanaf           ###   ########.fr       */
+/*   Created: 2024/08/06 04:57:59 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/08/06 06:19:24 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_env(t_env **env, char *key)
+void expand(t_env **env, t_tokenizer *lexer)
 {
-	t_env	*temp;
-
-	if (!env || !key)
-		return (NULL);
-	temp = *env;
-	while (temp)
-	{
-		if (ft_strncmp(temp->key, key, ft_strlen(key)) == 0 && ft_strlen(temp->key) == ft_strlen(key))
+    char *key;
+    t_env *temp;
+    
+    temp = *env;
+    if (lexer->type == WORD)
+    {
+        if (lexer->value[0] == '$')
         {
-        	return (temp->value);
+            key = get_env(env, lexer->value + 1);
+            if (ft_strncmp(key, "ahanaf", ft_strlen(key)))
+            {
+                printf(RED"%s\n"NC, key);
+            }
         }
-        temp = temp->next;
-	}
-	return ("ahanaf");
+    }
+    return;
 }

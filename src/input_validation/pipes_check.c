@@ -1,24 +1,24 @@
 #include "minishell.h"
 
-int pipes_check(t_tokenizer *lexer)
+bool pipes_check(t_tokenizer *lexer)
 {
-	if (ft_strncmp(lexer->value, "|", 1) == 0 && ft_strlen(lexer->value) == 1)
+	if (lexer->type == PIPE)
 	{
 		if (lexer->prev == NULL || lexer->next == NULL)
 		{
-			printf("syntax error\n");
-			return (-1);
+			printf("syntax error near unexpected token `|'\n");
+			return (true);
 		}
 		else if (lexer->prev == NULL && lexer->next->type == PIPE)
 		{
-			printf("syntax error\n");
-			return (-1);
+			printf("syntax error near unexpected token `||'\n");
+			return (true);
 		}
 		else if (lexer->prev->type != WORD)
 		{
-			printf("syntax error\n");
-			return (-1);
+			printf("syntax error: prev it's not a word\n");
+			return (true);
 		}
 	}
-	return (0);
+	return (false);
 }
