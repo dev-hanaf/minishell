@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/06 06:03:40 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/07 04:20:01 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int 					_pwd(void);
 int 					_unset(t_env **env, char *variable);
 
 /*----------------------------- Expand --------------------------*/
-void expand(t_env **env, t_tokenizer *lexer);
+void 					expand(t_env *env, t_tokenizer *lexer, char *line);
 
 /*----------------------------- Initilize Envirement --------------------------*/
 t_env					*new_env(char *key, char *value);

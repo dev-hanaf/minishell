@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:53:01 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/06 06:02:46 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/07 04:28:58 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,10 @@ void loop(t_env *env)
 		t_tokenizer *lexer = tokenization(line);
 		display_tokens(lexer);
 		input_validation(lexer);
-		expand(&env, lexer);
+		expand(env, lexer, NULL);
+		printf(YELLOW"after epansion\n"NC);
+		display_tokens(lexer);
+	
 		add_history(line);
 		free(line);
 	}
