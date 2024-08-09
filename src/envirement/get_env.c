@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 02:41:53 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/21 19:11:54 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/07 04:38:18 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ char	*get_env(t_env **env, char *key)
 	temp = *env;
 	while (temp)
 	{
-		if (ft_strncmp(temp->key, key, ft_strlen(key)) == 0)
+		if (ft_strncmp(temp->key, key, ft_strlen(key)) == 0 && ft_strlen(temp->key) == ft_strlen(key))
         {
         	return (temp->value);
         }
         temp = temp->next;
 	}
-	return ("ahanaf");
+	return (NULL);
 }

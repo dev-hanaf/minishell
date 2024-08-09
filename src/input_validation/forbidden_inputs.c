@@ -1,21 +1,31 @@
 #include "minishell.h"
 
-int forbidden_inputs(t_tokenizer *lexer)
+bool forbidden_inputs(t_tokenizer *lexer)
 {
-	char 		*forbidden;
 	size_t 		i;
-	forbidden = "()&|;";
-	i = 0;
-	if (lexer->value[0] == '\'' || lexer->value[0] == '"')
-		return (0);
-	while (forbidden[i]) 
+	
+	i = -1;
+	while(lexer->value[++i] != '\0')
 	{
-		if (ft_strchr(lexer->value, (int)forbidden[i]))
+		if (ft_strchr(lexer->value,'\\') || ft_strchr(lexer->value,';'))
 		{
-			printf("syntax error\n");
-			return (-1);
+			printf("syntax error:not required special character\n");
+			return (true);
 		}
-		i++;
 	}
-	return (0);
+	i = -1;
+	while (lexer->value[++i] != '\0')
+	{
+		if (lexer->value[i] == '&')
+		{
+			printf("syntax error:not required special character &\n");
+			return (true);
+		}
+		if (lexer->value[i] == '(' || lexer->value[i] == ')')
+		{
+			printf("syntax error:non expected argument ()\n");
+			return (true);
+		}
+	}
+	return (false);
 }

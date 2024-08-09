@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:53:01 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/22 06:55:27 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/07 04:28:58 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,45 +30,47 @@ t_tokenizer *get_token(t_tokenizer *lexer, char *word)
 	}
 	return (NULL);
 }
-void builtin_commands(t_env **env, char *line)
-{
-	if (!env || !line || !*env) 
-		return;
-	t_tokenizer *lexer = tokenization(line);
-	t_tokenizer *token;
-	token = get_token(lexer, "cd");
-	if (token)
-		_cd(token->value,env);
-	// _pwd();
-	token = get_token(lexer, "unset");
-	if (token/*  && ft_strncmp(token->value, "unset", 5) == 0 && ft_strlen(token->value) == 5 */)
-	{
-		_unset(env, "LANG");
-	}
+// void builtin_commands(t_env **env, char *line)
+// {
+// 	if (!env || !line || !*env) 
+// 		return;
+// 	t_tokenizer *lexer = tokenization(line);
+// 	t_tokenizer *token;
+// 	token = get_token(lexer, "cd");
+// 	if (token)
+// 		_cd(token->value,env);
+// 	// _pwd();
+// 	token = get_token(lexer, "unset");
+// 	if (token/*  && ft_strncmp(token->value, "unset", 5) == 0 && ft_strlen(token->value) == 5 */)
+// 	{
+// 		_unset(env, "LANG");
+// 	}
 
-}
+// }
 
 void loop(t_env *env)
 {
 	char *line;
 	char *prompt;
-	while (TRUE)
+	while (true)
 	{
-		//handle_signals();
 		prompt = ft_strjoin(get_env(&env, "PWD"), "$ ");
 		if(!prompt)
 			printf("error\n"); //TODO add the error handling function
-
 		line = readline(prompt);
-		if (line == NULL)
-			break ;
+		if (line == NULL || line[0] == '\0')
+			continue;
 		// builtin_commands(&env, line);
 		t_tokenizer *lexer = tokenization(line);
-		t_cmd *cmd_list = parse_cmds(lexer);
-		print_cmds(cmd_list);
+		display_tokens(lexer);
+		input_validation(lexer);
+		expand(env, lexer, NULL);
+    t_cmd *cmd_list = parse_cmds(lexer);
+    		print_cmds(cmd_list);
 		execute_cmds(cmd_list);
-		//display_tokens(lexer);
-		//input_validation(lexer);
+		printf(YELLOW"after epansion\n"NC);
+		display_tokens(lexer);
+	
 		add_history(line);
 		free(line);
 	}
