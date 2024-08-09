@@ -65,6 +65,9 @@ void loop(t_env *env)
 		display_tokens(lexer);
 		input_validation(lexer);
 		expand(env, lexer, NULL);
+    t_cmd *cmd_list = parse_cmds(lexer);
+    		print_cmds(cmd_list);
+		execute_cmds(cmd_list);
 		printf(YELLOW"after epansion\n"NC);
 		display_tokens(lexer);
 	

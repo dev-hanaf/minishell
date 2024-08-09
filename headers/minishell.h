@@ -23,6 +23,7 @@
 # include <stdio.h>
 # include <string.h>
 # include <sys/wait.h>
+# include <fcntl.h>
 # include <unistd.h>
 # include <stdbool.h>
 
@@ -41,6 +42,9 @@ enum					e_type
 	REDIR_OUT = 5,
 	APPEND = 6
 };
+# define WRITE 1
+# define READ 0
+# define CHILD 0
 
 typedef struct s_tokenizer
 {
@@ -68,6 +72,22 @@ typedef struct s_minishell
 }						t_minishell;
 
 extern t_minishell		g_minishell;
+
+// TODO replace the lists in t_cmd by this 
+typedef struct s_rdr
+{
+    t_list *redir;
+    int type;
+    struct s_rdr *next;
+} t_rdr;
+typedef struct s_cmd 
+{
+    t_list *args;
+    t_list *redir_in;
+    t_list *redir_out;
+    struct s_cmd *next;
+} t_cmd;
+
 
 /*-----------------------------Utils --------------------------*/
 int						ft_strlen_2d_array(char **arr);
@@ -108,6 +128,20 @@ char					*get_env(t_env **env, char *key);
 void    				change_env(t_env **env, char *key, char *value);
 void    				remove_env_element(t_env **env, char *variable);
 void					display_envirment(t_env **env);
+/*-------------------------- cmd utils --------------------------------------- */
+t_cmd* new_cmd(void);
+int  cmd_nbr(t_cmd *head);
+void add_to_back_cmd(t_cmd **head, t_cmd *newCmd);
+t_cmd *get_last_cmd(t_cmd *head);
+int cmd_nbr(t_cmd *head);
+char **ld_to_arr(t_list *lst);
+/* pasing  */
+t_cmd *parse_cmds(t_tokenizer *tokens);
+void print_cmds(t_cmd *cmd_list);
+/*execution */
+void execute_cmds(t_cmd *cmd);
+void exec_job(t_cmd *cmd);
+char	*get_cmd_path(char *cmd, char **env);
 
 
 #endif
