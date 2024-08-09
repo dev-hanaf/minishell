@@ -12,7 +12,7 @@
 # define MINISHELL_H
 
 # include "colors.h"
-# include "header.h"
+//# include "header.h"
 # include "libft.h"
 # include <errno.h>
 # include <readline/history.h>
@@ -24,8 +24,12 @@
 # include <fcntl.h>
 # include <unistd.h>
 
+# ifndef __O_DIRECTORY
+#define __O_DIRECTORY     0x00100000
+# endif
+
 /* It is not required to use uppercase, but often considered as good practice.
-	Enum is short for "enumerations", which means "specifically listed".	
+	Enum is short for "enumerations", which means "specifically listed".
 The typedef is a keyword that is used to provide existing data types with a new name.The C typedef keyword is used to redefine the name of already existing data types.
 */
 enum					e_bool
@@ -69,13 +73,14 @@ typedef struct s_minishell
 {
 	char 				*prompt;
 	char				**env;
+	t_env               **env_ld;
 	char				*line;
 	int					status;
 }						t_minishell;
 
 extern t_minishell		g_minishell;
 
-// TODO replace the lists in t_cmd by this 
+// TODO replace the lists in t_cmd by this
 typedef struct s_rdr
 {
     char *value;
@@ -83,7 +88,7 @@ typedef struct s_rdr
     int fd;
     struct s_rdr *next;
 } t_rdr;
-typedef struct s_cmd 
+typedef struct s_cmd
 {
     t_list *args;
     t_rdr *redir;
@@ -146,4 +151,5 @@ char	*get_cmd_path(char *cmd, char **env);
 int	ft_strcmp(const char *s1, const char *s2);
 
 
+int     _export(t_env **env,t_cmd *cmd,int flag);
 #endif

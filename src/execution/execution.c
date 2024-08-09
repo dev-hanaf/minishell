@@ -155,6 +155,12 @@ void check_heredoc(t_cmd *cmd)
         cmd = cmd->next;
     }
 }
+int check_single_builtin(t_cmd *cmd)
+{
+    if(!ft_strcmp((char *)cmd->args->content,"export") && !cmd->next)
+        _export(g_minishell.env,cmd,0);
+    return 0;
+}
 void execute_cmds(t_cmd *cmd)
 {
     int i;
@@ -165,6 +171,8 @@ void execute_cmds(t_cmd *cmd)
     int tmp;
     tmp = STDIN_FILENO;
     pipefd[WRITE] = STDOUT_FILENO;
+    if(check_single_builtin(cmd))
+        return;
     while(cmd)
     {
         if(cmd->next)

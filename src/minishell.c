@@ -66,9 +66,10 @@ void loop(t_env *env)
 		// builtin_commands(&env, line);
 		t_tokenizer *lexer = tokenization(line);
 		t_cmd *cmd_list = parse_cmds(lexer);
+		//_export(&env,cmd_list);
 		//print_cmds(cmd_list);
 		execute_cmds(cmd_list);
-		//display_tokens(lexer);
+		display_tokens(lexer);
 		//input_validation(lexer);
 		add_history(line);
 		free(line);
@@ -86,6 +87,7 @@ int	main(int ac, char **av, char **envp)
 		printf("error\n"); //TODO add the error handling function
 	g_minishell.env = envp;
 	env = init_envirement(envp);
+	g_minishell.env_ld = &env;
 	loop(env);
 	free_allocator();
 	return (0);
