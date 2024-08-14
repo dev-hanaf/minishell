@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/07 04:20:01 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/14 09:19:02 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,16 @@
 The typedef is a keyword that is used to provide existing data types with a new name.The C typedef keyword is used to redefine the name of already existing data types.
 */
 
+
 enum					e_type
 {
-	ERROR = 0,
-	WORD = 1,
-	PIPE = 2,
-	HERDOC = 3,
-	REDIR_IN = 4,
-	REDIR_OUT = 5,
-	APPEND = 6
+	ERROR,
+	WORD,
+	PIPE,
+	HERDOC,
+	REDIR_IN,
+	REDIR_OUT,
+	APPEND
 };
 
 typedef struct s_tokenizer
@@ -72,6 +73,7 @@ extern t_minishell		g_minishell;
 /*-----------------------------Utils --------------------------*/
 int						ft_strlen_2d_array(char **arr);
 void					free_string_array(char **arr);
+int 					is_whitespaces(int c);
 
 /*----------------------------- Input Validation --------------------------*/
 void					input_validation(t_tokenizer *lexer);
@@ -95,7 +97,8 @@ int 					_pwd(void);
 int 					_unset(t_env **env, char *variable);
 
 /*----------------------------- Expand --------------------------*/
-void 					expand(t_env *env, t_tokenizer *lexer, char *line);
+void 		expand_lexer(t_env *env, t_tokenizer *lexer);
+void 		expand(t_env *env,char *line);
 
 /*----------------------------- Initilize Envirement --------------------------*/
 t_env					*new_env(char *key, char *value);
@@ -103,11 +106,11 @@ t_env					*last_env(t_env **env);
 void					add_to_back_env(t_env **env, t_env *new);
 void					add_to_front_env(t_env **env, t_env *new);
 int						stack_size_env(t_env **env);
-t_env					*init_envirement(char **env);
+t_env					*init_environment(char **env);
 char					*get_env(t_env **env, char *key);
 void    				change_env(t_env **env, char *key, char *value);
 void    				remove_env_element(t_env **env, char *variable);
-void					display_envirment(t_env **env);
+void					display_environment(t_env **env);
 
 
 #endif

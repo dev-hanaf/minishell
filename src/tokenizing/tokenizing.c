@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 19:43:49 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/06 05:22:49 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/13 13:23:18 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,9 @@ void is_single_quote(char *line, size_t *i)
 	{
 		while (line[*i] != '\0' && line[*i] != '\'')
 			(*i)++;
-		if (line[*i] == '\'' && line[(*i) + 1] == '\'')
-			(*i) += 2;
 	}
-	(*i)++;
+	if (line[*i] == '\'')
+			(*i) += 1;
 }
 
 void is_double_quotes(char *line, size_t *i)
@@ -87,10 +86,9 @@ void is_double_quotes(char *line, size_t *i)
 	{
 		while (line[*i] != '\0' && line[*i] != '\"')
 			(*i)++;
-		if (line[*i] == '\"' && line[(*i) + 1] == '\"')
-			(*i) += 2;
 	}
-	(*i)++;
+	if (line[*i] == '\"')
+			(*i) += 1;
 }
 
 void	is_command(t_tokenizer **lexer, char *line, size_t *i)
@@ -103,23 +101,22 @@ void	is_command(t_tokenizer **lexer, char *line, size_t *i)
 	start = *i;
 	if (line[*i] != '>' && line[*i] != '<' && line[*i] != '|' && line[*i] != 32 && (line[*i] < 9 || line[*i] > 13) && line[*i] != 10 && line[*i] != '\0')
 	{
-		if (line[*i] == '\'')
-			is_single_quote(line, i);
-		else if (line[*i] == '\"')
-			is_double_quotes(line ,i);
-		else
-		{
-			while (true)
+		// if (line[*i] == '\'')
+		// 	is_single_quote(line, i);
+		// else if (line[*i] == '\"')
+		// 	is_double_quotes(line ,i);
+		while (line[*i])
 			{
-				if (line[*i] != '\0' &&  line[*i] == '\"')
+				if (line[*i] == '\"')
 					is_double_quotes(line, i);
-				else if(line[*i] != '\0' &&  line[*i] == '\'')
+					// break;
+				else if(line[*i] == '\'')
 					is_single_quote(line, i);
+					// break;
 				if (line[*i] == '\0' || line[*i] == ' ' || line[*i] == '>' || line[*i] == '<' || line[*i] == '|')
-						break;
+					break;
 				(*i)++;
 			}
-		}
 		word = ft_allocator(sizeof(char) * (*i - start + 1), "word");
 		if (!word)
 		{

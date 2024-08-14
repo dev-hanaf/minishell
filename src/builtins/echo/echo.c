@@ -1,31 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   display_envirment.c                                :+:      :+:    :+:   */
+/*   .echo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/22 05:55:40 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/22 05:58:28 by ahanaf           ###   ########.fr       */
+/*   Created: 2024/08/13 12:53:51 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/08/13 13:05:58 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void display_envirment(t_env **env)
+void _echo(char **argumentes) // echo hi heloo NULL
 {
-    t_env *temp;
+    int i;
 
-    if (!*env)
-        return;
-    temp = *env;
-    while (temp)
+    i = 1;//TODO why 1, ask lmokhtar
+    while(argumentes && argumentes[i])
     {
-        printf("KEY: \033[0;36m %-20s \033[0m |\t \
-			VALUE: \033[0;35m %-18s \033[0m \n",
-				temp->key,
-				temp->value);
-		printf("--------------------------------------------------\n");
-        temp = temp->next;
+        printf("%s", argumentes[i]);
+        if (argumentes[i + 1] != NULL)
+            printf(" ");
+        i++;
     }
+    printf("\n");
 }

@@ -5,107 +5,103 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/06 04:57:59 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/07 04:43:06 by ahanaf           ###   ########.fr       */
+/*   Created: 2024/08/12 15:07:46 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/08/14 09:18:36 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* void expand(t_env **env, t_tokenizer *lexer)
+char *handle_quotes(char *line)
 {
-    char *key;
-    t_env *temp;
-    
-    temp = *env;
-    if (lexer->type == WORD)
+    char *buffer = NULL;
+    char c[2];
+    int in_dq = 0;
+    int in_sq = 0;
+    int i = 0;   
+    while (line && line[i])
     {
-        if (lexer->value[0] == '$')
+        // "''"''$HOME''"''"
+        if (line[i] == '\'' && !in_dq)
+            in_sq = 1;
+        else if(line[i] == '\"' && !in_sq)
+            in_dq = 1;
+        else
         {
-            key = get_env(env, lexer->value + 1);
-            if (ft_strncmp(key, "ahanaf", ft_strlen(key)))
-            {
-                printf(RED"%s\n"NC, key);
-            }
-        }
-    }
-    return;
-} */
-
-char *parse_expansion_command(t_env *env, char *command, int dollar_idx)
-{
-    int i;
-    char *res;
-    
-    i = dollar_idx;
-    while(command[i])
-    {
-        if((command[i] == ' ' || command[i + 1] == '\0') && (command[i - 1] != '\'' || command[i - 1] != '\"'))
-        {
-            res =  get_env(&env, command + (dollar_idx + 1));
-            if (!res)
-                return ("NULL");
-            return(ft_strdup(res));         
+            c[0] = line[i];
+            c[1] = '\0';
+            buffer  = ft_strjoin(buffer, c);
         }
         i++;
     }
-    return (NULL);
+    return (buffer);
 }
 
 
-char *find_the_dollar(char *command, t_env *env)
+
+char *catch_expand(char *line, t_env *env)
 {
     int i;
-    int dollar_idx;
     char *res;
-
+    int start;
+    char buffer[2];
+    start = 0;
     res = NULL;
+    char *exp = NULL;
     i = 0;
-    if (ft_strchr(command, '$'))
+    if (line &&  ft_strchr(line, '$'))
     {
-        while(command[i])
+        if (line[0] == '\"' || line[0] == '$')
         {
-            if (command[i] == '$')
+            while(line[i])
             {
-                dollar_idx = i;   
-                res = parse_expansion_command(env, command, dollar_idx);
+                if (line[i] == '$')
+                {
+                    start = i;
+                    i++;
+                    while (line[i] && ft_isalnum(line[i]) &&  !is_whitespaces(line[i]))
+                        i++;
+                    exp =  ft_substr(line, start , i - start);
+                    exp =  get_env(&env, exp + 1);
+                    if (exp)
+                        res = ft_strjoin(res, exp);
+                }
+                buffer[0] = line[i];
+                buffer[1] = '\0';
+                res = ft_strjoin(res, buffer);
+                if (line[i] == '\0')
+                    break;
+                i++;
             }
-            i++;
         }
-    }
+        else if (line[0] == '\'')
+            res = ft_strjoin(res, line);  
+    } 
     return (res);
 }
 
-void expand(t_env *env, t_tokenizer *lexer, char *line)
-{
-    char *expansion;
-    t_tokenizer *temp;
 
-    temp = lexer;
-    if (!lexer)
-        return ;
-    while(temp && !line)
+void 		expand_lexer(t_env *env, t_tokenizer *lexer)
+{
+    char *res;
+    
+    res = NULL;
+    while (lexer)
     {
-        expansion =  find_the_dollar(temp->value, env);
-        // printf(RED"%s\n"NC, expansion);
-        if (expansion)
-        {
-            temp->value = expansion;
-        }
-        temp = temp->next;
-    }
-    if (line)
-    {
-        if (line[0] == '$')
-        {
-            while (env)
-            {
-                if (!ft_strncmp(env->key, line + 1, ft_strlen(env->key)) && ft_strlen(env->key) == ft_strlen(line + 1))
-                {
-                    printf("%s\n",env->value);  
-                }
-                env = env->next;
-            }
-        }
+        res = catch_expand(lexer->value, env);
+        res = handle_quotes(res);
+        if (res)
+            lexer->value = res;
+        lexer = lexer->next;
     }
 }
+
+/* void expand(t_env *env, char *line)
+{
+    TODO zmourid use it
+} */
+
+
+//TODO echo ''''''$HOME'''''' ==> /nfs/homes/ahanaf
+
+// TODO echo "''"''$HOME''"''" ==> ''/nfs/homes/ahanaf''

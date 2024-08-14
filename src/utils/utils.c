@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 03:15:46 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/21 03:16:48 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/14 09:18:42 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,3 +34,11 @@ void	free_string_array(char **arr)
 	}
 	free(arr);
 }
+
+int is_whitespaces(int c)
+{
+    if (c == 32 || (c >= 9 && c <= 13))
+        return (1);
+    return (0);
+}
+ 
