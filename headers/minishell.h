@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/14 09:19:02 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/14 09:30:33 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <stdio.h>
 # include <string.h>
 # include <sys/wait.h>
+# include <fcntl.h>
 # include <unistd.h>
 # include <stdbool.h>
 
@@ -42,6 +43,9 @@ enum					e_type
 	REDIR_OUT,
 	APPEND
 };
+# define WRITE 1
+# define READ 0
+# define CHILD 0
 
 typedef struct s_tokenizer
 {
@@ -69,6 +73,22 @@ typedef struct s_minishell
 }						t_minishell;
 
 extern t_minishell		g_minishell;
+
+// TODO replace the lists in t_cmd by this 
+typedef struct s_rdr
+{
+    t_list *redir;
+    int type;
+    struct s_rdr *next;
+} t_rdr;
+typedef struct s_cmd 
+{
+    t_list *args;
+    t_list *redir_in;
+    t_list *redir_out;
+    struct s_cmd *next;
+} t_cmd;
+
 
 /*-----------------------------Utils --------------------------*/
 int						ft_strlen_2d_array(char **arr);
@@ -110,7 +130,7 @@ t_env					*init_environment(char **env);
 char					*get_env(t_env **env, char *key);
 void    				change_env(t_env **env, char *key, char *value);
 void    				remove_env_element(t_env **env, char *variable);
-void					display_environment(t_env **env);
+// void					display_envirment(t_env **env);
 
 
 #endif
