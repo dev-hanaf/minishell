@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 21:58:47 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/18 23:34:58 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/17 08:37:07 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,9 @@ void	add_to_back(t_tokenizer **token, t_tokenizer *new)
 	new->prev = temp;
 }
 
+// [ls -la]
+// t_tokenizeer *token = ls
+// t_tokenizeer *token = -la
 void	add_to_front(t_tokenizer **token, t_tokenizer *new)
 {
 	t_tokenizer	*tmp;

@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 09:43:40 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/06 05:22:14 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/15 17:21:48 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ void	input_validation(t_tokenizer *lexer)
 		if (check_quotes(temp))
 		{
 			printf("syntax error unclosed quotes\n");
-			return ;
+			exit(241) ;
 		}
 		else if (forbidden_inputs(temp))
-			return;
+			exit(241);
 		else if (rederections_check(temp))
-			return ;//TODO is i should return a status and write syntax error on stderr
+			exit(241) ;//TODO is i should return a status and write syntax error on stderr
 		else if(pipes_check(temp))
-			return ;
+			exit(241) ;
 		temp = temp->next;
 	}
 	return ;

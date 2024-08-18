@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/14 09:30:33 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/18 04:45:29 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ typedef struct s_cmd
 int						ft_strlen_2d_array(char **arr);
 void					free_string_array(char **arr);
 int 					is_whitespaces(int c);
+void 					ft_strcpy(char *dst, char c);
 
 /*----------------------------- Input Validation --------------------------*/
 void					input_validation(t_tokenizer *lexer);
@@ -117,8 +118,9 @@ int 					_pwd(void);
 int 					_unset(t_env **env, char *variable);
 
 /*----------------------------- Expand --------------------------*/
-void 		expand_lexer(t_env *env, t_tokenizer *lexer);
-void 		expand(t_env *env,char *line);
+void 					expand_lexer(t_env *env, t_tokenizer **lexer);
+char 					*expand(t_env *env,char *line);
+char					 *handle_quotes(char *line);
 
 /*----------------------------- Initilize Envirement --------------------------*/
 t_env					*new_env(char *key, char *value);

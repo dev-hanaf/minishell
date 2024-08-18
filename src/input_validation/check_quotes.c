@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 05:58:00 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/05 12:46:40 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/15 16:54:14 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,23 @@ bool    check_quotes(t_tokenizer *lexer)
     flag = false;
     while (lexer->value[i])
     {
+        //"'"'"'
+        // to_find = "
+        //flag = true
+        // line[i] = '; 
+        // flag = false;
+        
         if ((lexer->value[i] == '\'' || lexer->value[i] == '\"') && lock)
             to_find = lexer->value[i];
         if (lexer->value[i] == to_find)
         {
             lock = false;
             if (flag)
+            {
                 flag = false;
+                lock = true;            
+            }
+             
             else
                 flag = true;
         }        
