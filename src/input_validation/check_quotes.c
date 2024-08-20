@@ -22,15 +22,10 @@ bool    check_quotes(t_tokenizer *lexer)
     lock = true;
     i = 0;
     flag = false;
+    to_find = 0;
     while (lexer->value[i])
     {
-        //"'"'"'
-        // to_find = "
-        //flag = true
-        // line[i] = '; 
-        // flag = false;
-        
-        if ((lexer->value[i] == '\'' || lexer->value[i] == '\"') && lock)
+        if ((lexer->value[i] == '\'' || lexer->value[i] == '"') && lock)
             to_find = lexer->value[i];
         if (lexer->value[i] == to_find)
         {

@@ -17,10 +17,10 @@ char *handle_quotes(char *line)
     char *buffer = NULL;
     char c[2];
     int i = 0;
- 
+    
     while (line && line[i])
     {
-        if (line[i] == '\"' )
+        if (line[i] && line[i] == '\"' )
         {
             i++;
             while (line[i] && line[i] != '\"')
@@ -29,8 +29,10 @@ char *handle_quotes(char *line)
                 buffer  = ft_strjoin(buffer, c);
                 i++;
             }
+            if (line[i] == '\0')
+                return buffer;
         }
-        else if (line[i] == '\'')
+        else if (line[i] && line[i] == '\'')
         {
             i++;
             while (line[i] && line[i] != '\'')
@@ -39,6 +41,8 @@ char *handle_quotes(char *line)
                 buffer  = ft_strjoin(buffer, c);
                 i++;
             }
+            if (line[i] == '\0')
+                return buffer;
         }
         else
         {

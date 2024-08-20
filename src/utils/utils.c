@@ -14,12 +14,13 @@
 
 int	ft_strlen_2d_array(char **arr)
 {
-	int			a;
-
-	a = 0;
-	while (arr[a] != 0)
-		a++;
-	return (a);
+	int			i;
+	if (!arr || !*arr)
+		return (0);
+	i = 0;
+	while (arr[i] != 0)
+		i++;
+	return (i);
 }
 
 void	free_string_array(char **arr)

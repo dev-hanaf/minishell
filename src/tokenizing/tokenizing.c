@@ -70,13 +70,16 @@ void	is_redirection(t_tokenizer **lexer, char *line, size_t *i)
 void is_single_quote(char *line, size_t *i)
 {
 	(*i)++;
+	// printf(RED"line[%zu] %c\n"NC, *i, line[*i]);
 	while (line[*i] != '\0' && line[*i] != '\'')
 	{
-		while (line[*i] != '\0' && line[*i] != '\'')
+		// while (line[*i] != '\0' && line[*i] != '\'')
 			(*i)++;
 	}
 	if (line[*i] == '\'')
-			(*i) += 1;
+		(*i) += 1;
+	if (line[*i] == '\'')
+		is_single_quote(line, i);
 }
 
 void is_double_quotes(char *line, size_t *i)
@@ -84,11 +87,13 @@ void is_double_quotes(char *line, size_t *i)
 	(*i)++;
 	while (line[*i] != '\0' && line[*i] != '\"')
 	{
-		while (line[*i] != '\0' && line[*i] != '\"')
+		// while (line[*i] != '\0' && line[*i] != '\"')
 			(*i)++;
 	}
 	if (line[*i] == '\"')
 			(*i) += 1;
+	if (line[*i] == '\"')
+		is_double_quotes(line, i);
 }
 
 void	is_command(t_tokenizer **lexer, char *line, size_t *i)
@@ -107,12 +112,13 @@ void	is_command(t_tokenizer **lexer, char *line, size_t *i)
 		// 	is_double_quotes(line ,i);
 		while (line[*i])
 			{
-				if (line[*i] == '\"')
-					is_double_quotes(line, i);
-					// break;
-				else if(line[*i] == '\'')
+				// if (line[*i] == '\"')
+				// 	is_double_quotes(line, i);
+				// 	// break;
+				 if(line[*i] == '\'')
 					is_single_quote(line, i);
 					// break;
+				printf(GREEN"line[%zu] %c\n"NC, *i, line[*i]);
 				if (line[*i] == '\0' || line[*i] == ' ' || line[*i] == '>' || line[*i] == '<' || line[*i] == '|')
 					break;
 				(*i)++;

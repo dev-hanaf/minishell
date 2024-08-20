@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/18 04:45:29 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/18 05:21:22 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,11 +116,13 @@ void					display_tokens(t_tokenizer *tokens);
 int						_cd(char *path, t_env **env);
 int 					_pwd(void);
 int 					_unset(t_env **env, char *variable);
+void    				_env(t_env *env);
+void 					_echo(char **argumentes);
 
 /*----------------------------- Expand --------------------------*/
-void 					expand_lexer(t_env *env, t_tokenizer **lexer);
+t_tokenizer 			*expand_lexer(t_env *env, t_tokenizer **lexer);
 char 					*expand(t_env *env,char *line);
-char					 *handle_quotes(char *line);
+char					*handle_quotes(char *line);
 
 /*----------------------------- Initilize Envirement --------------------------*/
 t_env					*new_env(char *key, char *value);

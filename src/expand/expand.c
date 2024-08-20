@@ -11,8 +11,10 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
+// ''$var''
+//str == "$var"$var"$var"
+//char *exp = "ls -la"
+// "ls -la"ls -la ls -la"ls -la"
 
 int needs_expansion(const char *line) {
     int i = 0;
@@ -43,7 +45,7 @@ int needs_expansion(const char *line) {
 
 
 
-char *catch_expand(char *line, t_env *env, int to_expand)
+char **catch_expand(char *line, t_env *env, int to_expand)
 {
     int i;
     char *res;
@@ -52,12 +54,35 @@ char *catch_expand(char *line, t_env *env, int to_expand)
     start = 0;
     res = NULL;
     char *exp = NULL;
-
+    bool open = false;
+    char **str;
+    str = ft_allocator(10 * sizeof(char *), "expand");
+    str[0] = NULL;
+    str[1] = NULL;
+    str[2] = NULL;
+    str[3] = NULL;
+    str[4] = NULL;
+    str[5] = NULL;
+    str[6] = NULL;
+    str[7] = NULL;
+    str[8] = NULL;
+    str[9] = NULL;
+    if (!str)
+    {
+        perror("malloc");
+        return (NULL);
+    }
+    int exp_cmpt = 0 ; 
     i = 0;
     if (line &&  ft_strchr(line, '$'))
     {
         while(line[i])
         {
+            if (line[i] == '"' && !open) {
+                open = true;
+            } else if (line[i] == '"' && open) {
+                open = false;
+            }
             if (line[i] && to_expand  && line[i] == '$'  &&  line[i + 1] && (ft_isalnum(line[i + 1]) || line[i  + 1] == '_' ))
             {
                 if (line[i + 1] && ft_isdigit(line[i + 1]))
@@ -71,9 +96,33 @@ char *catch_expand(char *line, t_env *env, int to_expand)
                     i++;
                 exp =  ft_substr(line, start , i - start);
                 exp =  get_env(&env, exp + 1);
-                printf("exp ==> %s\n", exp);
-                if (exp)
-                    res = ft_strjoin(res, exp);
+                // printf("exp ==> %s\n", exp);
+                int j = 0;
+                bool space = false;
+                while(exp && exp[j])
+                {
+                    if (is_whitespaces(exp[j]))
+                        space = true;
+                    j++;
+                }
+                if (space && !open)
+                {
+                    char **spilted = ft_split(exp, ' ');
+                    int x = 0;
+                    while (spilted[x])
+                    {
+                        // printf(CYAN"%s\n"NC, spilted[x]);
+                        str[exp_cmpt] = spilted[x];
+                        exp_cmpt++;
+                        x++;
+                    }
+                }
+                else if (exp)
+                {
+                    // printf(CYAN"%s\n"NC, exp);
+                    str[exp_cmpt] = exp;
+                    // exp_cmpt++;
+                }
                 continue;
             }
             else if (line[i] &&  line[i + 1] && ft_isdigit(line[i + 1]))
@@ -89,7 +138,7 @@ char *catch_expand(char *line, t_env *env, int to_expand)
             else if (line[i] && line[i] == '$' && !ft_isalnum(line[i + 1]) )
             {
                 ft_strcpy(buffer, line[i]);
-                res = ft_strjoin(res, buffer);
+                str[exp_cmpt] = ft_strjoin( str[exp_cmpt], buffer);
                 i++;
                 continue;
             }
@@ -99,71 +148,95 @@ char *catch_expand(char *line, t_env *env, int to_expand)
                 continue;
             }
             ft_strcpy(buffer, line[i]);
-            res = ft_strjoin(res, buffer);
+            str[exp_cmpt] = ft_strjoin( str[exp_cmpt], buffer);
             if (line[i] == '\0')
                 break;
             i++;
         }
     }
-    return (res);
+    str[++exp_cmpt] = NULL;
+    return (str);
+}
+
+void	add_to_back_expand(t_tokenizer **token, t_tokenizer *new)
+{
+	t_tokenizer	*temp;
+
+	if ((*token)->value == NULL && (*token)->type == ERROR)
+	{
+		*token = new;
+		return ;
+	}
+	temp = *token;
+	while (temp->next != NULL)
+		temp = temp->next;
+	temp->next = new;
+	new->prev = temp;
 }
 
 
-void 		expand_lexer(t_env *env, t_tokenizer **lexer)
+t_tokenizer 		*expand_lexer(t_env *env, t_tokenizer **lexer)
 {
-    char *res;
+    char **res;
     int to_expand = 0;
-    res = NULL;
+    // res = NULL;
     t_tokenizer *temp = *lexer;
+    t_tokenizer *head = new_token(NULL, 0);
     while (temp)
     {
+        int i = 0;
+        // printf(GREEN"*********%s************\n"NC, temp->value);
         if (temp->prev &&  temp->prev->type == HERDOC)
-            return ;
+            return temp;
         to_expand = needs_expansion(temp->value);
-        printf("to_expand ==> %d\n", to_expand);
-        // printf("result ==> %s\n", res);
-        res = catch_expand(temp->value, env, to_expand);
-        printf("after catch ==>%s\n", res);
-        res = handle_quotes(res);
-        if (ft_strchr(temp->value, '$'))
+        printf(RED"%d\n"NC, to_expand);
+        res = catch_expand(temp->value, env, to_expand);        
+        if (to_expand)
         {
-            //TODO after export arg="ls -la"; then axpand $arg the result should be as followd ==> [ls][-la]
-            //TODO after export arg="ls -la"; then axpand "$arg" the result should be as followd ==> [ls -la]
-            // TODO $arg [ls][-la]
-            char **str  = ft_split(res, ' ');
-            if (ft_strlen_2d_array(str) > 1)
+            if (!res[i])
             {
-                int i = 0;
-                while (str && str[i])
-                {
-                    t_tokenizer *new = new_token(str[i], WORD);
-                   add_to_back(&temp, new);
-                   if (i == 0)
-                        *lexer = new;
-                    i++;
-                }
+                t_tokenizer *new = new_token(NULL, WORD);
+                add_to_back_expand(&head, new);
+            }
+            while(res[i])
+            {
+                t_tokenizer *new = new_token(handle_quotes(res[i]), WORD);
+                add_to_back_expand(&head, new);
+                i++;
+            }
+        }
+        else
+        {
+            if (res[0])
+            {
+                t_tokenizer *new = new_token(handle_quotes(res[0]), temp->type);
+                add_to_back_expand(&head, new);
             }
             else 
-                temp->value = res;
+            { 
+                t_tokenizer *new = new_token(handle_quotes(temp->value), temp->type);
+                add_to_back_expand(&head, new);
+            }
         }
         temp = temp->next;
     }
+    return (head);
 }
 
-char *expand(t_env *env, char *line)
-{
-    //TODO you dommy need to expand the line if it has $ in it
-    int to_expand = 0;
-    char *res;
-    res = NULL;
+// char *expand(t_env *env, char *line)
+// {
+//     //TODO you dommy need to expand the line if it has $ in it
+//     int to_expand = 0;
+//     char *res;
+//     res = NULL;
     
-    to_expand = needs_expansion(line);
-    res = catch_expand(line, env, to_expand);
-    res = handle_quotes(res);
-    return (res);
-}
+//     to_expand = needs_expansion(line);
+//     res = catch_expand(line, env, to_expand);
+//     res = handle_quotes(res);
+//     return (res);
+// }
 
-
+/* ''''''$HOME''''''  | "''"''$HOME''"''" | ''''$HOME'"' | $"''"'''''$HOME'''''"''" |  $USER"v" | $+HOME  | $HOME$HOME |  $HOME$HOM  */
 //TODO echo ''''''$HOME'''''' ==> /nfs/homes/ahanaf
 
 

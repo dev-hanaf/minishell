@@ -52,9 +52,8 @@ void	add_to_back(t_tokenizer **token, t_tokenizer *new)
 	new->prev = temp;
 }
 
-// [ls -la]
-// t_tokenizeer *token = ls
-// t_tokenizeer *token = -la
+
+
 void	add_to_front(t_tokenizer **token, t_tokenizer *new)
 {
 	t_tokenizer	*tmp;
