@@ -106,19 +106,12 @@ void	is_command(t_tokenizer **lexer, char *line, size_t *i)
 	start = *i;
 	if (line[*i] != '>' && line[*i] != '<' && line[*i] != '|' && line[*i] != 32 && (line[*i] < 9 || line[*i] > 13) && line[*i] != 10 && line[*i] != '\0')
 	{
-		// if (line[*i] == '\'')
-		// 	is_single_quote(line, i);
-		// else if (line[*i] == '\"')
-		// 	is_double_quotes(line ,i);
 		while (line[*i])
 			{
-				// if (line[*i] == '\"')
-				// 	is_double_quotes(line, i);
-				// 	// break;
+				if (line[*i] == '\"')
+					is_double_quotes(line, i);
 				 if(line[*i] == '\'')
 					is_single_quote(line, i);
-					// break;
-				printf(GREEN"line[%zu] %c\n"NC, *i, line[*i]);
 				if (line[*i] == '\0' || line[*i] == ' ' || line[*i] == '>' || line[*i] == '<' || line[*i] == '|')
 					break;
 				(*i)++;

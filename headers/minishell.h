@@ -120,9 +120,30 @@ void    				_env(t_env *env);
 void 					_echo(char **argumentes);
 
 /*----------------------------- Expand --------------------------*/
+typedef struct s_expand
+{
+	char	*line;
+	int 	to_expand;
+	int		i;
+	int		j;
+	int		y;
+	char	**str;
+	int		exp_cmpt;
+	char	*exp;
+	char	**spilted;
+	int 	start;
+	bool	space;
+	bool 	open;
+	char	buffer[2];
+}		t_expand;
+
 t_tokenizer 			*expand_lexer(t_env *env, t_tokenizer **lexer);
-char 					*expand(t_env *env,char *line);
+char 					**expand(t_env *env,char *line);
 char					*handle_quotes(char *line);
+void					add_to_back_expand(t_tokenizer **token, t_tokenizer *new);
+bool					 is_opend(char c , bool open);
+int						needs_expansion(const char *line);
+
 
 /*----------------------------- Initilize Envirement --------------------------*/
 t_env					*new_env(char *key, char *value);
