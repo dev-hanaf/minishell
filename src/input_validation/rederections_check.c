@@ -1,27 +1,24 @@
 #include "minishell.h"
 
-
-int is_next_a_word(t_tokenizer *lexer)
+bool is_next_a_word(t_tokenizer *lexer)
 {
-    if (lexer->next)
+    if (lexer->next != NULL)
     {
         if (lexer->next->type != WORD)
         {
-            printf("syntax error\n");
-            return (-1);
+            printf("syntax error:next it's not a word\n");
+            return (true);
         }
     }
     else
     {
-        printf("syntax error\n");
-        return (-1);
+        printf("syntax error:near unexpected token `newline'\n");
+        return (true);
     }
-    return (0);
+    return (false);
 }
 
-
-
-int	rederections_check(t_tokenizer *lexer)
+/* int	rederections_check(t_tokenizer *lexer)
 {
 	if (ft_strncmp(lexer->value, ">", 1) == 0 && ft_strlen(lexer->value) == 1)
 	{
@@ -43,4 +40,25 @@ int	rederections_check(t_tokenizer *lexer)
 
 	}
 	return (0);
+} */
+
+bool	rederections_check(t_tokenizer *lexer)
+{
+	if (lexer->type == REDIR_IN)
+	{
+        return (is_next_a_word(lexer));
+	}
+	else if (lexer->type == REDIR_OUT)
+	{
+        return (is_next_a_word(lexer));
+	}
+	else if (lexer->type == APPEND)
+	{
+        return (is_next_a_word(lexer));
+	}
+	else if (lexer->type == HERDOC)
+	{
+        return (is_next_a_word(lexer));
+	}
+	return (false);
 }

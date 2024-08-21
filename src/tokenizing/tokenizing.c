@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 19:43:49 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/22 06:17:48 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/13 13:23:18 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,35 @@ void	is_redirection(t_tokenizer **lexer, char *line, size_t *i)
 	}
 }
 
+void is_single_quote(char *line, size_t *i)
+{
+	(*i)++;
+	// printf(RED"line[%zu] %c\n"NC, *i, line[*i]);
+	while (line[*i] != '\0' && line[*i] != '\'')
+	{
+		// while (line[*i] != '\0' && line[*i] != '\'')
+			(*i)++;
+	}
+	if (line[*i] == '\'')
+		(*i) += 1;
+	if (line[*i] == '\'')
+		is_single_quote(line, i);
+}
+
+void is_double_quotes(char *line, size_t *i)
+{
+	(*i)++;
+	while (line[*i] != '\0' && line[*i] != '\"')
+	{
+		// while (line[*i] != '\0' && line[*i] != '\"')
+			(*i)++;
+	}
+	if (line[*i] == '\"')
+			(*i) += 1;
+	if (line[*i] == '\"')
+		is_double_quotes(line, i);
+}
+
 void	is_command(t_tokenizer **lexer, char *line, size_t *i)
 {
 	t_tokenizer	*token;
@@ -77,34 +106,16 @@ void	is_command(t_tokenizer **lexer, char *line, size_t *i)
 	start = *i;
 	if (line[*i] != '>' && line[*i] != '<' && line[*i] != '|' && line[*i] != 32 && (line[*i] < 9 || line[*i] > 13) && line[*i] != 10 && line[*i] != '\0')
 	{
-		if (line[*i] == '\'')
-		{
-			while (line[*i] != '\0')
+		while (line[*i])
 			{
-				(*i)++;
-				if (line[*i] == '\'')
-				{
-					(*i)++;
-					break;
-				}
-			}
-		}
-		else if (line[*i] == '\"')
-		{
-			while (line[*i] != '\0')
-			{
-				(*i)++;
 				if (line[*i] == '\"')
-				{
-					(*i)++;
+					is_double_quotes(line, i);
+				 if(line[*i] == '\'')
+					is_single_quote(line, i);
+				if (line[*i] == '\0' || line[*i] == ' ' || line[*i] == '>' || line[*i] == '<' || line[*i] == '|')
 					break;
-				}
-			}
-		}
-		else
-			while (line[*i] != '\0' && line[*i] != '>' && line[*i] != '<'
-			&& line[*i] != '|' && line[*i] != ' ')
 				(*i)++;
+			}
 		word = ft_allocator(sizeof(char) * (*i - start + 1), "word");
 		if (!word)
 		{
@@ -145,6 +156,5 @@ t_tokenizer	*tokenization(char *line)
 		skip_whitespaces(line, &i);
 		is_redirection(&lexer, line, &i);
 	}
-	// display_tokens(lexer);
 	return (lexer);
 }

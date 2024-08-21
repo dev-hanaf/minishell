@@ -78,7 +78,6 @@ void exec_cmd(t_list *args)
 }
 void exec_child(t_cmd *cmd,int in_fd,int out_fd)
 {
-
     if(in_fd != STDIN_FILENO)
         {
             dup2(in_fd,STDIN_FILENO);
