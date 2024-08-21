@@ -32,7 +32,6 @@
 The typedef is a keyword that is used to provide existing data types with a new name.The C typedef keyword is used to redefine the name of already existing data types.
 */
 
-
 enum					e_type
 {
 	ERROR,
@@ -143,7 +142,6 @@ char					*handle_quotes(char *line);
 void					add_to_back_expand(t_tokenizer **token, t_tokenizer *new);
 bool					 is_opend(char c , bool open);
 int						needs_expansion(const char *line);
-
 
 /*----------------------------- Initilize Envirement --------------------------*/
 t_env					*new_env(char *key, char *value);

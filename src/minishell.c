@@ -86,12 +86,12 @@ void loop(t_env *env)
 		t_tokenizer *lexer = tokenization(line);
 		display_tokens(lexer);
 		input_validation(lexer);
-		t_tokenizer *new =  expand_lexer(env, &lexer);
+		t_tokenizer *new_tokenizer =  expand_lexer(env, &lexer);
 		printf(YELLOW"after epansion\n"NC);
-		display_tokens(new);
+		display_tokens(new_tokenizer);
 		// puts("********************\n********************");
 		// printf("%s\n", expand(env," $HOME"));
-		builtin_commands(env, new);
+		builtin_commands(env, new_tokenizer);
 		add_history(line);
 		free(line);
 	}

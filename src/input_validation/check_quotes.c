@@ -35,7 +35,6 @@ bool    check_quotes(t_tokenizer *lexer)
                 flag = false;
                 lock = true;            
             }
-             
             else
                 flag = true;
         }        
