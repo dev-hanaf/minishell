@@ -204,7 +204,7 @@ t_tokenizer	*expand_lexer(t_env *env, t_tokenizer **lexer)
 	return (head);
 }
 
-char	**expand(t_env *env, char *line)
+char	**expand(t_env *env, char *line, int enable)
 {
 	int		to_expand;
 	char	**res;
@@ -215,6 +215,8 @@ char	**expand(t_env *env, char *line)
 	res = NULL;
 	i = 0;
 	to_expand = needs_expansion(line);
+	if (!enable)
+		to_expand = 0;
 	res = catch_expand(line, env, to_expand);
 	while (res[i])
 	{

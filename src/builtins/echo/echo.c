@@ -16,11 +16,11 @@ void _echo(char **argumentes) // echo hi heloo NULL
 {
     int i;
 
-    i = 1;//TODO why 1, ask lmokhtar
+    i = 1;
     while(argumentes && argumentes[i])
     {
         printf("%s", argumentes[i]);
-        if (argumentes[i + 1] != NULL)
+        if (argumentes[i + 1] && argumentes[i + 1] != NULL)
             printf(" ");
         i++;
     }

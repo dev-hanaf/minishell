@@ -30,23 +30,45 @@ t_tokenizer *get_token(t_tokenizer *lexer, char *word)
 	}
 	return (NULL);
 }
-// void builtin_commands(t_env **env, char *line)
-// {
-// 	if (!env || !line || !*env) 
-// 		return;
-// 	t_tokenizer *lexer = tokenization(line);
-// 	t_tokenizer *token;
-// 	token = get_token(lexer, "cd");
-// 	if (token)
-// 		_cd(token->value,env);
-// 	// _pwd();
-// 	token = get_token(lexer, "unset");
-// 	if (token/*  && ft_strncmp(token->value, "unset", 5) == 0 && ft_strlen(token->value) == 5 */)
-// 	{
-// 		_unset(env, "LANG");
-// 	}
+void builtin_commands(t_env *env, t_tokenizer *lexer)
+{
+	size_t len;
+	t_tokenizer *temp;
+	int counter = 0;
+	int i = 0;
+	char **res;
+	if (!env || !lexer)
+		return;
+	while (lexer)
+	{
+		len = ft_strlen(lexer->value);
+		if (!ft_strncmp(lexer->value, "cd", 2) && len == 2)
+			_cd(lexer->next->value, &env);
+		else if (!ft_strncmp(lexer->value, "echo", 4) && len == 4)
+		{
+			temp = lexer;
+			while (temp && temp->type == WORD )
+			{
+				counter++;
+				temp = temp->next;
+			}
+			res = ft_allocator((counter + 1)  * sizeof(char *), "echo");
+			temp = lexer;
+			i = 0;
+			while (temp && temp->type == WORD )
+			{
+				res[i] = ft_strdup(temp->value);
+				// printf("%s\n", res[i]);
+				i++;
+				temp = temp->next;
+			}
+			res[i] = NULL;
 
-// }
+			_echo(res);
+		}
+		lexer = lexer->next;
+	}	
+}
 
 void loop(t_env *env)
 {
@@ -69,7 +91,7 @@ void loop(t_env *env)
 		display_tokens(new);
 		// puts("********************\n********************");
 		// printf("%s\n", expand(env," $HOME"));
-		
+		builtin_commands(env, new);
 		add_history(line);
 		free(line);
 	}

@@ -138,7 +138,7 @@ typedef struct s_expand
 }		t_expand;
 
 t_tokenizer 			*expand_lexer(t_env *env, t_tokenizer **lexer);
-char 					**expand(t_env *env,char *line);
+char 					**expand(t_env *env,char *line, int enable);
 char					*handle_quotes(char *line);
 void					add_to_back_expand(t_tokenizer **token, t_tokenizer *new);
 bool					 is_opend(char c , bool open);
