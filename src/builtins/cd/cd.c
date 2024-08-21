@@ -6,13 +6,19 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 18:23:55 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/22 05:23:02 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/14 00:52:12 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /* https://linuxize.com/post/linux-cd-command/ */
+/* 
+cd is not a command, it's built into your shell. This is necessary because your current working directory is controlled by the PWD environment variable named after the pwd or "print working directory" command.
+The environment variables of a parent process cannot be changed by a child process. So if your shell ran /bin/cd which changed PWD it would only affect /bin/cd and anything it ran. It would not change the shell's PWD.
+Some systems, like OS X and CentOS, map the cd man page to builtin which lists all the shell built ins and lets you know you should look at your shell's man page.
+ */
+
 
 int	_cd(char *path, t_env **env)
 {

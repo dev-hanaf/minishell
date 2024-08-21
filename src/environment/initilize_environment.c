@@ -1,34 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   initilize_environment.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/18 09:02:25 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/12 01:20:44 by ahanaf           ###   ########.fr       */
+/*   Created: 2024/05/21 02:10:51 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/08/12 16:57:37 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-char	*ft_strdup(const char *s)
+t_env	*init_environment(char **env)
 {
-	char	*str;
+	t_env	*init_env;
 	size_t	i;
-	size_t	s_len;
-	if (!s)
-		return (NULL);
-	s_len = ft_strlen(s);
-	str = ft_allocator(s_len + 1, "dup");
-	if (!str)
-		return (NULL);
+	char	**split;
+	t_env	*new;
+
+	init_env = ft_allocator(sizeof(t_env), "t_env");
+	if (!init_env)
+		printf("error\n"); //TODO add the error handling function
+	init_env->value = NULL;
 	i = 0;
-	while (s[i])
+	while (env[i])
 	{
-		str[i] = s[i];
+		split = ft_split(env[i], '=');
+		new = new_env(split[0], split[1]);
+		add_to_back_env(&init_env, new);
 		i++;
 	}
-	str[i] = 0;
-	return (str);
+	return (init_env);
 }

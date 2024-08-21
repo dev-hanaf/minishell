@@ -1,35 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   initilize_envirement.c                             :+:      :+:    :+:   */
+/*   get_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/21 02:10:51 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/21 02:34:21 by ahanaf           ###   ########.fr       */
+/*   Created: 2024/05/21 02:41:53 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/08/07 04:38:18 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_env	*init_envirement(char **env)
+char	*get_env(t_env **env, char *key)
 {
-	t_env	*init_env;
-	size_t	i;
-	char	**split;
-	t_env	*new;
+	t_env	*temp;
 
-	init_env = ft_allocator(sizeof(t_env), "t_env");
-	if (!init_env)
-		printf("error\n"); //TODO add the error handling function
-	init_env->value = NULL;
-	i = 0;
-	while (env[i])
+	if (!env || !key)
+		return (NULL);
+	temp = *env;
+	while (temp)
 	{
-		split = ft_split(env[i], '=');
-		new = new_env(split[0], split[1]);
-		add_to_back_env(&init_env, new);
-		i++;
+		if (ft_strncmp(temp->key, key, ft_strlen(key)) == 0 && ft_strlen(temp->key) == ft_strlen(key))
+        {
+        	return (temp->value);
+        }
+        temp = temp->next;
 	}
-	return (init_env);
+	return (NULL);
 }
