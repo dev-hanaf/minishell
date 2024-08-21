@@ -14,7 +14,7 @@
 # define MINISHELL_H
 
 # include "colors.h"
-# include "header.h"
+//# include "header.h"
 # include "libft.h"
 # include <errno.h>
 # include <readline/history.h>
@@ -27,8 +27,12 @@
 # include <unistd.h>
 # include <stdbool.h>
 
+# ifndef __O_DIRECTORY
+#define __O_DIRECTORY     0x00100000
+# endif
+
 /* It is not required to use uppercase, but often considered as good practice.
-	Enum is short for "enumerations", which means "specifically listed".	
+	Enum is short for "enumerations", which means "specifically listed".
 The typedef is a keyword that is used to provide existing data types with a new name.The C typedef keyword is used to redefine the name of already existing data types.
 */
 
@@ -42,6 +46,7 @@ enum					e_type
 	REDIR_OUT,
 	APPEND
 };
+# define TRUE 1
 # define WRITE 1
 # define READ 0
 # define CHILD 0
@@ -67,24 +72,27 @@ typedef struct s_minishell
 {
 	char 				*prompt;
 	char				**env;
+	t_env               **env_ld;
 	char				*line;
 	int					status;
 }						t_minishell;
 
 extern t_minishell		g_minishell;
 
-// TODO replace the lists in t_cmd by this 
+// TODO replace the lists in t_cmd by this
 typedef struct s_rdr
 {
-    t_list *redir;
+    char *value;
     int type;
+    int fd;
     struct s_rdr *next;
 } t_rdr;
-typedef struct s_cmd 
+typedef struct s_cmd
 {
     t_list *args;
-    t_list *redir_in;
-    t_list *redir_out;
+    t_rdr *redir;
+    t_rdr *heredoc;
+    int hrdc_fd;
     struct s_cmd *next;
 } t_cmd;
 
@@ -153,7 +161,23 @@ t_env					*init_environment(char **env);
 char					*get_env(t_env **env, char *key);
 void    				change_env(t_env **env, char *key, char *value);
 void    				remove_env_element(t_env **env, char *variable);
-// void					display_envirment(t_env **env);
+void					display_envirment(t_env **env);
+/*-------------------------- cmd utils --------------------------------------- */
+t_cmd* new_cmd(void);
+int  cmd_nbr(t_cmd *head);
+void add_to_back_cmd(t_cmd **head, t_cmd *newCmd);
+t_cmd *get_last_cmd(t_cmd *head);
+int cmd_nbr(t_cmd *head);
+char **ld_to_arr(t_list *lst);
+/* pasing  */
+t_cmd *parse_cmds(t_tokenizer *tokens);
+void print_cmds(t_cmd *cmd_list);
+/*execution */
+void execute_cmds(t_cmd *cmd);
+void exec_job(t_cmd *cmd);
+char	*get_cmd_path(char *cmd, char **env);
+int	ft_strcmp(const char *s1, const char *s2);
 
 
+int     _export(t_env **env,t_cmd *cmd,int flag);
 #endif
