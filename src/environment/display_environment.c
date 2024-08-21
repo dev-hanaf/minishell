@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   display_envirment.c                                :+:      :+:    :+:   */
+/*   display_environment.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 05:55:40 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/22 05:58:28 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/12 16:57:23 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void display_envirment(t_env **env)
+void display_environment(t_env **env)
 {
     t_env *temp;
 
