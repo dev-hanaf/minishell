@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 09:51:34 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/19 09:52:04 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/21 16:06:10 by zmourid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,8 +157,9 @@ void check_heredoc(t_cmd *cmd)
 }
 int check_single_builtin(t_cmd *cmd)
 {
-    if(!ft_strcmp((char *)cmd->args->content,"export") && !cmd->next)
-        _export(g_minishell.env,cmd,0);
+	(void)cmd;
+    //if(!ft_strcmp((char *)cmd->args->content,"export") && !cmd->next)
+        //_export(g_minishell.env,cmd,0);
     return 0;
 }
 void execute_cmds(t_cmd *cmd)
