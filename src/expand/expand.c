@@ -39,7 +39,8 @@ void	should_expand(char *line, int to_expand, t_env *env)
 		while (var()->spilted[var()->y])
 		{
 			var()->str[var()->exp_cmpt] = ft_strjoin(var()->str[var()->exp_cmpt], var()->spilted[var()->y]);
-			var()->exp_cmpt++;
+			if (var()->spilted[var()->y + 1] != NULL)
+				var()->exp_cmpt++;
 			var()->y++;
 		}
 	}
@@ -51,6 +52,7 @@ void	should_expand(char *line, int to_expand, t_env *env)
 char	**catch_expand(char *line, t_env *env, int to_expand)
 {
 	ft_bzero(var(), sizeof(t_expand));
+	//TODO allocate str dynamicaly
 	var()->str = ft_allocator(ALLOC * sizeof(char *), "expand");
 	if (!var()->str)
 	{
@@ -98,7 +100,7 @@ char	**catch_expand(char *line, t_env *env, int to_expand)
 				var()->i++;
 				continue ;
 			}
-			else if (line[var()->i] == '\'')
+			else if (line[var()->i] == '\'' && var()->open == false)
 			{
 				ft_strcpy(var()->buffer, line[var()->i]);
 				var()->str[var()->exp_cmpt] = ft_strjoin(var()->str[var()->exp_cmpt], var()->buffer);
@@ -129,7 +131,6 @@ char	**catch_expand(char *line, t_env *env, int to_expand)
 	return (var()->str);
 }
 
-
 t_tokenizer	*expand_lexer(t_env *env, t_tokenizer **lexer)
 {
 	char		**res;
@@ -149,6 +150,18 @@ t_tokenizer	*expand_lexer(t_env *env, t_tokenizer **lexer)
 		{
 			new = new_token(temp->value, temp->type);
 			add_to_back_expand(&head, new);
+		}
+		else if (temp->type == ESPACE )
+		{
+			
+			if (temp->value)
+			{
+			// printf("'");
+			// printf("%s", temp->value);
+			// printf("'\n");
+				new = new_token(temp->value, temp->type);
+				add_to_back_expand(&head, new);
+			}
 		}
 		else
 		{

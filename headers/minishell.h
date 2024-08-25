@@ -44,7 +44,8 @@ enum					e_type
 	HERDOC,
 	REDIR_IN,
 	REDIR_OUT,
-	APPEND
+	APPEND,
+	ESPACE
 };
 # define TRUE 1
 # define WRITE 1
@@ -102,9 +103,11 @@ int						ft_strlen_2d_array(char **arr);
 void					free_string_array(char **arr);
 int 					is_whitespaces(int c);
 void 					ft_strcpy(char *dst, char c);
+t_tokenizer 			*remove_espace_type(t_tokenizer *lexer);
+
 
 /*----------------------------- Input Validation --------------------------*/
-void					input_validation(t_tokenizer *lexer);
+bool					input_validation(t_tokenizer *lexer);
 bool					rederections_check(t_tokenizer *lexer);
 bool 					pipes_check(t_tokenizer *lexer);
 bool 					forbidden_inputs(t_tokenizer *lexer);
@@ -125,6 +128,8 @@ int 					_pwd(void);
 int 					_unset(t_env **env, char *variable);
 void    				_env(t_env *env);
 void 					_echo(char **argumentes);
+void   					__exit(char *line);
+
 
 /*----------------------------- Expand --------------------------*/
 typedef struct s_expand

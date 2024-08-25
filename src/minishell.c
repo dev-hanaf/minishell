@@ -13,6 +13,7 @@
 #include "minishell.h"
 
 t_minishell	g_minishell;
+// https://42-cursus.gitbook.io/guide/rank-03/minishell/functions
 
 t_tokenizer *get_token(t_tokenizer *lexer, char *word)
 {
@@ -30,10 +31,11 @@ t_tokenizer *get_token(t_tokenizer *lexer, char *word)
 	}
 	return (NULL);
 }
-void builtin_commands(t_env *env, t_tokenizer *lexer)
+void builtin_commands(t_env **env, t_tokenizer *lexer)
 {
 	size_t len;
 	t_tokenizer *temp;
+	t_tokenizer *save;
 	int counter = 0;
 	int i = 0;
 	char **res;
@@ -43,19 +45,23 @@ void builtin_commands(t_env *env, t_tokenizer *lexer)
 	{
 		len = ft_strlen(lexer->value);
 		if (!ft_strncmp(lexer->value, "cd", 2) && len == 2)
-			_cd(lexer->next->value, &env);
+			_cd(lexer->next->value, env);
 		else if (!ft_strncmp(lexer->value, "echo", 4) && len == 4)
 		{
-			temp = lexer;
-			while (temp && temp->type == WORD )
+			temp = lexer->next;
+			counter++;
+			while(temp && temp->type == ESPACE)
+				temp = temp->next;
+			save = temp;
+			while (temp && (temp->type == WORD || temp->type == ESPACE) )
 			{
 				counter++;
 				temp = temp->next;
 			}
 			res = ft_allocator((counter + 1)  * sizeof(char *), "echo");
-			temp = lexer;
+			temp = save;
 			i = 0;
-			while (temp && temp->type == WORD )
+			while (temp && (temp->type == WORD || temp->type == ESPACE))
 			{
 				res[i] = ft_strdup(temp->value);
 				// printf("%s\n", res[i]);
@@ -65,8 +71,18 @@ void builtin_commands(t_env *env, t_tokenizer *lexer)
 			res[i] = NULL;
 
 			_echo(res);
+			lexer = temp;
 		}
-		lexer = lexer->next;
+		else if(!ft_strncmp(lexer->value, "env", 3) && len == 3)
+			_env(*env);
+		else if (!ft_strncmp(lexer->value, "exit", 3) && len == 4)
+			__exit(lexer->value);
+		else if (!ft_strncmp(lexer->value, "unset", 5) && len == 5 && lexer->next)
+		{
+			_unset(env, lexer->next->value);
+		}
+		if (lexer)
+			lexer = lexer->next;
 	}	
 }
 
@@ -82,17 +98,27 @@ void loop(t_env *env)
 		if(!prompt)
 			printf("error\n"); //TODO add the error handling function
 		line = readline(prompt);
-		if (line == NULL || line[0] == '\0')
+		if (!line)
+		{
+			printf("exit\n");
+			exit(0);
+			free_allocator();
+		}
+		else if (line && line[0] == '\0')
 			continue;
 		// builtin_commands(&env, line);
 		t_tokenizer *lexer = tokenization(line);
-		t_cmd *cmd_list = parse_cmds(lexer);
-		//_export(&env,cmd_list);
-		//print_cmds(cmd_list);
-		execute_cmds(cmd_list);
 		display_tokens(lexer);
-		//input_validation(lexer);
-		add_history(line);
+		if (!input_validation(lexer))
+		{	
+			t_tokenizer *new_tokenizer =  expand_lexer(env, &lexer);
+			printf(YELLOW"after epansion\n"NC);
+			display_tokens(new_tokenizer);
+			// puts("********************\n********************");
+			// printf("%s\n", expand(env," $HOME"));
+			builtin_commands(&env, new_tokenizer);
+			add_history(line);
+		}
 		free(line);
 	}
 }
