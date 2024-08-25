@@ -12,24 +12,6 @@
 
 #include "minishell.h"
 
-t_tokenizer *remove_espace_type(t_tokenizer *lexer)
-{
-	t_tokenizer *head;
-	t_tokenizer *new;
-
-	head = new_token(NULL, 0);
-	while (lexer)
-	{
-		if (lexer->type != ESPACE)
-		{
-			new = new_token(lexer->value, lexer->type);
-			add_to_back_expand(&head, new);
-		}
-		lexer = lexer->next;
-	}
-	return (head);
-}
-
 bool	input_validation(t_tokenizer *lexer)
 {	
 	if (!lexer)

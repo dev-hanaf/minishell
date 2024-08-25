@@ -32,17 +32,17 @@ char	*ft_strrtrim(char const *s1, char const *set)
 	return (res);
 }
 
-void _echo(char **argumentes) // hi heloo NULL
+void _echo(char **argumentes)
 {
     int i;
     bool lock;
     bool flag;
-    bool trim_l;
+    bool ltrim;
     int j;
     char *res = NULL;
     flag = false;
     lock = false;
-    trim_l = true;
+    ltrim = true;
     i = 0;
     while(argumentes && argumentes[i])
     {
@@ -56,7 +56,7 @@ void _echo(char **argumentes) // hi heloo NULL
             else
             {
                 res = ft_strjoin(res, argumentes[i]);
-                trim_l = false;
+                ltrim = false;
             }
         }
         else
@@ -68,7 +68,7 @@ void _echo(char **argumentes) // hi heloo NULL
         //     printf(" ");
         i++;
     }
-    if (trim_l)
+    if (ltrim)
         res = ft_strtrim(res, " ");
     else
         res = ft_strrtrim(res, " ");

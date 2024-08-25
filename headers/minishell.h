@@ -95,6 +95,8 @@ int						ft_strlen_2d_array(char **arr);
 void					free_string_array(char **arr);
 int 					is_whitespaces(int c);
 void 					ft_strcpy(char *dst, char c);
+t_tokenizer 			*remove_espace_type(t_tokenizer *lexer);
+
 
 /*----------------------------- Input Validation --------------------------*/
 bool					input_validation(t_tokenizer *lexer);
