@@ -19,6 +19,8 @@ The environment variables of a parent process cannot be changed by a child proce
 Some systems, like OS X and CentOS, map the cd man page to builtin which lists all the shell built ins and lets you know you should look at your shell's man page.
  */
 
+/*perror ==> file not found && permission denied */
+/* oldpwd is not set && home is not set  */
 
 int	_cd(char *path, t_env **env)
 {

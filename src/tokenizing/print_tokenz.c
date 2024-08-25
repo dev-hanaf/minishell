@@ -14,7 +14,7 @@
 
 const char	*get_token_type_name(int type)
 {
-	const char	*token_type_names[7];
+	const char	*token_type_names[8];
 
 	token_type_names[0] = "ERROR";
 	token_type_names[1] = "WORD";
@@ -23,7 +23,8 @@ const char	*get_token_type_name(int type)
 	token_type_names[4] = "REDIR_IN";
 	token_type_names[5] = "REDIR_OUT";
 	token_type_names[6] = "APPEND";
-	if (type >= 0 && type < 7)
+	token_type_names[7] = "ESPACE";
+	if (type >= 0 && type < 8)
 		return (token_type_names[type]);
 	return ("UNKNOWN");
 }
