@@ -106,9 +106,7 @@ void loop(t_env *env)
 		}
 		else if (line && line[0] == '\0')
 			continue;
-		// builtin_commands(&env, line);
 		t_tokenizer *lexer = tokenization(line);
-		display_tokens(lexer);
 		if (!input_validation(lexer))
 		{	
 			t_tokenizer *new_tokenizer =  expand_lexer(env, &lexer);
