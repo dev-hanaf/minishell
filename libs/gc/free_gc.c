@@ -24,3 +24,6 @@ void	recursive_free(t_data *list)
 		return ;
 	recursive_free(tmp);
 }
+// void free_context(t_data **list) { //TODO do it mate 
+
+// }

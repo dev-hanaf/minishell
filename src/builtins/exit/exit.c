@@ -12,11 +12,9 @@
 
 #include "minishell.h"
 
-void    __exit(char *line)
+void    __exit(int num)
 {
-    if (line)
-    {
         printf("exit\n");
-        exit(0);
-    }
+        free_allocator();
+        exit(num);
 }

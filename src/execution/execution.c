@@ -80,8 +80,34 @@ void handle_rdr(t_rdr *redir)
     }
 }
 
+int check_builtin(t_list *args)
+{
+    if(!ft_strcmp((char *)args->content,"export"))
+    {
+        _export(g_minishell.env_ld,args,0);
+        return 1;
+    }
+    else if(!ft_strcmp((char *)args->content,"echo"))
+    {
+        _echo(ld_to_arr(args->next));
+        return 1;
+    }
+    else if(!ft_strcmp((char *)args->content,"pwd"))
+    {
+        _pwd();
+        return 1;
+    }
+    else if(!ft_strcmp((char *)args->content,"exit"))
+    {
+        __exit(0);
+        return 1;
+    }
+    return 0;
+}
 void exec_cmd(t_list *args)
 {
+    if(check_builtin(args))
+        __exit(1014);
     char **nargs = ld_to_arr(args);
     char **env = g_minishell.env;
     char *path = get_cmd_path(nargs[0],env);
@@ -169,17 +195,38 @@ int check_single_builtin(t_cmd *cmd)
 {
     int std_in = dup(STDIN_FILENO);
     int std_out = dup(STDOUT_FILENO);
-    if(!ft_strcmp((char *)cmd->args->content,"export"))
-    {
-        _export(g_minishell.env_ld,cmd,0);
-        return 1;
-    }
-    else if(!ft_strcmp((char *)cmd->args->content,"echo"))
+    if(!ft_strcmp((char *)cmd->args->content,"echo"))
     {
         handle_rdr(cmd->redir);
         _echo(ld_to_arr(cmd->args->next));
         dup2(std_in,STDIN_FILENO);
         dup2(std_out,STDOUT_FILENO);
+        return 1;
+    }
+    else if(!ft_strcmp((char *)cmd->args->content,"cd"))
+    {
+        handle_rdr(cmd->redir);
+        if(cmd->args->next)
+            _cd(cmd->args->next->content,g_minishell.env_ld);
+        else
+            _cd(NULL,g_minishell.env_ld);
+        dup2(std_in,STDIN_FILENO);
+        dup2(std_out,STDOUT_FILENO);
+        return 1;
+    }
+    else if(!ft_strcmp((char *)cmd->args->content,"pwd"))
+    {
+        handle_rdr(cmd->redir);
+        _pwd();
+        dup2(std_in,STDIN_FILENO);
+        dup2(std_out,STDOUT_FILENO);
+        return 1;
+    }
+    else if(!ft_strcmp((char *)cmd->args->content,"exit"))
+    {
+        __exit(0);
+    dup2(std_in,STDIN_FILENO);
+    dup2(std_out,STDOUT_FILENO);
         return 1;
     }
     return 0;
@@ -188,7 +235,7 @@ void execute_cmds(t_cmd *cmd)
 {
     int i;
     i = 0;
-    pid_t *pids = (int *)malloc(sizeof(pid_t) * (cmd_nbr(cmd)));
+    pid_t *pids = (int *)ft_allocator(sizeof(pid_t) * (cmd_nbr(cmd)),"execution");
     int pipefd[2];
     pipefd[READ] = 0;
     int tmp;

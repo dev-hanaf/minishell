@@ -1,5 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
@@ -75,8 +73,6 @@ void builtin_commands(t_env **env, t_tokenizer *lexer)
 		}
 		else if(!ft_strncmp(lexer->value, "env", 3) && len == 3)
 			_env(*env);
-		else if (!ft_strncmp(lexer->value, "exit", 3) && len == 4)
-			__exit(lexer->value);
 		else if (!ft_strncmp(lexer->value, "unset", 5) && len == 5 && lexer->next)
 		{
 			_unset(env, lexer->next->value);
@@ -112,13 +108,13 @@ void loop(t_env *env)
 			t_tokenizer *new_tokenizer =  expand_lexer(env, &lexer);
 			t_cmd *cmd_list = parse_cmds((new_tokenizer));
 			execute_cmds(cmd_list);
-//			print_cmds(cmd_list);
+			//print_cmds(cmd_list);
 			//display_tokens(new_tokenizer);
 			// puts("********************\n********************");
 			// printf("%s\n", expand(env," $HOME"));
 			//builtin_commands(&env, new_tokenizer);
-			add_history(line);
 		}
+			add_history(line);
 		free(line);
 	}
 }

@@ -128,7 +128,7 @@ int 					_pwd(void);
 int 					_unset(t_env **env, char *variable);
 void    				_env(t_env *env);
 void 					_echo(char **argumentes);
-void   					__exit(char *line);
+void   					__exit(int num);
 
 
 /*----------------------------- Expand --------------------------*/
@@ -184,5 +184,5 @@ char	*get_cmd_path(char *cmd, char **env);
 int	ft_strcmp(const char *s1, const char *s2);
 
 
-int     _export(t_env **env,t_cmd *cmd,int flag);
+int     _export(t_env **env,t_list *args,int flag);
 #endif

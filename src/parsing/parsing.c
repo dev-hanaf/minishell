@@ -7,7 +7,7 @@
 t_rdr *ft_redirnew(char *value,int type)
 {
    t_rdr *new;
-  new = malloc((sizeof(t_rdr)));
+  new = ft_allocator((sizeof(t_rdr)),"parsing");
   if(!new)
       return NULL;
   new->value = ft_strdup(value);
@@ -18,7 +18,7 @@ t_rdr *ft_redirnew(char *value,int type)
 }
 char *ft_strjoin_char(char *s1,char c)
 {
-    char *new = malloc((sizeof(char)* ft_strlen(s1) + 2));
+    char *new = ft_allocator((sizeof(char)* ft_strlen(s1) + 2),"parsing");
     if(!new)
         return ft_strdup("");
     int i = 0;
@@ -27,7 +27,6 @@ char *ft_strjoin_char(char *s1,char c)
         new[i] = s1[i];
         i++;
     }
-    //free(s1);
     new[i++] = c;
     new[i] = 0;
     return new;
@@ -179,6 +178,6 @@ t_cmd *parse_cmds(t_tokenizer *tokens)
         tokens = tokens->next;
     }
     //print_cmds(cmd);
-    //handle_heredoc(cmd);
+    handle_heredoc(cmd);
     return cmd;
 }
