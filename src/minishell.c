@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:53:01 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/18 07:24:10 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/25 09:20:50 by zmourid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,11 +110,13 @@ void loop(t_env *env)
 		if (!input_validation(lexer))
 		{	
 			t_tokenizer *new_tokenizer =  expand_lexer(env, &lexer);
-			printf(YELLOW"after epansion\n"NC);
-			display_tokens(new_tokenizer);
+			t_cmd *cmd_list = parse_cmds((new_tokenizer));
+			execute_cmds(cmd_list);
+//			print_cmds(cmd_list);
+			//display_tokens(new_tokenizer);
 			// puts("********************\n********************");
 			// printf("%s\n", expand(env," $HOME"));
-			builtin_commands(&env, new_tokenizer);
+			//builtin_commands(&env, new_tokenizer);
 			add_history(line);
 		}
 		free(line);
@@ -132,6 +134,7 @@ int	main(int ac, char **av, char **envp)
 		printf("error\n"); //TODO add the error handling function
 	g_minishell.env = envp;
 	env = init_environment(envp);
+	g_minishell.env_ld = &env;
 	loop(env);
 	free_allocator();
 	return (0);

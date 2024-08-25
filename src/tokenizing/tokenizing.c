@@ -13,29 +13,11 @@
 #include "minishell.h"
 
 /*perror() reads a the errno and convert it to human readable */
-void	skip_whitespaces(t_tokenizer **lexer, char *line, size_t *i)
+void	skip_whitespaces( char *line, size_t *i)
 {
-	bool	flag;
-
-	flag = false;
-	int start = *i;
-	char *res = NULL;
-	t_tokenizer *token;
-	// char buffer[2];
 	while (line[*i] == 32 || (line[*i] >= 9 && line[*i] <= 13))
 	{
-		flag = true;
 		(*i)++;
-	}
-	// ft_strcpy(buffer, '"');
-	// res = ft_strjoin(res, buffer);
-	if (flag)
-	{
-		res = ft_substr(line, start, *i - start);
-		// res = ft_strjoin(res, ft_substr(line, start, *i - start));
-		// res = ft_strjoin(res, buffer);
-		token = new_token(res, ESPACE);
-		add_to_back(lexer, token);
 	}
 }
 
@@ -171,11 +153,11 @@ t_tokenizer	*tokenization(char *line)
 	lexer->value = NULL;
 	while (line[i])
 	{
-		skip_whitespaces(&lexer ,line, &i);
+		skip_whitespaces(line, &i);
 		is_command(&lexer, line, &i);
-		skip_whitespaces(&lexer, line, &i);
+		skip_whitespaces( line, &i);
 		is_pipe(&lexer, line, &i);
-		skip_whitespaces(&lexer, line, &i);
+		skip_whitespaces(line, &i);
 		is_redirection(&lexer, line, &i);
 	}
 	return (lexer);
