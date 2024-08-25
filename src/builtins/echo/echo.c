@@ -12,17 +12,68 @@
 
 #include "minishell.h"
 
-void _echo(char **argumentes) // echo hi heloo NULL
+char	*ft_strrtrim(char const *s1, char const *set)
+{
+	int		len;
+	char	*res;
+
+	if (!s1 || !set)
+		return (0);
+	len = 0;
+	// while (*s1 && ft_strchr(set, *s1))
+	// 	s1++;
+	len = ft_strlen(s1);
+	while (len > 0 && ft_strchr(set, s1[len - 1]))
+		len--;
+	res = ft_allocator(len + 1, "strtrim");
+	if (!res)
+		return (0);
+	ft_strlcpy(res, s1, len + 1);
+	return (res);
+}
+
+void _echo(char **argumentes)
 {
     int i;
-
-    i = 1;
+    bool lock;
+    bool flag;
+    bool ltrim;
+    int j;
+    char *res = NULL;
+    flag = false;
+    lock = false;
+    ltrim = true;
+    i = 0;
     while(argumentes && argumentes[i])
     {
-        printf("%s", argumentes[i]);
-        if (argumentes[i + 1] && argumentes[i + 1] != NULL)
-            printf(" ");
+        if (!ft_strncmp(argumentes[i], "-n", 2) && !flag)
+        {
+            j = 1;        
+            while (argumentes[i][j] && argumentes[i][j] == 'n')
+                j++;
+            if (argumentes[i][j] == '\0')
+                lock = true;
+            else
+            {
+                res = ft_strjoin(res, argumentes[i]);
+                ltrim = false;
+            }
+        }
+        else
+        {
+            res = ft_strjoin(res, argumentes[i]);
+            flag = true;
+        }
+        // if (argumentes[i + 1] && argumentes[i + 1] != NULL)
+        //     printf(" ");
         i++;
     }
-    printf("\n");
+    if (ltrim)
+        res = ft_strtrim(res, " ");
+    else
+        res = ft_strrtrim(res, " ");
+    printf("%s", res);
+    if (!lock)
+        printf("\n");
 }
+

@@ -12,27 +12,27 @@
 
 #include "minishell.h"
 
-
-void	input_validation(t_tokenizer *lexer)
+bool	input_validation(t_tokenizer *lexer)
 {	
-	t_tokenizer *temp;
 	if (!lexer)
-		return ;
-	temp = lexer;
-	while (temp)
+		return true;
+
+	lexer = remove_espace_type(lexer);
+	while (lexer)
 	{
-		if (check_quotes(temp))
+		if (check_quotes(lexer))
 		{
 			printf("syntax error unclosed quotes\n");
-			exit(241) ;
+			// exit(241) ;
+			return true;
 		}
-		else if (forbidden_inputs(temp))
-			exit(241);
-		else if (rederections_check(temp))
-			exit(241) ;//TODO is i should return a status and write syntax error on stderr
-		else if(pipes_check(temp))
-			exit(241) ;
-		temp = temp->next;
+		else if (forbidden_inputs(lexer))
+			return true;
+		else if (rederections_check(lexer))
+			return true;
+		else if(pipes_check(lexer))
+			return true ;
+		lexer = lexer->next;
 	}
-	return ;
+	return false;
 }

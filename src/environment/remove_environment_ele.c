@@ -36,10 +36,12 @@ void    remove_env_element(t_env **env, char *variable)
             }
             else if (temp->next && !temp->prev)
             {
-                last_var = temp->next;
-                temp->next = NULL;
-                last_var->prev = NULL;
-                *env = temp;
+                printf(" i am here\n");
+                // last_var = temp->next;
+                // temp->next = NULL;
+                // last_var->prev = NULL;
+                // temp->next->prev = NULL;
+                *env = temp->next;
             }
              else if (!temp->next && temp->prev)
             {

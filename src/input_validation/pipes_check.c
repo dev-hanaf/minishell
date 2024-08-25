@@ -14,7 +14,7 @@ bool pipes_check(t_tokenizer *lexer)
 			printf("syntax error near unexpected token `||'\n");
 			return (true);
 		}
-		else if (lexer->prev->type != WORD)
+		else if (lexer->prev->type != WORD )
 		{
 			printf("syntax error: prev it's not a word\n");
 			return (true);

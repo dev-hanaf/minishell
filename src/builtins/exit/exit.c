@@ -10,13 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "minishell.h"
+#include "minishell.h"
 
-// void    _exit(char *line)
-// {
-//     if (line)
-//     {
-//         printf("exit\n");
-//         exit(0);
-//     }
-// }
+void    __exit(char *line)
+{
+    if (line)
+    {
+        printf("exit\n");
+        exit(0);
+    }
+}
