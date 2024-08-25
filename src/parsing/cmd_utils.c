@@ -5,8 +5,9 @@ t_cmd* new_cmd() {
     if (!newCmd) return NULL;
     newCmd->args = NULL; // Copy the name
     newCmd->next = NULL;
-    newCmd->redir_in = NULL;
-    newCmd->redir_out = NULL;
+    newCmd->redir = NULL;
+    newCmd->heredoc = NULL;
+    newCmd->hrdc_fd = -1;
     return newCmd;
 }
 

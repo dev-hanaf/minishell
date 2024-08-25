@@ -18,6 +18,10 @@ char	*ft_strjoin(char *s1, char *s2)
 	size_t	i;
 	size_t	j;
 
+	if(!s1 && s2)
+	   return ft_strdup(s2);
+	if(!s2 && s1)
+	   return ft_strdup(s2);
 	if (s2 == NULL)
 	{
 		s2 = ft_allocator(sizeof(char), "s2");
