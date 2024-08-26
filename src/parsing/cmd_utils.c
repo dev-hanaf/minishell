@@ -43,7 +43,7 @@ int cmd_nbr(t_cmd *head)
     }
     return i;
 }
-//change this function place
+// TODO change this function place
 char **ld_to_arr(t_list *lst)
 {
 	if(!lst)
@@ -55,6 +55,29 @@ char **ld_to_arr(t_list *lst)
 		arr[i] = ft_strdup((char *)lst->content);
 		i++;
 		lst = lst->next;
+	}
+	arr[i] = NULL;
+	return arr;
+}
+
+char **env_to_arr(t_env *env)
+{
+    char *temp;
+    temp = NULL;
+	if(!env)
+		return NULL;
+	char **arr = ft_allocator(sizeof(char *) * (env_size(env) + 1),"parsing");
+	int i = 0;
+	while(env)
+	{
+        //dprintf(2,"env//%s=%s\n",env->key,env->value);
+        temp = ft_strjoin(ft_strdup(env->key),"=");
+        temp = ft_strjoin(temp,ft_strdup(env->value));
+        if(!temp)
+            temp = ft_strdup("");
+        arr[i] = temp;
+        env = env->next;
+		i++;
 	}
 	arr[i] = NULL;
 	return arr;

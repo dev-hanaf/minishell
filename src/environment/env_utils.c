@@ -40,7 +40,7 @@ void	add_to_back_env(t_env **env, t_env *new)
 {
 	t_env	*temp;
 
-	if ((*env)->value == NULL)
+	if ((*env) == NULL)
 	{
 		*env = new;
 		return ;
@@ -67,18 +67,17 @@ void	add_to_front_env(t_env **env, t_env *new)
 	*env = new;
 }
 
-int	stack_size_env(t_env **env)
+int	env_size(t_env *env)
 {
 	int		size;
 	t_env	*tmp;
 
-	if (!*env)
+	if (!env)
 		return (0);
-	tmp = *env;
 	size = 0;
-	while (tmp != NULL)
+	while (env != NULL)
 	{
-		tmp = tmp->next;
+		env = env->next;
 		size++;
 	}
 	return (size);

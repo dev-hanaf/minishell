@@ -116,7 +116,7 @@ void exec_cmd(t_list *args)
     if(check_builtin(args))
         __exit(1014);
     char **nargs = ld_to_arr(args);
-    char **env = g_minishell.env;
+    char **env = env_to_arr(*g_minishell.env_ld);
     char *path = get_cmd_path(nargs[0],env);
     execve(path,nargs,env);
 }
@@ -200,13 +200,17 @@ int	ft_strcmp(const char *s1, const char *s2)
 // }
 int is_built_in(char *command)
 {
-    if(!ft_strcmp((char *)command,"echo"))
+    if(!ft_strcmp(command,"echo"))
         return 1;
-    if(!ft_strcmp((char *)command,"cd"))
+    if(!ft_strcmp(command,"cd"))
         return 1;
-    if(!ft_strcmp((char *)command,"exit"))
+    if(!ft_strcmp(command,"exit"))
         return 1;
-    if(!ft_strcmp((char *)command,"pwd"))
+    if(!ft_strcmp(command,"pwd"))
+        return 1;
+    if(!ft_strcmp(command,"export"))
+        return 1;
+    if(!ft_strcmp(command,"env"))
         return 1;
     return 0;
 }
@@ -229,12 +233,16 @@ int check_single_builtin(t_cmd *cmd)
         }
         else if(!ft_strcmp((char *)cmd->args->content,"pwd"))
             _pwd();
+        else if(!ft_strcmp((char *)cmd->args->content,"env"))
+            _env(*g_minishell.env_ld);
         else if(!ft_strcmp((char *)cmd->args->content,"exit"))
         {
             close(std_in);
             close(std_out);
             __exit(0);
         }
+        else if(!ft_strcmp((char *)cmd->args->content,"export"))
+            _export(g_minishell.env_ld,cmd->args->next);
         dup2(std_in,STDIN_FILENO);
         dup2(std_out,STDOUT_FILENO);
         close(std_in);

@@ -75,7 +75,7 @@ void print_strs(char **strs)
 	int i=0;
 	while(*strs)
 	{
-		printf("%d=%s",i++,*strs);
+		printf("%d=%s\n",i++,*strs);
 		strs++;
 	}
 }

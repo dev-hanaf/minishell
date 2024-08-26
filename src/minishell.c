@@ -146,6 +146,7 @@ int	main(int ac, char **av, char **envp)
 	g_minishell.env = envp;
 	env = init_environment(envp);
 	g_minishell.env_ld = &env;
+    add_to_back_env(g_minishell.env_ld,new_env("Aloha",NULL));
 	loop(env);
 	free_allocator();
 	return (0);

@@ -14,7 +14,7 @@
 
 char	*ft_strjoin(char *s1, char *s2)
 {
-	char	*str;
+	char	*str;//TODO make a safer strjoin
 	size_t	i;
 	size_t	j;
 
