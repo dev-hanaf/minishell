@@ -175,7 +175,10 @@ t_cmd *parse_cmds(t_tokenizer *tokens)
             tokens = tokens->next->next;
             continue;
         }
-        ft_lstadd_back(&curr_cmd->args, ft_lstnew(tokens->value));
+        if(!tokens->value)//TODO this should be handled in parsing
+            ft_lstadd_back(&curr_cmd->args, ft_lstnew(""));
+        else
+            ft_lstadd_back(&curr_cmd->args, ft_lstnew(tokens->value));
         tokens = tokens->next;
     }
     //print_cmds(cmd);

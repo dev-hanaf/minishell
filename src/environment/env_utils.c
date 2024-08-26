@@ -70,7 +70,6 @@ void	add_to_front_env(t_env **env, t_env *new)
 int	env_size(t_env *env)
 {
 	int		size;
-	t_env	*tmp;
 
 	if (!env)
 		return (0);

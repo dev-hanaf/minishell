@@ -32,7 +32,7 @@ void print_args(t_list *arg,char *name)
 {
     if(!arg)
         return;
-    printf("    %s:",name);
+    printf("%s:",name);
     while (arg) {
         printf("%s", (char *)arg->content);
         if(arg->next)

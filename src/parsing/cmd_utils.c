@@ -71,9 +71,14 @@ char **env_to_arr(t_env *env)
 	while(env)
 	{
         //dprintf(2,"env//%s=%s\n",env->key,env->value);
+        // if(!env->value)
+        // {
+        //     env = env->next;
+        //     continue;
+        // }
         temp = ft_strjoin(ft_strdup(env->key),"=");
         temp = ft_strjoin(temp,ft_strdup(env->value));
-        if(!temp)
+        if(!temp)//TODO check why there is a problem here
             temp = ft_strdup("");
         arr[i] = temp;
         env = env->next;

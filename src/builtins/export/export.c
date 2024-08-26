@@ -30,15 +30,30 @@ t_env **clone_env(t_env *env)
     }
     return new;
 }
-
+void process_args(char *str)
+{
+    if(!str)
+        return;
+    if(!ft_isalpha(str[0]) && str[0] != '_')
+    {
+        dprintf(2,"ms: export: `%s': not a valid identifier\n",str);
+        return;//TODO handle exit status here mate
+    }
+    else
+        printf("%s\n",str);
+}
 int     _export(t_env **env,t_list *args)
 {
     if(!env)
         return 0;//i still need to check this
-    display_environment(env);
+    //display_environment(env);
     if(!args)
         print_export(*env);
-    printf("hello world this is export mates\n");
+    while(args)
+    {
+        process_args(args->content);
+        args = args->next;
+    }
 	return 0;
 }
 

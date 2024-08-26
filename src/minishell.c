@@ -122,7 +122,7 @@ void loop(t_env *env)
 			t_tokenizer *new_tokenizer =  expand_lexer(env, &lexer);
 			t_cmd *cmd_list = parse_cmds((new_tokenizer));
 			execute_cmds(cmd_list);
-			close_heredoc(cmd_list);
+			//close_heredoc(cmd_list);
 			//print_cmds(cmd_list);
 			//display_tokens(new_tokenizer);
 			// puts("********************\n********************");
@@ -137,7 +137,7 @@ void loop(t_env *env)
 int	main(int ac, char **av, char **envp)
 {
 	(void)av;
-	t_env *env;
+	t_env **env;
 	
 	if (ac > 1)
 		return(1);
@@ -145,9 +145,9 @@ int	main(int ac, char **av, char **envp)
 		printf("error\n"); //TODO add the error handling function
 	g_minishell.env = envp;
 	env = init_environment(envp);
-	g_minishell.env_ld = &env;
+	g_minishell.env_ld = env;
     add_to_back_env(g_minishell.env_ld,new_env("Aloha",NULL));
-	loop(env);
+	loop(*env);
 	free_allocator();
 	return (0);
 }

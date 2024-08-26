@@ -163,7 +163,7 @@ void					add_to_back_env(t_env **env, t_env *new);
 void					add_to_front_env(t_env **env, t_env *new);
 int						env_size(t_env *env);
 char					**env_to_arr(t_env *env);
-t_env					*init_environment(char **env);
+t_env					**init_environment(char **env);
 char					*get_env(t_env **env, char *key);
 void    				change_env(t_env **env, char *key, char *value);
 void    				remove_env_element(t_env **env, char *variable);
@@ -178,6 +178,7 @@ char **ld_to_arr(t_list *lst);
 /* pasing  */
 t_cmd *parse_cmds(t_tokenizer *tokens);
 void print_cmds(t_cmd *cmd_list);
+void print_args(t_list *arg,char *name);
 /*execution */
 void execute_cmds(t_cmd *cmd);
 void exec_job(t_cmd *cmd);
