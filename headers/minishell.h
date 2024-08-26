@@ -166,7 +166,7 @@ t_env					*init_environment(char **env);
 char					*get_env(t_env **env, char *key);
 void    				change_env(t_env **env, char *key, char *value);
 void    				remove_env_element(t_env **env, char *variable);
-void					display_envirment(t_env **env);
+void					display_environment(t_env **env);
 /*-------------------------- cmd utils --------------------------------------- */
 t_cmd* new_cmd(void);
 int  cmd_nbr(t_cmd *head);
@@ -184,6 +184,6 @@ char	*get_cmd_path(char *cmd, char **env);
 int	ft_strcmp(const char *s1, const char *s2);
 
 
-int     _export(t_env **env,t_list *args,int flag);
+int     _export(t_env **env,t_list *args);
 void print_strs(char **strs);
 #endif

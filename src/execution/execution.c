@@ -89,7 +89,7 @@ int check_builtin(t_list *args)
 {
     if(!ft_strcmp((char *)args->content,"export"))
     {
-        _export(g_minishell.env_ld,args,0);
+        _export(g_minishell.env_ld,args);
         return 1;
     }
     else if(!ft_strcmp((char *)args->content,"echo"))

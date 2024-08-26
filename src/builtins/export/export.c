@@ -1,10 +1,9 @@
 #include "libft.h"
 #include "minishell.h"
 
-int     _export(t_env **env,t_list *args,int flag)
+int     _export(t_env **env,t_list *args)
 {
 	(void) args;//TODO do something hh
-	(void) flag;//TODO do something hh
     if(!env)
         return 0;//i still need to check this
     printf("hello world this is export mates\n");
