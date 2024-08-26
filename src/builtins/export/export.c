@@ -30,17 +30,42 @@ t_env **clone_env(t_env *env)
     }
     return new;
 }
+int str_is_valid(char *str)
+{
+    int i;
+    i = 0;
+    if(!str || !*str)
+        return 0;
+    while(str[i] && str[i] != '=')
+    {
+        if(ft_isalnum(str[i]) == 0)
+        {
+            if(str[i] == '+' && str[i+1] == '=')
+                return 2;
+            return 0;
+        }
+        i++;
+    }
+    return 1;
+}
 void process_args(char *str)
 {
+    char *key;
+    char *value;
     if(!str)
         return;
-    if(!ft_isalpha(str[0]) && str[0] != '_')
+    int flag = str_is_valid(str);
+    if(flag == 0)
     {
         dprintf(2,"ms: export: `%s': not a valid identifier\n",str);
         return;//TODO handle exit status here mate
     }
     else
+    {
         printf("%s\n",str);
+        printf("%s\n",ft_strchr(str,'=') + 1);
+        printf("%s\n",ft_substr(str,0,ft_strchr(str,'=') - str));
+    }
 }
 int     _export(t_env **env,t_list *args)
 {
