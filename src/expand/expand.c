@@ -169,7 +169,7 @@ t_tokenizer	*expand_lexer(t_env *env, t_tokenizer **lexer)
 			res = catch_expand(temp->value, env, to_expand);
 			while (res[i])
 			{
-				printf(MAGENTA"res[%d] ==> %s\n"NC,i, res[i]);
+				//printf(MAGENTA"res[%d] ==> %s\n"NC,i, res[i]);
 				i++;
 			}
 			i = 0;
@@ -206,26 +206,27 @@ t_tokenizer	*expand_lexer(t_env *env, t_tokenizer **lexer)
 	return (head);
 }
 
-char	**expand(t_env *env, char *line, int enable)
+char	*expand(t_env *env, char *line)
 {
 	int		to_expand;
 	char	**res;
+	char	*str;
 	int		i;
-
+	//line = "hello\n$aloha\nbroski\n$HOME";
 	//TODO you dommy need to expand the line if it has $ in it
 	to_expand = 0;
+	str = NULL;
 	res = NULL;
 	i = 0;
 	to_expand = needs_expansion(line);
-	if (!enable)
-		to_expand = 0;
 	res = catch_expand(line, env, to_expand);
 	while (res[i])
 	{
 		res[i] = handle_quotes(res[i]);
+		str = ft_strjoin(str,res[i]);
 		i++;
 	}
-	return (res);
+	return (str);
 }
 
 /* ''''''$HOME''''''  | "''"''$HOME''"''" | ''''$HOME'"' | $"''"'''''$HOME'''''"''" |  $USER"v" | $+HOME  | $HOME$HOME |  $HOME$HOM  */

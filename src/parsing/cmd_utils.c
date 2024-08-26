@@ -1,7 +1,7 @@
 #include "minishell.h"
 // Function to create a new command
 t_cmd* new_cmd() {
-    t_cmd *newCmd = (t_cmd*)malloc(sizeof(t_cmd));
+    t_cmd *newCmd = (t_cmd*)ft_allocator(sizeof(t_cmd),"parsing");
     if (!newCmd) return NULL;
     newCmd->args = NULL; // Copy the name
     newCmd->next = NULL;
@@ -48,7 +48,7 @@ char **ld_to_arr(t_list *lst)
 {
 	if(!lst)
 		return NULL;
-	char **arr = malloc(sizeof(char *) * (ft_lstsize(lst) + 1));
+	char **arr = ft_allocator(sizeof(char *) * (ft_lstsize(lst) + 1),"parsing");
 	int i = 0;
 	while(lst)
 	{

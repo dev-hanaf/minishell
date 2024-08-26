@@ -1,12 +1,10 @@
-/* ************************************************************************** */
-/*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:53:01 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/18 07:24:10 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/25 09:20:50 by zmourid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +73,6 @@ void builtin_commands(t_env **env, t_tokenizer *lexer)
 		}
 		else if(!ft_strncmp(lexer->value, "env", 3) && len == 3)
 			_env(*env);
-		else if (!ft_strncmp(lexer->value, "exit", 3) && len == 4)
-			__exit(lexer->value);
 		else if (!ft_strncmp(lexer->value, "unset", 5) && len == 5 && lexer->next)
 		{
 			_unset(env, lexer->next->value);
@@ -85,7 +81,21 @@ void builtin_commands(t_env **env, t_tokenizer *lexer)
 			lexer = lexer->next;
 	}	
 }
-
+void close_heredoc(t_cmd *cmd)
+{
+	t_rdr *temp;
+	while(cmd)
+	{
+		temp = cmd->redir;
+		while(temp)
+		{
+			if(temp->type == HERDOC && temp->fd != -1)
+				close(temp->fd);
+			temp = temp->next;
+		}
+		cmd = cmd->next;
+	}
+}
 void loop(t_env *env)
 {
     printf("env - %s\n",get_env(&env, "PWD"));
@@ -106,19 +116,20 @@ void loop(t_env *env)
 		}
 		else if (line && line[0] == '\0')
 			continue;
-		// builtin_commands(&env, line);
 		t_tokenizer *lexer = tokenization(line);
-		display_tokens(lexer);
 		if (!input_validation(lexer))
 		{	
 			t_tokenizer *new_tokenizer =  expand_lexer(env, &lexer);
-			printf(YELLOW"after epansion\n"NC);
-			display_tokens(new_tokenizer);
+			t_cmd *cmd_list = parse_cmds((new_tokenizer));
+			execute_cmds(cmd_list);
+			close_heredoc(cmd_list);
+			//print_cmds(cmd_list);
+			//display_tokens(new_tokenizer);
 			// puts("********************\n********************");
 			// printf("%s\n", expand(env," $HOME"));
-			builtin_commands(&env, new_tokenizer);
-			add_history(line);
+			//builtin_commands(&env, new_tokenizer);
 		}
+			add_history(line);
 		free(line);
 	}
 }
@@ -134,6 +145,7 @@ int	main(int ac, char **av, char **envp)
 		printf("error\n"); //TODO add the error handling function
 	g_minishell.env = envp;
 	env = init_environment(envp);
+	g_minishell.env_ld = &env;
 	loop(env);
 	free_allocator();
 	return (0);

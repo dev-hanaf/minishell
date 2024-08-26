@@ -17,7 +17,6 @@ bool	input_validation(t_tokenizer *lexer)
 	if (!lexer)
 		return true;
 
-	lexer = remove_espace_type(lexer);
 	while (lexer)
 	{
 		if (check_quotes(lexer))
