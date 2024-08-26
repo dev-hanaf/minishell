@@ -66,3 +66,16 @@ t_tokenizer *remove_espace_type(t_tokenizer *lexer)
 	}
 	return (head);
 }
+
+void print_strs(char **strs)
+{
+	if(!strs || !*strs)
+		return;
+	printf("printing strssssssssssssssss\n");
+	int i=0;
+	while(*strs)
+	{
+		printf("%d=%s",i++,*strs);
+		strs++;
+	}
+}

@@ -150,7 +150,7 @@ typedef struct s_expand
 }		t_expand;
 
 t_tokenizer 			*expand_lexer(t_env *env, t_tokenizer **lexer);
-char 					**expand(t_env *env,char *line, int enable);
+char 					*expand(t_env *env,char *line);
 char					*handle_quotes(char *line);
 void					add_to_back_expand(t_tokenizer **token, t_tokenizer *new);
 bool					 is_opend(char c , bool open);
@@ -185,4 +185,5 @@ int	ft_strcmp(const char *s1, const char *s2);
 
 
 int     _export(t_env **env,t_list *args,int flag);
+void print_strs(char **strs);
 #endif

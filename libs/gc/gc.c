@@ -78,3 +78,34 @@ void	free_allocator(void)
 {
 	recursive_free(get_data());
 }
+
+//  void free_context(char *name)
+//  {
+//  	t_data *data;
+//  	t_data *temp;
+//  	t_data *temp2;
+//  	data = get_data();
+// 	temp = NULL;
+//  	if(!data)
+//  		return;
+//  	if(strcmp(name,data->description) == 0)
+//  	{
+//  		temp = data->next;
+//  		free(data->ptr);
+//  		free(data);
+// 		data = temp;
+// 		return ;
+//  	}
+// 	while(temp->next)
+// 	{
+// 		if(strcmp(name,temp->next->description) == 0)
+// 		{
+// 			temp2 = temp->next->next;
+// 			free(temp->next->ptr);
+// 			free(temp->next);
+// 			temp->next = temp2;
+// 			break;
+// 		}
+// 		temp = temp->next;
+// 	}
+//  }

@@ -122,6 +122,7 @@ void open_heredoc(t_rdr *heredocs)
     if(!str)
         return;
     int pipefd[2];
+    str = expand(*g_minishell.env_ld,str);
     pipe(pipefd);
     //printf("str =%s",str);
     //file = open(name, O_RDWR |O_TRUNC| O_CREAT,0644);

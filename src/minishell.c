@@ -81,7 +81,21 @@ void builtin_commands(t_env **env, t_tokenizer *lexer)
 			lexer = lexer->next;
 	}	
 }
-
+void close_heredoc(t_cmd *cmd)
+{
+	t_rdr *temp;
+	while(cmd)
+	{
+		temp = cmd->redir;
+		while(temp)
+		{
+			if(temp->type == HERDOC && temp->fd != -1)
+				close(temp->fd);
+			temp = temp->next;
+		}
+		cmd = cmd->next;
+	}
+}
 void loop(t_env *env)
 {
     printf("env - %s\n",get_env(&env, "PWD"));
@@ -108,6 +122,7 @@ void loop(t_env *env)
 			t_tokenizer *new_tokenizer =  expand_lexer(env, &lexer);
 			t_cmd *cmd_list = parse_cmds((new_tokenizer));
 			execute_cmds(cmd_list);
+			close_heredoc(cmd_list);
 			//print_cmds(cmd_list);
 			//display_tokens(new_tokenizer);
 			// puts("********************\n********************");
