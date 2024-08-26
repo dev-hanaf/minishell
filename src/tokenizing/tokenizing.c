@@ -13,12 +13,11 @@
 #include "minishell.h"
 
 /*perror() reads a the errno and convert it to human readable */
-void	skip_whitespaces( char *line, size_t *i)
+
+void	skip_whitespaces(char *line, size_t *i)
 {
 	while (line[*i] == 32 || (line[*i] >= 9 && line[*i] <= 13))
-	{
 		(*i)++;
-	}
 }
 
 void	is_pipe(t_tokenizer **lexer, char *line, size_t *i)
@@ -155,6 +154,7 @@ t_tokenizer	*tokenization(char *line)
 	{
 		skip_whitespaces(line, &i);
 		is_command(&lexer, line, &i);
+		skip_whitespaces(line, &i);
 		skip_whitespaces( line, &i);
 		is_pipe(&lexer, line, &i);
 		skip_whitespaces(line, &i);

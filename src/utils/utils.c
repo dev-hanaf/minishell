@@ -48,34 +48,3 @@ void ft_strcpy(char *dst, char c)
     *dst++ = c;
     *dst = '\0';
 }
- 
-t_tokenizer *remove_espace_type(t_tokenizer *lexer)
-{
-	t_tokenizer *head;
-	t_tokenizer *new;
-
-	head = new_token(NULL, 0);
-	while (lexer)
-	{
-		if (lexer->type != ESPACE)
-		{
-			new = new_token(lexer->value, lexer->type);
-			add_to_back_expand(&head, new);
-		}
-		lexer = lexer->next;
-	}
-	return (head);
-}
-
-void print_strs(char **strs)
-{
-	if(!strs || !*strs)
-		return;
-	printf("printing strssssssssssssssss\n");
-	int i=0;
-	while(*strs)
-	{
-		printf("%d=%s",i++,*strs);
-		strs++;
-	}
-}

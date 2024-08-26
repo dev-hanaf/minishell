@@ -151,6 +151,18 @@ t_tokenizer	*expand_lexer(t_env *env, t_tokenizer **lexer)
 			new = new_token(temp->value, temp->type);
 			add_to_back_expand(&head, new);
 		}
+		else if (temp->type == ESPACE )
+		{
+			
+			if (temp->value)
+			{
+			// printf("'");
+			// printf("%s", temp->value);
+			// printf("'\n");
+				new = new_token(temp->value, temp->type);
+				add_to_back_expand(&head, new);
+			}
+		}
 		else
 		{
 			to_expand = needs_expansion(temp->value);

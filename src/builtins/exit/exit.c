@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+
 void    __exit(int num)
 {
         printf("exit\n");
