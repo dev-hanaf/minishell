@@ -253,6 +253,16 @@ int check_single_builtin(t_cmd *cmd)
     close(std_out);
     return 0;
 }
+void update_underscore(t_cmd *cmd)
+{
+    t_list *arg;
+    while(cmd->next)
+        cmd = cmd->next;
+    arg = cmd->args;
+    while(arg->next)
+        arg = arg->next;
+    get_env_ld(g_minishell.env_ld,"_")->value =ft_strdup(arg->content);
+}
 void execute_cmds(t_cmd *cmd)
 {
     int i;
@@ -263,6 +273,8 @@ void execute_cmds(t_cmd *cmd)
     int tmp;
     tmp = STDIN_FILENO;
     pipefd[WRITE] = STDOUT_FILENO;
+    if(!cmd->next)
+        update_underscore(cmd);
     if(!cmd->next && check_single_builtin(cmd))
         return;
     while(cmd)
@@ -288,4 +300,5 @@ void execute_cmds(t_cmd *cmd)
     i++;
     while(i--)
         wait(NULL);
+    // print_export(*g_minishell.env_ld);
 }

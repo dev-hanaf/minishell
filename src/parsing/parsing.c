@@ -108,7 +108,7 @@ void open_heredoc(t_rdr *heredocs)
         {
             line = readline(prompt);
             dprintf(2, "heredoc eof = %s\n",heredocs->value);
-            if(!ft_strcmp(line, heredocs->value))
+            if( line == NULL || !ft_strcmp(line, heredocs->value))
                 break;
             if(!heredocs->next)
             {
@@ -122,9 +122,8 @@ void open_heredoc(t_rdr *heredocs)
     if(!str)
         return;
     int pipefd[2];
-    str = expand(*g_minishell.env_ld,str);
+    //str = expand(*g_minishell.env_ld,str); //TODO khoya hadchi ra makhdamch--slem 3lek mohamed 
     pipe(pipefd);
-    //printf("str =%s",str);
     //file = open(name, O_RDWR |O_TRUNC| O_CREAT,0644);
     write(pipefd[WRITE],str,ft_strlen(str));
     close(pipefd[WRITE]);
@@ -181,7 +180,6 @@ t_cmd *parse_cmds(t_tokenizer *tokens)
             ft_lstadd_back(&curr_cmd->args, ft_lstnew(tokens->value));
         tokens = tokens->next;
     }
-    //print_cmds(cmd);
     handle_heredoc(cmd);
     return cmd;
 }

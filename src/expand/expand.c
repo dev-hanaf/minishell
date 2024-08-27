@@ -65,7 +65,7 @@ char	**catch_expand(char *line, t_env *env, int to_expand)
 	if (line && ft_strchr(line, '$'))
 	{
 		while (line[var()->i])
-		{
+		{ //TODO $_ is not expandig
 			var()->open = is_opend(line[var()->i], var()->open);
 			if (line[var()->i] && to_expand && line[var()->i] == '$' && line[var()->i]
 				&& (ft_isalnum(line[var()->i + 1]) || line[var()->i] == '_'))

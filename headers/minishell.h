@@ -165,6 +165,8 @@ int						env_size(t_env *env);
 char					**env_to_arr(t_env *env);
 t_env					**init_environment(char **env);
 char					*get_env(t_env **env, char *key);
+t_env					*get_env_ld(t_env **env, char *key);
+void					print_export(t_env *env);
 void    				change_env(t_env **env, char *key, char *value);
 void    				remove_env_element(t_env **env, char *variable);
 void					display_environment(t_env **env);

@@ -33,9 +33,11 @@ $(NAME) : $(OBJ)
 
 clean:
 	@make clean -C $(LIBFT)
+	@make clean -C $(GARBAGE)
 	rm -rf $(OBJ)
 fclean: clean
 	@make fclean -C $(LIBFT)
+	@make fclean -C $(GARBAGE)
 	rm -rf $(NAME)
 
 re: fclean all
