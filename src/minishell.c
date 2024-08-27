@@ -114,7 +114,7 @@ void loop(t_env *env)
 			exit(0);
 			free_allocator();
 		}
-		else if (line && line[0] == '\0')
+		else if ((line && line[0] == '\0' )|| line[0] == '\n')
 			continue;
 		t_tokenizer *lexer = tokenization(line);
 		if (!input_validation(lexer))
