@@ -99,12 +99,14 @@ void close_heredoc(t_cmd *cmd)
 void loop(t_env *env)
 {
     printf("env - %s\n",get_env(&env, "PWD"));
+	add_to_back_env(g_minishell.env_ld,new_env("?",0));
 	char *line;
 	char *prompt;
 	while (true)
 	{
 		//handle_signals();
-		prompt = ft_strjoin("minishell", "$ ");
+		prompt = ft_strjoin("minishell(", get_env(g_minishell.env_ld,"?"));
+		prompt = ft_strjoin(prompt,")$");
 		if(!prompt)
 			printf("error\n"); //TODO add the error handling function
 		line = readline(prompt);

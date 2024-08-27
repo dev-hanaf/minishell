@@ -263,9 +263,19 @@ void update_underscore(t_cmd *cmd)
         arg = arg->next;
     get_env_ld(g_minishell.env_ld,"_")->value =ft_strdup(arg->content);
 }
+int get_status(int status)
+{
+    if(WIFEXITED(status))
+        return WEXITSTATUS(status);
+    if(WIFSIGNALED(status))
+        return WTERMSIG(status) + 128;
+    return 0;
+}
 void execute_cmds(t_cmd *cmd)
 {
     int i;
+    int nbr;
+    nbr = cmd_nbr(cmd);
     i = 0;
     pid_t *pids = (int *)ft_allocator(sizeof(pid_t) * (cmd_nbr(cmd)),"execution");
     int pipefd[2];
@@ -296,9 +306,14 @@ void execute_cmds(t_cmd *cmd)
         cmd = cmd->next;
     }
     if(tmp != 0)
+    {
         close(tmp);
-    i++;
-    while(i--)
-        wait(NULL);
+    }
+	i = 0;
+    int status;
+	while (i++ < nbr)
+		wait(&status);
+    g_minishell.status = get_status(status);
+    change_env(g_minishell.env_ld,"?",ft_itoa(g_minishell.status));
     // print_export(*g_minishell.env_ld);
 }

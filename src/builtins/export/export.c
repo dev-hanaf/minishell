@@ -67,7 +67,7 @@ void fill_key_value(char *str,char **key,char **value,int flag)
     if(ft_strchr(str,'='))
     {
         *value = ft_strdup(ft_strchr(str,'=') + 1);
-        printf("len = %ld\n",ft_strchr(str,'=') - str  - flag );
+        //printf("len = %ld\n",ft_strchr(str,'=') - str  - flag );
         *key = ft_substr(str,0,ft_strchr(str,'=') - str - flag);
         return;
     }
@@ -95,7 +95,7 @@ void make_and_add(char *key,char *value,int concat)
 }
 void process_args(char *str)
 {
-    printf("%s\n",str);
+    //printf("%s\n",str);
      char *key;
      char *value;
      key = NULL;
