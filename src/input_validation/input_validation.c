@@ -14,6 +14,7 @@
 
 bool	input_validation(t_tokenizer *lexer)
 {	
+	//TODO add syntax error exit code [1]
 	if (!lexer)
 		return true;
 

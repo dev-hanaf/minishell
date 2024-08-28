@@ -80,6 +80,8 @@ typedef struct s_minishell
 
 extern t_minishell		g_minishell;
 
+t_minishell *get_ms(void);
+
 // TODO replace the lists in t_cmd by this
 typedef struct s_rdr
 {

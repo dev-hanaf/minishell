@@ -11,6 +11,11 @@
 #include "minishell.h"
 
 t_minishell	g_minishell;
+t_minishell *get_ms(void)
+{
+	static t_minishell ms;
+	return &ms;
+}
 // https://42-cursus.gitbook.io/guide/rank-03/minishell/functions
 
 t_tokenizer *get_token(t_tokenizer *lexer, char *word)
@@ -99,13 +104,12 @@ void close_heredoc(t_cmd *cmd)
 void loop(t_env *env)
 {
     printf("env - %s\n",get_env(&env, "PWD"));
-	add_to_back_env(g_minishell.env_ld,new_env("?",0));
 	char *line;
 	char *prompt;
 	while (true)
 	{
 		//handle_signals();
-		prompt = ft_strjoin("minishell(", get_env(g_minishell.env_ld,"?"));
+		prompt = ft_strjoin("minishell(", get_env(get_ms()->env_ld,"?"));
 		prompt = ft_strjoin(prompt,")$");
 		if(!prompt)
 			printf("error\n"); //TODO add the error handling function
@@ -145,10 +149,11 @@ int	main(int ac, char **av, char **envp)
 		return(1);
 	if(!envp || !*envp)
 		printf("error\n"); //TODO add the error handling function
-	g_minishell.env = envp;
+	get_ms()->env = envp;
 	env = init_environment(envp);
-	g_minishell.env_ld = env;
-    add_to_back_env(g_minishell.env_ld,new_env("Aloha",NULL));
+	get_ms()->env_ld = env;
+    add_to_back_env(get_ms()->env_ld,new_env("Aloha",NULL));
+	add_to_back_env(get_ms()->env_ld,new_env("?",ft_itoa(0)));
 	loop(*env);
 	free_allocator();
 	return (0);

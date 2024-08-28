@@ -77,10 +77,10 @@ void fill_key_value(char *str,char **key,char **value,int flag)
 void make_and_add(char *key,char *value,int concat)
 {
     t_env *node;
-    node = get_env_ld(g_minishell.env_ld,key);
+    node = get_env_ld(get_ms()->env_ld,key);
     if(!node)
     {
-        add_to_back_env(g_minishell.env_ld,new_env(key,value));
+        add_to_back_env(get_ms()->env_ld,new_env(key,value));
         return ;
     }
     if(concat)
@@ -91,9 +91,9 @@ void make_and_add(char *key,char *value,int concat)
             node->value = value;
         return;
     }
-    add_to_back_env(g_minishell.env_ld,new_env(key,value));
+    add_to_back_env(get_ms()->env_ld,new_env(key,value));
 }
-void process_args(char *str)
+int process_args(char *str)
 {
     //printf("%s\n",str);
      char *key;
@@ -104,11 +104,11 @@ void process_args(char *str)
      flag = 1;
      flag = str_is_valid(str);
      if(!str)
-         return;
+         return 0;
      if(flag == 0)
      {
          dprintf(2,"ms: export: `%s': not a valid identifier\n",str);
-         return;//TODO handle exit status here mate
+         return 0;//TODO handle exit status here mate
      }
      else
      {
@@ -118,18 +118,23 @@ void process_args(char *str)
         //printf("key=%s,",key);
         //printf("value=%s\n",value);
      }
+     return 1;
 }
 int     _export(t_env **env,t_list *args)
 {
+    int status;
+    status = 0;
     if(!env)
         return 0;// TODO i still need to check this
     //display_environment(env);
+    //printf("hello im export content = %s\n",(char *)args->content);
     if(!args)
         print_export(*env);
     while(args)
     {
-        process_args(args->content);
+        if(!process_args(args->content))
+            status = 1;
         args = args->next;
     }
-	return 0;
+	return status;
 }
