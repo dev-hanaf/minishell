@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 04:44:08 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/18 04:44:15 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/31 16:12:23 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*handle_quotes(char *line)
 	int		i;
 
 	buffer = NULL;
-	vars_init(buffer, line, &i);
+	buffer = vars_init(buffer, line, &i);
 	while (line && line[i])
 	{
 		if (line[i] && line[i] == '\"')

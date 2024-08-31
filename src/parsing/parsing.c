@@ -198,9 +198,7 @@ t_cmd *parse_cmds(t_tokenizer *tokens)
             tokens = tokens->next->next;
             continue;
         }
-        if(!tokens->value)//TODO this should be handled in parsing
-            ft_lstadd_back(&curr_cmd->args, ft_lstnew(""));
-        else
+        if(tokens->value)//TODO this should be handled in parsing
             ft_lstadd_back(&curr_cmd->args, ft_lstnew(tokens->value));
         tokens = tokens->next;
     }
