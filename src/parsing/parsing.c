@@ -90,7 +90,7 @@ int is_stillhrdc(t_rdr *tmp)
     return 0;
 }
 
-void open_heredoc(t_rdr *heredocs)
+void open_heredoc(t_rdr *heredocs,int *pipefd)
 {
     char prompt[] = ">";
     char *str = NULL;
@@ -108,7 +108,7 @@ void open_heredoc(t_rdr *heredocs)
         {
             line = readline(prompt);
             dprintf(2, "heredoc eof = %s\n",heredocs->value);
-            if(!ft_strcmp(line, heredocs->value))
+            if( line == NULL || !ft_strcmp(line, heredocs->value))
                 break;
             if(!heredocs->next)
             {
@@ -121,21 +121,44 @@ void open_heredoc(t_rdr *heredocs)
     }
     if(!str)
         return;
-    int pipefd[2];
-    str = expand(*g_minishell.env_ld,str);
-    pipe(pipefd);
-    //printf("str =%s",str);
     //file = open(name, O_RDWR |O_TRUNC| O_CREAT,0644);
     write(pipefd[WRITE],str,ft_strlen(str));
     close(pipefd[WRITE]);
     last_heredoc->fd = pipefd[READ];
    //unlink("ofile");
 }
+t_rdr *get_last_hrdc(t_rdr *redir)
+{
+	t_rdr *last;
+	last = NULL;
+	if(!redir)
+		return NULL;
+	while(redir)
+	{
+		if(redir->type == HERDOC)
+			last = redir;
+		redir = redir->next;
+	}
+	if(last)
+	{
+		printf("fddddddddddd =%d\n",last->fd);
+	}
+	return  last;
+}
 void handle_heredoc(t_cmd *cmd)
 {
+   // int pid;
+   // pid = fork();
+   // if(pid != CHILD)
+   //     return;
+    int pipefd[2];
+    //str = expand(*g_minishell.env_ld,str); //TODO khoya hadchi ra makhdamch--slem 3lek mohamed 
+    //sigaction(SIGINT,get_ms()->old_act,NULL);
     while(cmd)
     {
-      open_heredoc(cmd->redir);
+		pipe(pipefd);
+      open_heredoc(cmd->redir,pipefd);
+		get_last_hrdc(cmd->redir);
       cmd = cmd->next;
     }
 }
@@ -175,10 +198,12 @@ t_cmd *parse_cmds(t_tokenizer *tokens)
             tokens = tokens->next->next;
             continue;
         }
-        ft_lstadd_back(&curr_cmd->args, ft_lstnew(tokens->value));
+        if(!tokens->value)//TODO this should be handled in parsing
+            ft_lstadd_back(&curr_cmd->args, ft_lstnew(""));
+        else
+            ft_lstadd_back(&curr_cmd->args, ft_lstnew(tokens->value));
         tokens = tokens->next;
     }
-    //print_cmds(cmd);
     handle_heredoc(cmd);
     return cmd;
 }

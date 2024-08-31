@@ -12,17 +12,17 @@
 
 #include "minishell.h"
 
-t_env	*init_environment(char **env)
+t_env	**init_environment(char **env)
 {
-	t_env	*init_env;
+	t_env	**init_env;
 	size_t	i;
 	char	**split;
 	t_env	*new;
 
-	init_env = ft_allocator(sizeof(t_env), "t_env");
+	init_env = ft_allocator(sizeof(t_env*), "t_env");
 	if (!init_env)
 		printf("error\n"); //TODO add the error handling function
-	init_env->value = NULL;
+	*init_env = NULL;
 	i = 0;
 	new = new_env("$", ft_itoa(get_pid()));
 	add_to_back_env(&init_env, new);
@@ -34,7 +34,7 @@ t_env	*init_environment(char **env)
 	{
 		split = ft_split(env[i], '=');
 		new = new_env(split[0], split[1]);
-		add_to_back_env(&init_env, new);
+		add_to_back_env(init_env, new);
 		i++;
 	}
 

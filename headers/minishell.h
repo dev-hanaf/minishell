@@ -26,6 +26,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdbool.h>
+#include <signal.h>
 
 # ifndef __O_DIRECTORY
 #define __O_DIRECTORY     0x00100000
@@ -75,12 +76,15 @@ typedef struct s_minishell
 {
 	char 				*prompt;
 	char				**env;
+	struct sigaction *old_act;
 	t_env               **env_ld;
 	char				*line;
 	int					status;
 }						t_minishell;
 
 extern t_minishell		g_minishell;
+
+t_minishell *get_ms(void);
 
 // TODO replace the lists in t_cmd by this
 typedef struct s_rdr
@@ -171,9 +175,12 @@ t_env					*new_env(char *key, char *value);
 t_env					*last_env(t_env **env);
 void					add_to_back_env(t_env **env, t_env *new);
 void					add_to_front_env(t_env **env, t_env *new);
-int						stack_size_env(t_env **env);
-t_env					*init_environment(char **env);
+int						env_size(t_env *env);
+char					**env_to_arr(t_env *env);
+t_env					**init_environment(char **env);
 char					*get_env(t_env **env, char *key);
+t_env					*get_env_ld(t_env **env, char *key);
+void					print_export(t_env *env);
 void    				change_env(t_env **env, char *key, char *value);
 void    				remove_env_element(t_env **env, char *variable);
 void					display_environment(t_env **env);
@@ -187,6 +194,7 @@ char **ld_to_arr(t_list *lst);
 /* pasing  */
 t_cmd *parse_cmds(t_tokenizer *tokens);
 void print_cmds(t_cmd *cmd_list);
+void print_args(t_list *arg,char *name);
 /*execution */
 void execute_cmds(t_cmd *cmd);
 void exec_job(t_cmd *cmd);

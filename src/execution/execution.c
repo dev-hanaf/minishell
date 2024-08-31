@@ -17,6 +17,23 @@
 #include <stdio.h>
 #include <unistd.h>
 
+<<<<<<< HEAD
+=======
+//TODO $$
+int get_pid()
+{
+    int pid;
+
+    pid = fork();
+    if (!pid)
+        exit(0);
+    return (pid - 2);
+}
+void update_status(int new_status)
+{
+    change_env(get_ms()->env_ld,"?",ft_itoa(new_status));
+}
+>>>>>>> afe0304d9f6d9cc222c39c279787f25a92c796b6
 
 void handle_rdr(t_rdr *redir,int flag)
 {
@@ -75,11 +92,11 @@ void handle_rdr(t_rdr *redir,int flag)
     }
 }
 
-int check_builtin(t_list *args)
+int check_builtin(t_list *args,int *status)
 {
     if(!ft_strcmp((char *)args->content,"export"))
     {
-        _export(g_minishell.env_ld,args);
+        *status = _export(get_ms()->env_ld,args->next);
         return 1;
     }
     else if(!ft_strcmp((char *)args->content,"echo"))
@@ -94,21 +111,29 @@ int check_builtin(t_list *args)
     }
     else if(!ft_strcmp((char *)args->content,"exit"))
     {
-        __exit(0);
+        __exit(ft_atoi(get_env(get_ms()->env_ld,"?")));
+        return 1;
+    }
+    else if(!ft_strcmp((char *)args->content,"env"))
+    {
+        _env(*get_ms()->env_ld);
         return 1;
     }
     return 0;
 }
 void exec_cmd(t_list *args)
 {
+    int status;
+    status = 0;
     if(!args)
         exit(0);
-    if(check_builtin(args))
-        __exit(1014);
+    if(check_builtin(args,&status))
+        exit(status);
     char **nargs = ld_to_arr(args);
-    char **env = g_minishell.env;
+    char **env = env_to_arr(*get_ms()->env_ld);
     char *path = get_cmd_path(nargs[0],env);
     execve(path,nargs,env);
+    //TODO handle failed execve
 }
 void exec_child(t_cmd *cmd,int in_fd,int out_fd)
 {
@@ -190,54 +215,84 @@ int	ft_strcmp(const char *s1, const char *s2)
 // }
 int is_built_in(char *command)
 {
-    if(!ft_strcmp((char *)command,"echo"))
+    if(!ft_strcmp(command,"echo"))
         return 1;
-    if(!ft_strcmp((char *)command,"cd"))
+    if(!ft_strcmp(command,"cd"))
         return 1;
-    if(!ft_strcmp((char *)command,"exit"))
+    if(!ft_strcmp(command,"exit"))
         return 1;
-    if(!ft_strcmp((char *)command,"pwd"))
+    if(!ft_strcmp(command,"pwd"))
+        return 1;
+    if(!ft_strcmp(command,"export"))
+        return 1;
+    if(!ft_strcmp(command,"env"))
         return 1;
     return 0;
 }
 
 int check_single_builtin(t_cmd *cmd)
 {
-    int std_in = dup(STDIN_FILENO);
-    int std_out = dup(STDOUT_FILENO);
     if(cmd->args && is_built_in(cmd->args->content))
     {
+        int std_in = dup(STDIN_FILENO);
+        int std_out = dup(STDOUT_FILENO);
         handle_rdr(cmd->redir,0);
         if(!ft_strcmp((char *)cmd->args->content,"echo"))
             _echo(ld_to_arr(cmd->args->next));
         else if(!ft_strcmp((char *)cmd->args->content,"cd"))
         {
             if(cmd->args->next)
-                _cd(cmd->args->next->content,g_minishell.env_ld);
+                _cd(cmd->args->next->content,get_ms()->env_ld);
             else
-                _cd(NULL,g_minishell.env_ld);
+                _cd(NULL,get_ms()->env_ld);
         }
         else if(!ft_strcmp((char *)cmd->args->content,"pwd"))
             _pwd();
+        else if(!ft_strcmp((char *)cmd->args->content,"env"))
+            _env(*get_ms()->env_ld);
         else if(!ft_strcmp((char *)cmd->args->content,"exit"))
         {
             close(std_in);
             close(std_out);
-            __exit(0);
+            _exit(ft_atoi(get_env(get_ms()->env_ld,"?")));
         }
+        else if(!ft_strcmp((char *)cmd->args->content,"export"))
+            _export(get_ms()->env_ld,cmd->args->next);
         dup2(std_in,STDIN_FILENO);
         dup2(std_out,STDOUT_FILENO);
         close(std_in);
         close(std_out);
         return 1;
     }
-    close(std_in);
-    close(std_out);
+    // close(std_in);
+    // close(std_out);
+    return 0;
+}
+void update_underscore(t_cmd *cmd)
+{
+    t_list *arg;
+    while(cmd->next)
+        cmd = cmd->next;
+    arg = cmd->args;
+	if(!arg)
+		return;
+    while(arg && arg->next)
+        arg = arg->next;
+    get_env_ld(get_ms()->env_ld,"_")->value = ft_strdup(arg->content);
+}
+int get_status(int status)
+{
+    if(WIFEXITED(status))
+        return WEXITSTATUS(status);
+    // if(WIFSIGNALED(status))
+    //     return WTERMSIG(status) + 128;
     return 0;
 }
 void execute_cmds(t_cmd *cmd)
 {
     int i;
+    int nbr;
+    nbr = cmd_nbr(cmd);
     i = 0;
     pid_t *pids = (int *)ft_allocator(sizeof(pid_t) * (cmd_nbr(cmd)),"execution");
     int pipefd[2];
@@ -245,6 +300,8 @@ void execute_cmds(t_cmd *cmd)
     int tmp;
     tmp = STDIN_FILENO;
     pipefd[WRITE] = STDOUT_FILENO;
+    if(!cmd->next)
+        update_underscore(cmd);
     if(!cmd->next && check_single_builtin(cmd))
         return;
     while(cmd)
@@ -267,7 +324,10 @@ void execute_cmds(t_cmd *cmd)
     }
     if(tmp != 0)
         close(tmp);
-    i++;
-    while(i--)
-        wait(NULL);
+    int status;
+    i = 0;
+	while (i < nbr)
+		waitpid(pids[i++], &status, 0);
+    update_status(get_status(status));
+    // print_export(*g_minishell.env_ld);
 }
