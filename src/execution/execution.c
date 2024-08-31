@@ -1,39 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   .execution.c                                       :+:      :+:    :+:   */
+/*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 09:51:34 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/21 16:06:10 by zmourid          ###   ########.fr       */
+/*   Updated: 2024/08/31 15:57:08 by zmourid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "minishell.h"
 #include <fcntl.h>
 #include <readline/readline.h>
 #include <stdio.h>
 #include <unistd.h>
 
-<<<<<<< HEAD
-=======
-//TODO $$
-int get_pid()
-{
-    int pid;
-
-    pid = fork();
-    if (!pid)
-        exit(0);
-    return (pid - 2);
-}
 void update_status(int new_status)
 {
     change_env(get_ms()->env_ld,"?",ft_itoa(new_status));
 }
->>>>>>> afe0304d9f6d9cc222c39c279787f25a92c796b6
 
 void handle_rdr(t_rdr *redir,int flag)
 {
@@ -328,6 +314,6 @@ void execute_cmds(t_cmd *cmd)
     i = 0;
 	while (i < nbr)
 		waitpid(pids[i++], &status, 0);
-    update_status(get_status(status));
+    //update_status(get_status(status));
     // print_export(*g_minishell.env_ld);
 }

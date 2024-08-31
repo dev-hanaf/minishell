@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 02:10:51 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/12 16:57:37 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/31 15:55:55 by zmourid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ t_env	**init_environment(char **env)
 	*init_env = NULL;
 	i = 0;
 	new = new_env("$", ft_itoa(get_pid()));
-	add_to_back_env(&init_env, new);
+	add_to_back_env(init_env, new);
 	new = new_env("?", ft_itoa(g_minishell.status));
-	add_to_back_env(&init_env, new);
+	add_to_back_env(init_env, new);
 	new = new_env("0", "minishell");
-	add_to_back_env(&init_env, new);
+	add_to_back_env(init_env, new);
 	while (env[i])
 	{
 		split = ft_split(env[i], '=');
