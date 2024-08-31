@@ -95,8 +95,10 @@ char	*get_cmd_path(char *cmd, char **env)
 			path = *env;
 		env++;
 	}
-	if (!cmd || !*cmd)
+	if (!cmd)
 		clean_exit(0);
+	if(!*cmd)
+		ms_error(cmd,127);
 	if (ft_strchr(cmd, '/') || !path)
 	{
 		if (!access(cmd, F_OK))
