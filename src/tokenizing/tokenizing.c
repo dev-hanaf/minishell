@@ -33,7 +33,7 @@ void	is_pipe(t_tokenizer **lexer, char *line, size_t *i)
 	}
 }
 
-void	is_redirection(t_tokenizer **lexer, char *line, size_t *i)
+void	is_redirection(t_tokenizer **lexer, char *line, size_t *i, int *counter)
 {
 	t_tokenizer	*token;
 
@@ -56,6 +56,12 @@ void	is_redirection(t_tokenizer **lexer, char *line, size_t *i)
 	{
 		if (line[*i + 1] != '\0' && line[*i + 1] == '<')
 		{
+			(*counter)++;
+			if (*counter == 17)
+			{
+				printf("minishell: maximum here-document count exceeded\n");
+				exit(1);
+			}
 			token = new_token("<<", HERDOC);
 			add_to_back(lexer, token);
 			(*i)++;
@@ -137,6 +143,7 @@ t_tokenizer	*tokenization(char *line)
 {
 	size_t		i;
 	t_tokenizer	*lexer;
+	int counter = 0;
 
 	if (!line)
 		return (NULL);
@@ -158,7 +165,7 @@ t_tokenizer	*tokenization(char *line)
 		skip_whitespaces( line, &i);
 		is_pipe(&lexer, line, &i);
 		skip_whitespaces(line, &i);
-		is_redirection(&lexer, line, &i);
+		is_redirection(&lexer, line, &i, &counter);
 	}
 	return (lexer);
 }

@@ -14,7 +14,7 @@
 
 bool	input_validation(t_tokenizer *lexer)
 {	
-	if (!lexer)
+	if (!lexer || lexer->type == ERROR)
 		return true;
 
 	while (lexer)

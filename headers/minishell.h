@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/18 05:21:22 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/08/31 15:33:36 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,18 +44,20 @@ enum					e_type
 	HERDOC,
 	REDIR_IN,
 	REDIR_OUT,
-	APPEND,
-	ESPACE
+	APPEND
 };
+
 # define TRUE 1
 # define WRITE 1
 # define READ 0
 # define CHILD 0
+#define ALLOC 20
 
 typedef struct s_tokenizer
 {
 	struct s_tokenizer	*prev;
 	char				*value;
+	bool				expanded;
 	int					type;
 	struct s_tokenizer	*next;
 
@@ -140,7 +142,7 @@ typedef struct s_expand
 	int		j;
 	int		y;
 	char	**str;
-	int		exp_cmpt;
+	int		x;
 	char	*exp;
 	char	**spilted;
 	int 	start;
@@ -149,13 +151,21 @@ typedef struct s_expand
 	char	buffer[2];
 }		t_expand;
 
+t_expand	*var(void);
 t_tokenizer 			*expand_lexer(t_env *env, t_tokenizer **lexer);
 char 					*expand(t_env *env,char *line);
 char					*handle_quotes(char *line);
 void					add_to_back_expand(t_tokenizer **token, t_tokenizer *new);
 bool					 is_opend(char c , bool open);
 int						needs_expansion(const char *line);
-
+t_tokenizer				*new_token_expand(char *value, int type, bool expanded);
+char					**catch_expand(char *line, t_env *env, int flag);
+int 					get_pid(void);
+int						var_need_expansion(const char *line);
+int 					valid_expansion_variable(char c);
+char 					**ft_split_whitespaces(char *str, char *seps);
+void	start_expanding(char *line, t_env *env, int flag);
+bool	open_or_close(char *line);
 /*----------------------------- Initilize Envirement --------------------------*/
 t_env					*new_env(char *key, char *value);
 t_env					*last_env(t_env **env);

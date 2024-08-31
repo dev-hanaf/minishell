@@ -12,44 +12,75 @@
 
 #include "minishell.h"
 
-char *handle_quotes(char *line)
+static char	*is_qquotes(char *line, char *buffer, int *i)
 {
-    char *buffer = NULL;
-    char c[2];
-    int i = 0;
-    
-    while (line && line[i])
-    {
-        if (line[i] && line[i] == '\"' )
-        {
-            i++;
-            while (line[i] && line[i] != '\"')
-            {
-                ft_strcpy(c, line[i]);
-                buffer  = ft_strjoin(buffer, c);
-                i++;
-            }
-            if (line[i] == '\0')
-                return buffer;
-        }
-        else if (line[i] && line[i] == '\'')
-        {
-            i++;
-            while (line[i] && line[i] != '\'')
-            {
-               ft_strcpy(c, line[i]);
-                buffer  = ft_strjoin(buffer, c);
-                i++;
-            }
-            if (line[i] == '\0')
-                return buffer;
-        }
-        else
-        {
-            ft_strcpy(c, line[i]);
-            buffer  = ft_strjoin(buffer, c);
-        }
-        i++;    
-    }
-    return (buffer);
+	char	c[2];
+
+	(*i)++;
+	while (line[*i] && line[*i] != '"')
+	{
+		ft_strcpy(c, line[*i]);
+		buffer = ft_strjoin(buffer, c);
+		(*i)++;
+	}
+	return (buffer);
+}
+
+static char	*is_squotes(char *line, char *buffer, int *i)
+{
+	char	c[2];
+
+	(*i)++;
+	while (line[*i] && line[*i] != '\'')
+	{
+		ft_strcpy(c, line[*i]);
+		buffer = ft_strjoin(buffer, c);
+		(*i)++;
+	}
+	return (buffer);
+}
+
+static char	*none(char *line, char *buffer, int *i)
+{
+	char	c[2];
+
+	ft_strcpy(c, line[*i]);
+	buffer = ft_strjoin(buffer, c);
+	return (buffer);
+}
+
+static char	*vars_init(char *buffer, char *line, int *i)
+{
+	*i = 0;
+	if (line)
+		buffer = ft_strdup("");
+	return (buffer);
+}
+
+char	*handle_quotes(char *line)
+{
+	char	*buffer;
+	int		i;
+
+	buffer = NULL;
+	vars_init(buffer, line, &i);
+	while (line && line[i])
+	{
+		if (line[i] && line[i] == '\"')
+		{
+			buffer = is_qquotes(line, buffer, &i);
+			if (line[i] == '\0')
+				return (buffer);
+		}
+		else if (line[i] && line[i] == '\'')
+		{
+			buffer = is_squotes(line, buffer, &i);
+			if (line[i] == '\0')
+				return (buffer);
+		}
+		else
+			buffer = none(line, buffer, &i);
+		i++;
+	}
+	return (buffer);
 }

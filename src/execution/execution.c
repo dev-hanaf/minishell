@@ -17,16 +17,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-//TODO $$
-int get_pid()
-{
-    int pid;
-
-    pid = fork();
-    if (!pid)
-        exit(0);
-    return (pid - 2);
-}
 
 void handle_rdr(t_rdr *redir,int flag)
 {

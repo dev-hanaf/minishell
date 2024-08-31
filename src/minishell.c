@@ -48,10 +48,10 @@ void builtin_commands(t_env **env, t_tokenizer *lexer)
 		{
 			temp = lexer->next;
 			counter++;
-			while(temp && temp->type == ESPACE)
+			while(temp)
 				temp = temp->next;
 			save = temp;
-			while (temp && (temp->type == WORD || temp->type == ESPACE) )
+			while (temp && (temp->type == WORD) )
 			{
 				counter++;
 				temp = temp->next;
@@ -59,7 +59,7 @@ void builtin_commands(t_env **env, t_tokenizer *lexer)
 			res = ft_allocator((counter + 1)  * sizeof(char *), "echo");
 			temp = save;
 			i = 0;
-			while (temp && (temp->type == WORD || temp->type == ESPACE))
+			while (temp && (temp->type == WORD))
 			{
 				res[i] = ft_strdup(temp->value);
 				// printf("%s\n", res[i]);
@@ -117,12 +117,15 @@ void loop(t_env *env)
 		else if (line && line[0] == '\0')
 			continue;
 		t_tokenizer *lexer = tokenization(line);
+		display_tokens(lexer);
 		if (!input_validation(lexer))
 		{	
-			t_tokenizer *new_tokenizer =  expand_lexer(env, &lexer);
-			t_cmd *cmd_list = parse_cmds((new_tokenizer));
-			execute_cmds(cmd_list);
-			close_heredoc(cmd_list);
+		 	t_tokenizer *new_tokenizer =   expand_lexer(env, &lexer);
+			printf(YELLOW"after expansion\n"NC);
+			display_tokens(new_tokenizer);
+			// t_cmd *cmd_list = parse_cmds((new_tokenizer));
+			// execute_cmds(cmd_list);
+			// close_heredoc(cmd_list);
 			//print_cmds(cmd_list);
 			//display_tokens(new_tokenizer);
 			// puts("********************\n********************");

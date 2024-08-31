@@ -42,7 +42,7 @@ char	*ft_itoa(int n)
 
 	num = n;
 	size = lenght_size(num);
-	str = (char *)malloc(sizeof(char) * (size + 1));
+	str = ft_allocator(sizeof(char) * (size + 1), "itoa");
 	if (!str)
 		return (NULL);
 	if (num < 0)

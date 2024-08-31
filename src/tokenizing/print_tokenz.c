@@ -14,7 +14,7 @@
 
 const char	*get_token_type_name(int type)
 {
-	const char	*token_type_names[8];
+	const char	*token_type_names[7];
 
 	token_type_names[0] = "ERROR";
 	token_type_names[1] = "WORD";
@@ -23,12 +23,17 @@ const char	*get_token_type_name(int type)
 	token_type_names[4] = "REDIR_IN";
 	token_type_names[5] = "REDIR_OUT";
 	token_type_names[6] = "APPEND";
-	token_type_names[7] = "ESPACE";
-	if (type >= 0 && type < 8)
+	if (type >= 0 && type < 7)
 		return (token_type_names[type]);
 	return ("UNKNOWN");
 }
 
+char *bool_ret(bool type)
+{
+	if (type)
+		return ("TRUE");
+	return ("FALSE");
+}
 void	display_tokens(t_tokenizer *tokens)
 {
 	t_tokenizer	*token;
@@ -36,6 +41,7 @@ void	display_tokens(t_tokenizer *tokens)
 	token = tokens;
 	while (token)
 	{
+		printf("Expanded : %s\t", bool_ret(token->expanded));
 		printf("Token: \033[0;36m %-20s \033[0m |\t \
 			Type: \033[0;35m %-18s \033[0m \n",
 				token->value,

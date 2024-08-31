@@ -39,7 +39,7 @@ void _echo(char **argumentes)
     bool flag;
     bool ltrim;
     int j;
-    char *res = NULL;
+    // char *res = NULL;
     flag = false;
     lock = false;
     ltrim = true;
@@ -55,24 +55,22 @@ void _echo(char **argumentes)
                 lock = true;
             else
             {
-                res = ft_strjoin(res, argumentes[i]);
+               printf("%s", argumentes[i]);
                 ltrim = false;
+                flag = true;
+                if (argumentes[i + 1] && argumentes[i + 1] != NULL)
+                printf(" ");
             }
         }
         else
         {
-            res = ft_strjoin(res, argumentes[i]);
+           printf("%s", argumentes[i]);
             flag = true;
+        if (argumentes[i + 1] && argumentes[i + 1] != NULL)
+            printf(" ");
         }
-        // if (argumentes[i + 1] && argumentes[i + 1] != NULL)
-        //     printf(" ");
         i++;
     }
-    if (ltrim)
-        res = ft_strtrim(res, " ");
-    else
-        res = ft_strrtrim(res, " ");
-    printf("%s", res);
     if (!lock)
         printf("\n");
 }
