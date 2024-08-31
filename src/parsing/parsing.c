@@ -90,7 +90,7 @@ int is_stillhrdc(t_rdr *tmp)
     return 0;
 }
 
-void open_heredoc(t_rdr *heredocs)
+void open_heredoc(t_rdr *heredocs,int *pipefd)
 {
     char prompt[] = ">";
     char *str = NULL;
@@ -121,20 +121,44 @@ void open_heredoc(t_rdr *heredocs)
     }
     if(!str)
         return;
-    int pipefd[2];
-    //str = expand(*g_minishell.env_ld,str); //TODO khoya hadchi ra makhdamch--slem 3lek mohamed 
-    pipe(pipefd);
     //file = open(name, O_RDWR |O_TRUNC| O_CREAT,0644);
     write(pipefd[WRITE],str,ft_strlen(str));
     close(pipefd[WRITE]);
     last_heredoc->fd = pipefd[READ];
    //unlink("ofile");
 }
+t_rdr *get_last_hrdc(t_rdr *redir)
+{
+	t_rdr *last;
+	last = NULL;
+	if(!redir)
+		return NULL;
+	while(redir)
+	{
+		if(redir->type == HERDOC)
+			last = redir;
+		redir = redir->next;
+	}
+	if(last)
+	{
+		printf("fddddddddddd =%d\n",last->fd);
+	}
+	return  last;
+}
 void handle_heredoc(t_cmd *cmd)
 {
+   // int pid;
+   // pid = fork();
+   // if(pid != CHILD)
+   //     return;
+    int pipefd[2];
+    //str = expand(*g_minishell.env_ld,str); //TODO khoya hadchi ra makhdamch--slem 3lek mohamed 
+    //sigaction(SIGINT,get_ms()->old_act,NULL);
     while(cmd)
     {
-      open_heredoc(cmd->redir);
+		pipe(pipefd);
+      open_heredoc(cmd->redir,pipefd);
+		get_last_hrdc(cmd->redir);
       cmd = cmd->next;
     }
 }

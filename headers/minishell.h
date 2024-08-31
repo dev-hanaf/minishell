@@ -26,6 +26,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdbool.h>
+#include <signal.h>
 
 # ifndef __O_DIRECTORY
 #define __O_DIRECTORY     0x00100000
@@ -73,6 +74,7 @@ typedef struct s_minishell
 {
 	char 				*prompt;
 	char				**env;
+	struct sigaction *old_act;
 	t_env               **env_ld;
 	char				*line;
 	int					status;

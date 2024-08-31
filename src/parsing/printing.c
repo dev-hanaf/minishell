@@ -71,9 +71,7 @@ int is_last(t_rdr *redir)
 //     }
 // }
 
-
-void print_rdr(t_rdr *redir) {
-    while(redir) {
+void print_rdr(t_rdr *redir) { while(redir) {
         if(redir->type == REDIR_IN)
             dprintf(2, "Redirection: \033[0;36mIN\033[0m \t Value: \033[0;35m%s\033[0m\n", redir->value);
         if(redir->type == REDIR_OUT)
@@ -101,6 +99,8 @@ void print_redir(t_rdr *arg) {
     printf("\033[0;34mRedirections:\033[0m ");
     while (arg) {
         printf("\033[0;33m%s\033[0m -> \033[0;36m%d\033[0m", arg->value, arg->type);
+		if(arg->type == HERDOC)
+			printf("\033[0;33mheredoc fd\033[0m -> \033[0;36m%d\033[0m", arg->fd);
         if (arg->next)
             printf(", ");
         arg = arg->next;

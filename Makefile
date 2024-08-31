@@ -41,6 +41,9 @@ fclean: clean
 	rm -rf $(NAME)
 
 re: fclean all
+dev:
+	while inotifywait -q . ; do echo -e '\n\n'; make; done
+
 
 .SECONDARY : $(OBJ)
 
