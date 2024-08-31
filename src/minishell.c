@@ -11,6 +11,7 @@
 #include "minishell.h"
 
 t_minishell	g_minishell;
+
 t_minishell *get_ms(void)
 {
 	static t_minishell ms;
@@ -101,6 +102,23 @@ void close_heredoc(t_cmd *cmd)
 		cmd = cmd->next;
 	}
 }
+
+void sigHandler(int sig)
+{
+	rl_on_new_line();
+	printf("\n");
+	rl_replace_line("",0);
+	rl_redisplay();
+	get_ms()->status = sig + 128;
+}
+void handle_signals(void)
+{
+	struct sigaction sa;
+	sa.sa_flags = 0;
+	sa.sa_handler = sigHandler;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGINT,&sa,get_ms()->old_act);
+}
 void loop(t_env *env)
 {
     printf("env - %s\n",get_env(&env, "PWD"));
@@ -109,6 +127,7 @@ void loop(t_env *env)
 	while (true)
 	{
 		//handle_signals();
+		handle_signals();
 		prompt = ft_strjoin("minishell(", get_env(get_ms()->env_ld,"?"));
 		prompt = ft_strjoin(prompt,")$");
 		if(!prompt)
@@ -127,9 +146,9 @@ void loop(t_env *env)
 		{	
 			t_tokenizer *new_tokenizer =  expand_lexer(env, &lexer);
 			t_cmd *cmd_list = parse_cmds((new_tokenizer));
-			execute_cmds(cmd_list);
+			//execute_cmds(cmd_list);
 			//close_heredoc(cmd_list);
-			//print_cmds(cmd_list);
+			print_cmds(cmd_list);
 			//display_tokens(new_tokenizer);
 			// puts("********************\n********************");
 			// printf("%s\n", expand(env," $HOME"));
@@ -139,21 +158,25 @@ void loop(t_env *env)
 		free(line);
 	}
 }
+
 // TODO test builtin_commandsll
 int	main(int ac, char **av, char **envp)
 {
 	(void)av;
 	t_env **env;
-	
+	t_minishell *ms;
+	ms = get_ms();
+	//struct sigaction old_act;
+	//get_ms()->old_act = &old_act;
 	if (ac > 1)
 		return(1);
 	if(!envp || !*envp)
 		printf("error\n"); //TODO add the error handling function
-	get_ms()->env = envp;
+	ms->env = envp;
 	env = init_environment(envp);
-	get_ms()->env_ld = env;
-    add_to_back_env(get_ms()->env_ld,new_env("Aloha",NULL));
-	add_to_back_env(get_ms()->env_ld,new_env("?",ft_itoa(0)));
+	ms->env_ld = env;
+    add_to_back_env(ms->env_ld,new_env("Aloha",NULL));
+	add_to_back_env(ms->env_ld,new_env("?",ft_itoa(0)));
 	loop(*env);
 	free_allocator();
 	return (0);

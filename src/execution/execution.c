@@ -254,7 +254,7 @@ int check_single_builtin(t_cmd *cmd)
             _exit(ft_atoi(get_env(get_ms()->env_ld,"?")));
         }
         else if(!ft_strcmp((char *)cmd->args->content,"export"))
-            update_status(_export(get_ms()->env_ld,cmd->args->next));
+            _export(get_ms()->env_ld,cmd->args->next);
         dup2(std_in,STDIN_FILENO);
         dup2(std_out,STDOUT_FILENO);
         close(std_in);
@@ -271,9 +271,11 @@ void update_underscore(t_cmd *cmd)
     while(cmd->next)
         cmd = cmd->next;
     arg = cmd->args;
-    while(arg->next)
+	if(!arg)
+		return;
+    while(arg && arg->next)
         arg = arg->next;
-    get_env_ld(get_ms()->env_ld,"_")->value =ft_strdup(arg->content);
+    get_env_ld(get_ms()->env_ld,"_")->value = ft_strdup(arg->content);
 }
 int get_status(int status)
 {
@@ -318,10 +320,7 @@ void execute_cmds(t_cmd *cmd)
         cmd = cmd->next;
     }
     if(tmp != 0)
-    {
         close(tmp);
-    }
-	i = 0;
     int status;
     i = 0;
 	while (i < nbr)
