@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 09:51:34 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/31 15:57:08 by zmourid          ###   ########.fr       */
+/*   Updated: 2024/08/31 16:26:22 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,7 @@ void exec_cmd(t_list *args)
     char **nargs = ld_to_arr(args);
     char **env = env_to_arr(*get_ms()->env_ld);
     char *path = get_cmd_path(nargs[0],env);
-    execve(path,nargs,env);
-    perror("execve");
+    execve("",nargs,env);
     //TODO handle failed execve
 }
 void exec_child(t_cmd *cmd,int in_fd,int out_fd[2])
