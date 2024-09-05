@@ -4,128 +4,11 @@
 #include <stdio.h>
 #include <unistd.h>
 //todo parse the line and execute the command
-t_rdr *ft_redirnew(char *value,int type)
-{
-   t_rdr *new;
-  new = ft_allocator((sizeof(t_rdr)),"parsing");
-  if(!new)
-      return NULL;
-  new->value = ft_strdup(value);
-  new->next = NULL;
-  new->fd = -1;
-  new->type = type;
-  return  new;
-}
-char *ft_strjoin_char(char *s1,char c)
-{
-    char *new = ft_allocator((sizeof(char)* ft_strlen(s1) + 2),"parsing");
-    if(!new)
-        return ft_strdup("");
-    int i = 0;
-    while(s1[i])
-    {
-        new[i] = s1[i];
-        i++;
-    }
-    new[i++] = c;
-    new[i] = 0;
-    return new;
-}
-char *ft_readline(char *txt)
-{
-    char *line;
-    char buff;
-    char *test = ft_strjoin_char("aloh", 'a');
-    dprintf(2,"str = %s\n",test);
-    write(1,txt,ft_strlen(txt));
-    while(TRUE)
-    {
-        if(read(0,&buff,1) == 0)
-            break;
-        dprintf(2, "buff = %c\n", buff);
-        line = ft_strjoin_char(line,buff);
-        if(buff == '\n' || !buff || buff == 'q')
-            break;
-    }
-    return line;
-}
 
-char	*ft_strjoin_ln(char *s1, char *s2)
+void sigHandler_hrdc(int sig)
 {
-	char	*str;
-	size_t	i;
-	size_t	j;
-
-	if(!s1 && s2)
-	   return ft_strdup(s2);
-	if(!s2 && s1)
-	   return ft_strdup(s2);
-	if (s2 == NULL)
-	{
-		s2 = ft_allocator(sizeof(char), "s2");
-		if (!s2)
-			return (NULL);
-		s2[0] = '\0';
-	}
-	str = ft_allocator((ft_strlen(s1) + ft_strlen(s2) + 1 + 1), "join");
-	if (!str)
-		return (NULL);
-	i = -1;
-	while (s1[++i])
-		str[i] = s1[i];
-	j = 0;
-	while (s2[j])
-		str[i++] = s2[j++];
-	str[i++] = '\n';
-	str[i] = 0;
-	return (str);
-}
-int is_stillhrdc(t_rdr *tmp)
-{
-    while(tmp)
-    {
-        if(tmp->type == HERDOC)
-            return 1; 
-    }
-    return 0;
-}
-
-void open_heredoc(t_rdr *heredocs,int *pipefd)
-{
-    char prompt[] = ">";
-    char *str = NULL;
-    char *line = NULL;
-    t_rdr *last_heredoc;
-    last_heredoc = NULL;
-    while(heredocs)
-    {
-        if(heredocs->type != HERDOC)
-        {
-            heredocs = heredocs->next;
-            continue;
-        }
-        while(TRUE)
-        {
-            line = readline(prompt);
-            dprintf(2, "heredoc eof = %s\n",heredocs->value);
-            if( line == NULL || !ft_strcmp(line, heredocs->value))
-                break;
-            if(!heredocs->next)
-            {
-                last_heredoc = heredocs;
-                str = ft_strjoin(str, line);
-                str =ft_strjoin(str, "\n");
-            }
-        }
-        heredocs = heredocs->next;
-    }
-    if(!str)
-        return;
-    //file = open(name, O_RDWR |O_TRUNC| O_CREAT,0644);
-    write(pipefd[WRITE],str,ft_strlen(str));
-    close(pipefd[WRITE]);
-    last_heredoc->fd = pipefd[READ];
-   //unlink("ofile");
+    write(1,"\n",1);
+	exit(sig + 128);
 }
 t_rdr *get_last_hrdc(t_rdr *redir)
 {
@@ -139,43 +22,90 @@ t_rdr *get_last_hrdc(t_rdr *redir)
 			last = redir;
 		redir = redir->next;
 	}
-	if(last)
-	{
-		printf("fddddddddddd =%d\n",last->fd);
-	}
 	return  last;
 }
-void handle_heredoc(t_cmd *cmd)
+int open_heredoc(t_rdr *heredocs,int *pipefd, int *status)
 {
-   // int pid;
-   // pid = fork();
-   // if(pid != CHILD)
-   //     return;
+    char *str = NULL;
+    char *line = NULL;
+    //expand = 0; //TODO check if we need to expand
+	int pid;
+	pid = fork();
+    char *eof;
+	if(pid != CHILD)
+	{
+        handle_parent_signals();
+		waitpid(pid,status,0);
+		return *status;//	struct sigaction sa; //	sa.sa_flags = -1;
+	}
+	signal(SIGINT,SIG_DFL);
+    while(heredocs)
+    {
+        if(heredocs->type != HERDOC)
+        {
+            heredocs = get_last_hrdc(heredocs);
+            continue;
+        }
+        eof = handle_quotes(heredocs->value);
+        while(TRUE)
+        {
+            line = readline(">");
+            if( line == NULL || !ft_strcmp(line, eof))
+                break;
+            if(get_last_hrdc(heredocs) == heredocs)
+            {
+                str = ft_strjoin(str, line);
+                str = ft_strjoin(str, "\n");
+            }
+        }
+        heredocs = heredocs->next;
+    }
+    if(!str)
+	{
+		close(pipefd[WRITE]);
+		close(pipefd[READ]);
+		exit(0);
+        return 0;
+	}
+    if(!write(pipefd[WRITE],str,ft_strlen(str)))
+	{
+			dprintf(2,"error writing to pipe\n");
+			return 0;
+	}
+    close_heredoc(get_ms()->cmd);
+    close(pipefd[WRITE]);
+	close(pipefd[READ]);
+	exit(0);
+	return 1;
+}
+
+int  handle_heredoc(t_cmd *cmd)
+{
     int pipefd[2];
-    //str = expand(*g_minishell.env_ld,str); //TODO khoya hadchi ra makhdamch--slem 3lek mohamed 
-    //sigaction(SIGINT,get_ms()->old_act,NULL);
+	int status;
+	t_rdr *last;
     while(cmd)
     {
-		pipe(pipefd);
-      open_heredoc(cmd->redir,pipefd);
-		get_last_hrdc(cmd->redir);
+		last = get_last_hrdc(cmd->redir);
+		if(last)
+		{
+            pipe(pipefd);
+			open_heredoc(cmd->redir,pipefd,&status);
+			close(pipefd[WRITE]);
+			if(status != 0)
+			{
+                close(pipefd[READ]);
+				get_ms()->status = status;
+				update_status(get_status(status));
+				return status;
+			}
+			last->fd = pipefd[READ];
+		}
       cmd = cmd->next;
     }
+	return 0;
 }
-void ft_rdraddback(t_rdr **rdr,t_rdr *new)
-{
-    if(!rdr)
-        return ;
-    if(!*rdr)
-    {
-        *rdr = new;
-        return ;
-    }
-    t_rdr *temp = *rdr;
-    while(temp->next)
-        temp = temp->next;
-    temp->next = new;
-}
+
 t_cmd *parse_cmds(t_tokenizer *tokens)
 {
     t_cmd *cmd = new_cmd();
@@ -186,24 +116,24 @@ t_cmd *parse_cmds(t_tokenizer *tokens)
     {
         if(tokens->type == PIPE)
         {
-            add_to_back_cmd(&cmd, new_cmd());
-            curr_cmd = get_last_cmd(cmd);
+            curr_cmd = new_cmd();
+            add_to_back_cmd(&cmd, curr_cmd);
             tokens = tokens->next;
             continue;
         }
-        if((tokens->type == REDIR_IN || tokens->type == REDIR_OUT || tokens->type == HERDOC || tokens->type == APPEND) && tokens->next)
+        if((tokens->type == REDIR_IN || tokens->type == REDIR_OUT || tokens->type == HERDOC || tokens->type == APPEND))
         {
            tmp_rdr = ft_redirnew(tokens->next->value, tokens->type);
             ft_rdraddback(&curr_cmd->redir, tmp_rdr);
             tokens = tokens->next->next;
             continue;
         }
-        if(!tokens->value)//TODO this should be handled in parsing
-            ft_lstadd_back(&curr_cmd->args, ft_lstnew(""));
-        else
+        if(tokens->value && *tokens->value)//TODO this should be handled in parsing
             ft_lstadd_back(&curr_cmd->args, ft_lstnew(tokens->value));
         tokens = tokens->next;
     }
-    handle_heredoc(cmd);
+    get_ms()->cmd = cmd;
+    if(handle_heredoc(cmd))
+		return NULL;
     return cmd;
 }

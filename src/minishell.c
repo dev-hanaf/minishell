@@ -19,22 +19,6 @@ t_minishell *get_ms(void)
 }
 // https://42-cursus.gitbook.io/guide/rank-03/minishell/functions
 
-t_tokenizer *get_token(t_tokenizer *lexer, char *word)
-{
-	t_tokenizer *temp;
-	temp = lexer;
-	while (temp)
-	{
-		if (ft_strncmp(temp->value, word, 2) == 0 )
-		{
-			if (temp->next != NULL)
-				return(temp->next);
-			break;
-		}
-		temp = temp->next;
-	}
-	return (NULL);
-}
 void builtin_commands(t_env **env, t_tokenizer *lexer)
 {
 	size_t len;
@@ -103,22 +87,7 @@ void close_heredoc(t_cmd *cmd)
 	}
 }
 
-void sigHandler(int sig)
-{
-	rl_on_new_line();
-	printf("\n");
-	rl_replace_line("",0);
-	rl_redisplay();
-	get_ms()->status = sig + 128;
-}
-void handle_signals(void)
-{
-	struct sigaction sa;
-	sa.sa_flags = 0;
-	sa.sa_handler = sigHandler;
-	sigemptyset(&sa.sa_mask);
-	sigaction(SIGINT,&sa,get_ms()->old_act);
-}
+
 void loop(t_env *env)
 {
     printf("env - %s\n",get_env(&env, "PWD"));
@@ -126,34 +95,30 @@ void loop(t_env *env)
 	char *prompt;
 	while (true)
 	{
-		//handle_signals();
 		handle_signals();
-		prompt = ft_strjoin("minishell(", get_env(get_ms()->env_ld,"?"));
-		prompt = ft_strjoin(prompt,")$");
+		prompt = ft_strjoin("minishell(", ft_itoa(get_ms()->status));
+		prompt = ft_strjoin(prompt,")$ ");
 		if(!prompt)
 			printf("error\n"); //TODO add the error handling function
 		line = readline(prompt);
 		if (!line)
 		{
 			printf("exit\n");
-			exit(0);
+			exit(130);
 			free_allocator();
 		}
 		else if ((line && line[0] == '\0' )|| line[0] == '\n')
 			continue;
 		t_tokenizer *lexer = tokenization(line);
-		display_tokens(lexer);
+		//display_tokens(lexer);
 		if (!input_validation(lexer))
 		{	
 			t_tokenizer *new_tokenizer =  expand_lexer(env, &lexer);
 			t_cmd *cmd_list = parse_cmds((new_tokenizer));
-			//execute_cmds(cmd_list);
-			//close_heredoc(cmd_list);
-			print_cmds(cmd_list);
+			execute_cmds(cmd_list,cmd_nbr(cmd_list));
+			close_heredoc(cmd_list);
+			//print_cmds(cmd_list);
 			//display_tokens(new_tokenizer);
-			// puts("********************\n********************");
-			// printf("%s\n", expand(env," $HOME"));
-			//builtin_commands(&env, new_tokenizer);
 		}
 			add_history(line);
 		free(line);
@@ -164,11 +129,10 @@ void loop(t_env *env)
 int	main(int ac, char **av, char **envp)
 {
 	(void)av;
+	//TODO add args check
 	t_env **env;
 	t_minishell *ms;
 	ms = get_ms();
-	//struct sigaction old_act;
-	//get_ms()->old_act = &old_act;
 	if (ac > 1)
 		return(1);
 	if(!envp || !*envp)
@@ -177,7 +141,6 @@ int	main(int ac, char **av, char **envp)
 	env = init_environment(envp);
 	ms->env_ld = env;
     add_to_back_env(ms->env_ld,new_env("Aloha",NULL));
-	add_to_back_env(ms->env_ld,new_env("?",ft_itoa(0)));
 	loop(*env);
 	free_allocator();
 	return (0);

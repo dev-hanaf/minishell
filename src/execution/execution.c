@@ -18,19 +18,24 @@
 
 void update_status(int new_status)
 {
-    change_env(get_ms()->env_ld,"?",ft_itoa(new_status));
+    get_ms()->status = new_status;
+    get_env_ld(get_ms()->env_ld,"?")->value = ft_itoa(new_status);
+}
+int ft_close(int fd)
+{
+    if(fd != 0 && fd != 1)
+        return close(fd);
+    return -1;
 }
 
 void handle_rdr(t_rdr *redir,int flag)
 {
     int file;
-    //char *here_doc_name = NULL;
-    //dprintf(2,"hello %s\n",redir->type);
     while(redir)
     {
-        if(redir->type == REDIR_IN)
+        if(redir->type == REDIR_IN || redir->type == REDIR_OUT || redir->type == APPEND)
         {
-            file = open(redir->value,O_RDONLY);
+            file = open(redir->value,redir->mode,redir->perm);
             if(file == -1)
             {
                perror(redir->value);
@@ -38,32 +43,7 @@ void handle_rdr(t_rdr *redir,int flag)
                     exit(1);
                 return ;
             };
-            dup2(file,STDIN_FILENO);
-            close(file);
-        }
-        if(redir->type == REDIR_OUT)
-        {
-            file = open(redir->value, O_RDWR |O_TRUNC| O_CREAT,0644);
-            if(file == -1)
-            {
-               perror(redir->value);
-               if(flag)
-                    exit(1);
-                return ;
-            };
-            dup2(file,STDOUT_FILENO);
-            close(file);
-        }
-        if(redir->type == APPEND)
-        {
-            file = open(redir->value,O_APPEND| O_RDWR | O_CREAT,0644);
-            if(file == -1)
-            {
-               perror(redir->value);
-               if(flag)
-                    exit(1);
-            };
-            dup2(file,STDOUT_FILENO);
+            dup2(file,redir->dup);
             close(file);
         }
         if(redir->type == HERDOC)
@@ -97,7 +77,7 @@ int check_builtin(t_list *args,int *status)
     }
     else if(!ft_strcmp((char *)args->content,"exit"))
     {
-        __exit(ft_atoi(get_env(get_ms()->env_ld,"?")));
+        __exit(get_ms()->status);
         return 1;
     }
     else if(!ft_strcmp((char *)args->content,"env"))
@@ -119,86 +99,21 @@ void exec_cmd(t_list *args)
     char **env = env_to_arr(*get_ms()->env_ld);
     char *path = get_cmd_path(nargs[0],env);
     execve(path,nargs,env);
+    perror("execve");
     //TODO handle failed execve
 }
-void exec_child(t_cmd *cmd,int in_fd,int out_fd)
+void exec_child(t_cmd *cmd,int in_fd,int out_fd[2])
 {
-    if(in_fd != STDIN_FILENO)
-        {
-            dup2(in_fd,STDIN_FILENO);
-            close(in_fd);
-        };
-    if(out_fd != STDOUT_FILENO)
-        {
-            dup2(out_fd,STDOUT_FILENO);
-            close(out_fd);
-        }
-    ///handle_rdr(cmd->redir);
-    exec_cmd(cmd->args);
-}
-void exec_child2(t_cmd *cmd,int in_fd,int out_fd[2])
-{
-
-    if(in_fd != STDIN_FILENO)
-        {
-            dup2(in_fd,STDIN_FILENO);
-            close(in_fd);
-        };
-    if(out_fd[1] != STDOUT_FILENO)
-        {
-            dup2(out_fd[1],STDOUT_FILENO);
-            close(out_fd[1]);
-        }
-    if(out_fd[0] != 0)
-        close(out_fd[0]);
+    handle_child_signals();
+    dup2(in_fd,STDIN_FILENO);
+    ft_close(in_fd);
+    dup2(out_fd[WRITE],STDOUT_FILENO);
+    ft_close(out_fd[WRITE]);
+    ft_close(out_fd[READ]);
     handle_rdr(cmd->redir,1);
     exec_cmd(cmd->args);
 }
 
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	size_t			i;
-	unsigned char	*str1;
-	unsigned char	*str2;
-
-	str1 = (unsigned char *)s1;
-	str2 = (unsigned char *)s2;
-	i = 0;
-	while ((str1[i] == str2[i]) && str1[i] && str2[i])
-	{
-		i++;
-	}
-	return (str1[i] - str2[i]);
-}
-// void read_heredoc(t_rdr *hrdoc)
-// {
-//     char *line;
-//     char *str = NULL;
-//     while(TRUE)
-//     {
-//         line = readline(">");
-//         if(!line || !ft_strcmp(hrdoc->value, line))
-//             break;
-//         str = ft_strjoin(str, line);
-//     }
-//     printf("-------------------------str---------------------------\n");
-//     printf("%s",str);
-// }
-
-// void check_heredoc(t_cmd *cmd)
-// {
-//     t_rdr *temp_rdr;
-//     while(cmd)
-//     {
-//         temp_rdr =cmd->heredoc;
-//         while(temp_rdr)
-//         {
-//             read_heredoc(temp_rdr);
-//             temp_rdr = temp_rdr->next;
-//         }
-//         cmd = cmd->next;
-//     }
-// }
 int is_built_in(char *command)
 {
     if(!ft_strcmp(command,"echo"))
@@ -240,18 +155,16 @@ int check_single_builtin(t_cmd *cmd)
         {
             close(std_in);
             close(std_out);
-            _exit(ft_atoi(get_env(get_ms()->env_ld,"?")));
+            _exit(get_ms()->status);
         }
         else if(!ft_strcmp((char *)cmd->args->content,"export"))
-            _export(get_ms()->env_ld,cmd->args->next);
+            get_ms()->status = _export(get_ms()->env_ld,cmd->args->next);
         dup2(std_in,STDIN_FILENO);
         dup2(std_out,STDOUT_FILENO);
         close(std_in);
         close(std_out);
         return 1;
     }
-    // close(std_in);
-    // close(std_out);
     return 0;
 }
 void update_underscore(t_cmd *cmd)
@@ -270,50 +183,55 @@ int get_status(int status)
 {
     if(WIFEXITED(status))
         return WEXITSTATUS(status);
-    // if(WIFSIGNALED(status))
-    //     return WTERMSIG(status) + 128;
+    if(WIFSIGNALED(status))
+        return WTERMSIG(status) + 128;
     return 0;
 }
-void execute_cmds(t_cmd *cmd)
+t_exec *init_exec(t_cmd *cmd)
 {
-    int i;
-    int nbr;
-    nbr = cmd_nbr(cmd);
-    i = 0;
-    pid_t *pids = (int *)ft_allocator(sizeof(pid_t) * (cmd_nbr(cmd)),"execution");
-    int pipefd[2];
-    pipefd[READ] = 0;
-    int tmp;
-    tmp = STDIN_FILENO;
-    pipefd[WRITE] = STDOUT_FILENO;
+    t_exec *exec;
+    if(!cmd)
+        return NULL;
     if(!cmd->next)
         update_underscore(cmd);
     if(!cmd->next && check_single_builtin(cmd))
+        return NULL;
+    exec = ft_allocator(sizeof(t_exec),"execution");
+    exec->pids = (pid_t *)ft_allocator(sizeof(pid_t) * (cmd_nbr(cmd)),"execution");
+    exec->pipefd[READ] = 0;
+    exec->pipefd[WRITE] = 1;
+    exec->tmp = STDIN_FILENO;
+    exec->i = 0;
+    return exec;
+}
+void execute_cmds(t_cmd *cmd,int nbr)
+{
+    t_exec *exec;
+    int i = 0;
+    int status;
+    exec = init_exec(cmd);
+    if(exec == NULL)
         return;
     while(cmd)
     {
         if(cmd->next)
-            pipe(pipefd);
-        pids[i] = fork();
-        if(pids[i] == CHILD)
-            exec_child2(cmd,tmp,pipefd);
+            pipe(exec->pipefd);
+        exec->pids[i] = fork();
+        if(exec->pids[i] == CHILD)
+            exec_child(cmd,exec->tmp,exec->pipefd);
         else
         {
-            if(pipefd[WRITE] != 1)
-                close(pipefd[WRITE]);
-            if(tmp != 0)
-                close(tmp);
-            tmp = pipefd[READ];
+            handle_parent_signals();
+            ft_close(exec->pipefd[WRITE]);
+            ft_close(exec->tmp);
+            exec->tmp = exec->pipefd[READ];
         }
         i++;
         cmd = cmd->next;
     }
-    if(tmp != 0)
-        close(tmp);
-    int status;
+    ft_close(exec->tmp);
     i = 0;
 	while (i < nbr)
-		waitpid(pids[i++], &status, 0);
-    //update_status(get_status(status));
-    // print_export(*g_minishell.env_ld);
+		waitpid(exec->pids[i++], &status, 0);
+    update_status(get_status(status));
 }

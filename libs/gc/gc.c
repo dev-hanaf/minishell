@@ -57,7 +57,7 @@ void	*ft_allocator(size_t size, char *description)
 	t_data	*node;
 	void	*ptr;
 
-	node = ft_gc_lstnew(size, malloc(size), description);
+	node = ft_gc_lstnew(size, calloc(1,size), description);
 	if (!node)
 		return (NULL);
 	ptr = node->ptr;

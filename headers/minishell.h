@@ -72,28 +72,18 @@ typedef struct s_env
 	struct s_env		*prev;
 }						t_env;
 
-typedef struct s_minishell
-{
-	char 				*prompt;
-	char				**env;
-	struct sigaction *old_act;
-	t_env               **env_ld;
-	char				*line;
-	int					status;
-}						t_minishell;
-
-extern t_minishell		g_minishell;
-
-t_minishell *get_ms(void);
-
 // TODO replace the lists in t_cmd by this
 typedef struct s_rdr
 {
     char *value;
     int type;
     int fd;
+	int mode;
+	int perm;
+	int dup;
     struct s_rdr *next;
 } t_rdr;
+
 typedef struct s_cmd
 {
     t_list *args;
@@ -102,6 +92,22 @@ typedef struct s_cmd
     int hrdc_fd;
     struct s_cmd *next;
 } t_cmd;
+
+typedef struct s_minishell
+{
+	char 				*prompt;
+	char				**env;
+	struct sigaction *old_act;
+	t_env               **env_ld;
+	char				*line;
+	int					status;
+	t_cmd				*cmd;
+}						t_minishell;
+
+extern t_minishell		g_minishell;
+
+t_minishell *get_ms(void);
+
 
 
 /*-----------------------------Utils --------------------------*/
@@ -155,6 +161,14 @@ typedef struct s_expand
 	char	buffer[2];
 }		t_expand;
 
+typedef struct s_exec
+{
+	pid_t *pids;
+	int pipefd[2];
+	int tmp;
+	int i;
+} t_exec;
+
 t_expand	*var(void);
 t_tokenizer 			*expand_lexer(t_env *env, t_tokenizer **lexer);
 char 					*expand(t_env *env,char *line);
@@ -195,13 +209,20 @@ char **ld_to_arr(t_list *lst);
 t_cmd *parse_cmds(t_tokenizer *tokens);
 void print_cmds(t_cmd *cmd_list);
 void print_args(t_list *arg,char *name);
+/*t_rdr */
+t_rdr *ft_redirnew(char *value,int type);
+void ft_rdraddback(t_rdr **rdr,t_rdr *new);
+void close_heredoc(t_cmd *cmd);
 /*execution */
-void execute_cmds(t_cmd *cmd);
-void exec_job(t_cmd *cmd);
+void execute_cmds(t_cmd *cmd,int nbr);
 char	*get_cmd_path(char *cmd, char **env);
 int	ft_strcmp(const char *s1, const char *s2);
-
-
+/*signals*/
+void handle_parent_signals(void);
+void handle_child_signals(void);
+void handle_signals(void);
+void update_status(int new_status);
 int     _export(t_env **env,t_list *args);
 void print_strs(char **strs);
+int get_status(int status);
 #endif
