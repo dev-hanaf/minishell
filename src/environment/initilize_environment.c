@@ -25,6 +25,7 @@ t_env	**init_environment(char **env)
 	*init_env = NULL;
 	i = 0;
 	new = new_env("$", ft_itoa(get_pid()));
+	wait(0);
 	add_to_back_env(init_env, new);
 	new = new_env("?", ft_itoa(g_minishell.status));
 	add_to_back_env(init_env, new);

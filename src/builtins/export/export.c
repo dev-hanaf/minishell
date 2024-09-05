@@ -95,7 +95,6 @@ void make_and_add(char *key,char *value,int concat)
 }
 int process_args(char *str)
 {
-    //printf("%s\n",str);
      char *key;
      char *value;
      key = NULL;
@@ -114,9 +113,6 @@ int process_args(char *str)
      {
         fill_key_value(str,&key,&value,flag- 1);
         make_and_add(key,value,flag - 1);
-        //printf("%s\n",str);
-        //printf("key=%s,",key);
-        //printf("value=%s\n",value);
      }
      return 1;
 }
@@ -126,8 +122,6 @@ int     _export(t_env **env,t_list *args)
     status = 0;
     if(!env)
         return 0;// TODO i still need to check this
-    //display_environment(env);
-    //printf("hello im export content = %s\n",(char *)args->content);
     if(!args)
         print_export(*env);
     while(args)

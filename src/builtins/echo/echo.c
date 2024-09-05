@@ -37,12 +37,10 @@ void _echo(char **argumentes)
     int i;
     bool lock;
     bool flag;
-    bool ltrim;
     int j;
     // char *res = NULL;
     flag = false;
     lock = false;
-    ltrim = true;
     i = 0;
     while(argumentes && argumentes[i])
     {
@@ -56,7 +54,6 @@ void _echo(char **argumentes)
             else
             {
                printf("%s", argumentes[i]);
-                ltrim = false;
                 flag = true;
                 if (argumentes[i + 1] && argumentes[i + 1] != NULL)
                 printf(" ");

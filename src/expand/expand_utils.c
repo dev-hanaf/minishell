@@ -54,10 +54,8 @@ int	needs_expansion(const char *line)
 int	var_need_expansion(const char *line)
 {
 	int		i;
-	char	hold;
 
 	i = 0;
-	hold = 0;
 	while (line && line[i])
 	{
 		if (line[i] == '$')
@@ -95,8 +93,11 @@ int get_pid(void)
     int pid;
 
     pid = fork();
-    if (!pid)
+    if (pid == CHILD)
+	{
         exit(0);
+	}
+	wait(0);
     return (pid - 2);
 }
 
