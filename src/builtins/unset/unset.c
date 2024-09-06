@@ -12,10 +12,16 @@
 
 #include "minishell.h"
 
-int _unset(t_env **env, char *variable)
+int _unset(t_env **env, char **variables)
 {
-    if (!*env || !variable)
+    if (!*env)
+	{
         return (-1);
-    remove_env_element(env, variable);
+	}
+	while(variables && *variables)
+	{
+		remove_env_element(env, *variables);
+		variables++;
+	}
     return (0);
 }

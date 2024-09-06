@@ -1,5 +1,6 @@
 #include "libft.h"
 #include "minishell.h"
+#include <stdio.h>
 
 void print_export(t_env *env)
 {
@@ -91,8 +92,11 @@ void make_and_add(char *key,char *value,int concat)
             node->value = value;
         return;
     }
+	dprintf(2,"key=%s\n",key);
+	dprintf(2,"value=%s\n",value);
     add_to_back_env(get_ms()->env_ld,new_env(key,value));
 }
+
 int process_args(char *str)
 {
      char *key;
@@ -116,19 +120,81 @@ int process_args(char *str)
      }
      return 1;
 }
+void process_nodes(t_env *env,char *arg)
+{
+	char *key = NULL;
+	char *value = NULL;
+	char c[2];
+	int i;
+	char **strs;
+
+	strs = NULL;
+	i = 0;
+	while (arg && arg[i] && arg[i] != '=')
+	{
+		ft_strcpy(c, arg[i]);
+		key = ft_strjoin(key, c);
+		i++;
+	}
+	if (arg && arg[i] == '=')
+		i++;
+	while (arg && arg[i])
+	{
+		ft_strcpy(c, arg[i]);
+		value = ft_strjoin(value, c);
+		i++;
+	}
+	if (!key ||  (key[0] == '\0'|| ft_strchr(key, '$')))
+	{
+		dprintf(2, "key ==> %s\t\t value ==> %s\n", key, value);
+		dprintf(2, RED"split ALL\n"NC);
+		strs = expand(env, arg);
+	}
+	else
+	{
+		dprintf(2, "key ==> %s\t\t value ==> %s\n", key, value);
+		dprintf(2, GREEN"join ALL\n"NC);
+		strs = catch_expand(arg, env, 1);
+		int j = 0;
+		while (strs[j])
+		{
+			strs[j] = handle_quotes(strs[j]);
+			j++;
+		}
+	}
+    while(strs && *strs)
+    {
+		printf("creating %s\n",*strs);
+        process_args(*strs);
+		strs++;
+    }
+}
+char **export_v2(t_env *env,t_list *args)
+{
+	while(args)
+	{
+		process_nodes(env,(char *)args->content);
+		args = args->next;
+	}
+	return NULL;AgjdkdfAgjdkdfAAA
+}
 int     _export(t_env **env,t_list *args)
 {
     int status;
     status = 0;
+	export_v2(*env,args);
     if(!env)
         return 0;// TODO i still need to check this
     if(!args)
+	{
         print_export(*env);
-    while(args)
-    {
-        if(!process_args(args->content))
-            status = 1;
-        args = args->next;
-    }
+	}
+//    while(strs && *strs)
+//    {
+//		printf("creating %s\n",*strs);
+//        if(!process_args(*strs))
+//            status = 1;
+//		strs++;
+//    }
 	return status;
 }

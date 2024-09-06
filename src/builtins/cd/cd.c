@@ -22,10 +22,16 @@ Some systems, like OS X and CentOS, map the cd man page to builtin which lists a
 /*perror ==> file not found && permission denied */
 /* oldpwd is not set && home is not set  */
 
-int	_cd(char *path, t_env **env)
+int	_cd(char **paths, t_env **env)
 {
     char *new_path;
+	char *path = paths[0];
     char *cwd;
+	if(ft_strlen_2d_array(paths) > 1)
+	{
+		printf("cd: too many arguments\n");
+		return (1);
+	}
     if (path == NULL)
     {
         change_env(env, "OLDPWD", get_env(env, "PWD"));

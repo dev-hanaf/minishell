@@ -85,7 +85,7 @@ void print_args(t_list *arg, char *name) {
         return;
     printf("\033[0;34m%s:\033[0m ", name);
     while (arg) {
-        printf("\033[0;32m\"%s\"\033[0m", (char *)arg->content);
+		printf("\033[0;32m%s\033[0m", (char *)arg->content);
         if (arg->next)
             printf(", ");
         arg = arg->next;
