@@ -114,7 +114,7 @@ void loop(t_env *env)
 		if (!input_validation(lexer))
 		{	
 			t_tokenizer *new_tokenizer =  expand_lexer(env, &lexer);
-			display_tokens(new_tokenizer);
+			//display_tokens(new_tokenizer);
 			t_cmd *cmd_list = parse_cmds((new_tokenizer));
 			execute_cmds(cmd_list,cmd_nbr(cmd_list));
 			close_heredoc(cmd_list);

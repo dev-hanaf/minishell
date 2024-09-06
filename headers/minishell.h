@@ -100,6 +100,7 @@ typedef struct s_minishell
 	struct sigaction *old_act;
 	t_env               **env_ld;
 	char				*line;
+	t_list				*heredoc_fds;
 	int					status;
 	t_cmd				*cmd;
 }						t_minishell;

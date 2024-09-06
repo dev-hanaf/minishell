@@ -98,7 +98,7 @@ void exec_cmd(t_list *args)
     char **nargs = ld_to_arr(args);
     char **env = env_to_arr(*get_ms()->env_ld);
     char *path = get_cmd_path(nargs[0],env);
-    execve("",nargs,env);
+    execve(path,nargs,env);
     //TODO handle failed execve
 }
 void exec_child(t_cmd *cmd,int in_fd,int out_fd[2])
