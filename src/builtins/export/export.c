@@ -176,7 +176,7 @@ char **export_v2(t_env *env,t_list *args)
 		process_nodes(env,(char *)args->content);
 		args = args->next;
 	}
-	return NULL;AgjdkdfAgjdkdfAAA
+	return NULL;
 }
 int     _export(t_env **env,t_list *args)
 {

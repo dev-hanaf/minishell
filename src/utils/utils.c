@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 03:15:46 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/18 04:45:17 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/06 23:39:29 by zmourid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,11 @@ int expand_counter(t_list *lst)
 
 char **ld_to_arr_and_expand(t_list *lst)
 {
-	if(!lst)
+	int counter = 0;
+	counter = expand_counter(lst);
+	if(!lst || counter == 0)
 		return NULL;
-	char **arr = ft_allocator(sizeof(char *) * (expand_counter(lst) + 1),"parsing");
+	char **arr = ft_allocator(sizeof(char *) * (counter +  1),"parsing");
 	int i = 0;
 	while(lst)
 	{

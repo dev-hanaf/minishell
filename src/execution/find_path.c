@@ -1,6 +1,7 @@
 #include "minishell.h"
 void clean_exit(int e)
 {
+	dprintf(2,"khoya hani kankhroj \n");
     exit(e);
 }
 void	ms_error(char *str, int e)
