@@ -76,21 +76,18 @@ char **catch_expand(char *line, t_env *env, int flag)
 	return (var()->str);
 }
 
-char *expand(t_env *env, char *line)
+char **expand(t_env *env, char *line)
 {
 	char **res;
-	char *str;
 	int i;
 
-	str = NULL;
 	res = NULL;
 	i = 0;
-	res = catch_expand(line, env, 1);
+	res = catch_expand(line, env, 0);
 	while (res[i])
 	{
 		res[i] = handle_quotes(res[i]);
-		str = ft_strjoin(str, res[i]);
 		i++;
 	}
-	return (str);
+	return (res);
 }

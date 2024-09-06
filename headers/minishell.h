@@ -136,12 +136,12 @@ t_tokenizer				*tokenization(char *line);
 void					display_tokens(t_tokenizer *tokens);
 
 /*----------------------------- Built-in --------------------------*/
-int						_cd(char *path, t_env **env);
+int						_cd(char **paths, t_env **env);
 int 					_pwd(void);
-int 					_unset(t_env **env, char *variable);
+int 					_unset(t_env **env, char **variables);
 void    				_env(t_env *env);
 void 					_echo(char **argumentes);
-void   					__exit(int num);
+void					__exit(char **args);
 
 
 /*----------------------------- Expand --------------------------*/
@@ -172,7 +172,8 @@ typedef struct s_exec
 
 t_expand	*var(void);
 t_tokenizer 			*expand_lexer(t_env *env, t_tokenizer **lexer);
-char 					*expand(t_env *env,char *line);
+char 					**expand(t_env *env, char *line);
+char					**ld_to_arr_and_expand(t_list *lst);
 char					*handle_quotes(char *line);
 void					add_to_back_expand(t_tokenizer **token, t_tokenizer *new);
 bool					 is_opend(char c , bool open);

@@ -73,8 +73,8 @@ int open_heredoc(t_rdr *heredocs,int *pipefd, int *status)
 		exit(0);
         return 0;
 	}
-	if(!isExpand)
-		str = expand(*get_ms()->env_ld, str);
+//	if(!isExpand)
+//		str = expand(*get_ms()->env_ld, str);
     if(!write(pipefd[WRITE],str,ft_strlen(str)))
 	{
 			dprintf(2,"error writing to pipe\n");
@@ -136,8 +136,8 @@ t_cmd *parse_cmds(t_tokenizer *tokens)
             tokens = tokens->next->next;
             continue;
         }
-        if(tokens->value && *tokens->value)//TODO this should be handled in parsing
-            ft_lstadd_back(&curr_cmd->args, ft_lstnew(tokens->value));
+        //if(tokens->value)//TODO this should be handled in parsing
+         ft_lstadd_back(&curr_cmd->args, ft_lstnew(tokens->value));
         tokens = tokens->next;
     }
     get_ms()->cmd = cmd;

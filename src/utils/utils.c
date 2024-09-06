@@ -77,3 +77,43 @@ void print_strs(char **strs)
 		strs++;
 	}
 }
+
+int expand_counter(t_list *lst)
+{
+	if(!lst)
+		return 0;
+	int i = 0;
+	while(lst)
+	{
+		char **res = catch_expand((char *)lst->content , *get_ms()->env_ld, 0);
+		i += ft_strlen_2d_array(res);
+		lst = lst->next;
+	}
+	return i;
+}
+
+char **ld_to_arr_and_expand(t_list *lst)
+{
+	if(!lst)
+		return NULL;
+	char **arr = ft_allocator(sizeof(char *) * (expand_counter(lst) + 1),"parsing");
+	int i = 0;
+	while(lst)
+	{
+		int j = 0;
+		char **res = catch_expand((char *)lst->content , *get_ms()->env_ld, 0);
+		while (res[j])
+		{
+			arr[i] = handle_quotes(res[j]);
+	//		dprintf(2,"------------------------------------\n");
+	//		dprintf(2,"arr[%d]=%s\n",i,arr[i]);
+	//		dprintf(2,"------------------------------------\n");
+			i++;
+			j++;
+		}
+		lst = lst->next;
+	}
+	arr[i] = NULL;
+	return arr;
+}
+
