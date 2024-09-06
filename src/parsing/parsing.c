@@ -24,11 +24,17 @@ t_rdr *get_last_hrdc(t_rdr *redir)
 	}
 	return  last;
 }
+char *handle_quotes_v2(char *eof,int *expand)
+{
+	if(ft_strchr(eof, '\'') || ft_strchr(eof, '\"'))
+		*expand = 1;
+	return handle_quotes(eof);
+}
 int open_heredoc(t_rdr *heredocs,int *pipefd, int *status)
 {
     char *str = NULL;
     char *line = NULL;
-    //expand = 0; //TODO check if we need to expand
+    int isExpand = 0; //TODO check if we need to expand
 	int pid;
 	pid = fork();
     char *eof;
@@ -46,7 +52,7 @@ int open_heredoc(t_rdr *heredocs,int *pipefd, int *status)
             heredocs = get_last_hrdc(heredocs);
             continue;
         }
-        eof = handle_quotes(heredocs->value);
+        eof = handle_quotes_v2(heredocs->value,&isExpand);
         while(TRUE)
         {
             line = readline(">");
@@ -67,6 +73,8 @@ int open_heredoc(t_rdr *heredocs,int *pipefd, int *status)
 		exit(0);
         return 0;
 	}
+	if(!isExpand)
+		str = expand(*get_ms()->env_ld, str);
     if(!write(pipefd[WRITE],str,ft_strlen(str)))
 	{
 			dprintf(2,"error writing to pipe\n");
