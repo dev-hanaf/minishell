@@ -6,7 +6,7 @@ BLUE = \033[0;34m
 NC = \033[0m
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g3
 NAME = minishell
 
 LIBFT = ./libs/libft
