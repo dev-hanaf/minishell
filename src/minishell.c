@@ -20,6 +20,8 @@ t_minishell *get_ms(void)
 void close_heredoc(t_cmd *cmd)
 {
 	t_rdr *temp;
+	if(!cmd)
+		return;
 	while(cmd)
 	{
 		temp = cmd->redir;
@@ -49,8 +51,7 @@ void loop()
 		if (!line)
 		{
 			printf("exit\n");
-			exit(130);
-			_free();
+			clean_exit(0);
 		}
 		else if ((line && line[0] == '\0' )|| line[0] == '\n')
 			continue;
@@ -59,6 +60,7 @@ void loop()
 		{	
 			t_cmd *cmd_list = parse_cmds((lexer));
 			execute_cmds(cmd_list,cmd_nbr(cmd_list));
+			close_heredoc(cmd_list);
 		}
 		add_history(line);
 		free(line);

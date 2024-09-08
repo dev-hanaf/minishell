@@ -63,7 +63,7 @@ int  map_to_255_range(int x)
 
 void print_and_free_digit(int e)
 {
-	ft_putstr_fd("exit\n",2);
+	ft_putstr_fd("exit\n",1);
 	_free_env();
 	_free();
 	exit(e);
@@ -71,7 +71,7 @@ void print_and_free_digit(int e)
 
 void print_and_free_alpha(int e, char *str, char *str2, char *str3)
 {
-	ft_putstr_fd("exit\n",2);
+	ft_putstr_fd("exit\n",1);
 	ft_putstr_fd(str ,2);
 	ft_putstr_fd(str2 ,2);
 	ft_putstr_fd(str3 ,2);
@@ -86,17 +86,18 @@ void multiple_arguments(char **args, int num)
 	int valid;
 	int is_ok2;
 	int valid2;
-	int num2;
+	//int num2;
 	
 	num = atoi_exit(args[0], &valid, &is_ok);
-	num2 = atoi_exit(args[1], &valid2, &is_ok2);
+	(void)num;
+	atoi_exit(args[1], &valid2, &is_ok2);
 	if ((!valid || !is_ok) && (valid2 && is_ok2))
 		print_and_free_alpha(2, "bash: exit: ", args[0],": numeric argument required\n");
 	else if ((!valid || !is_ok) && (!valid2 && !is_ok2))
 		print_and_free_alpha(2, "bash: exit: ", args[0],": numeric argument required\n");
 	else
 	{
-		ft_putstr_fd("exit\n",2);
+		ft_putstr_fd("exit\n",1);
 		ft_putstr_fd("bash: exit: too many arguments\n", 2);
 		get_ms()->status = 1;
 	}
@@ -110,7 +111,7 @@ void    __exit(char **args)
 	int is_ok;
 	
 	num = 0;
-	if (!args)
+	if (!args || !*args)
 		print_and_free_digit(get_ms()->status);
 	len = ft_strlen_2d_array(args);
 	if (len == 1)

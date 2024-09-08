@@ -25,23 +25,31 @@ void	whitspaces_in_var(char *exp, char *line)
 	{
 		var()->spilted = ft_split_whitespaces(var()->exp, " \t\n\v\f\r");
 		var()->x = 0;
+		ft_strcpy(var()->buffer, '"');
+		var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
+			var()->buffer);
 		while (var()->spilted[var()->x])
 		{
-			ft_strcpy(var()->buffer, '"');
 			var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-				var()->buffer);
+			var()->buffer);
 			var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-				var()->spilted[var()->x]);
+			var()->spilted[var()->x]);
 			var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-				var()->buffer);
+			var()->buffer);
 			if (var()->spilted[var()->x + 1] != NULL)
 				var()->y++;
 			var()->x++;
+			var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
+			var()->buffer);
 		}
 	}
 	else
+	{
 		var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
 			var()->exp);
+	var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
+		var()->buffer);
+	}
 }
 
 void	expansion_valid(char *line, int *i, t_env **env, int flag)

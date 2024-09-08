@@ -3,6 +3,7 @@
 
 void clean_exit(int e)
 {
+	close_heredoc(get_ms()->cmd);
 	_free();
 	_free_env();
     exit(e);
@@ -57,8 +58,8 @@ char	*ft_look_in_path(char *cmd, char *path)
 	int		i;
 
 	i = -1;
-	if (!cmd || !path)
-		ms_error(cmd, 127);
+	if (!cmd || !path || ft_strcmp(cmd, ".") == 0 || ft_strcmp(cmd, "..") == 0)
+		ms_error(cmd,127);
 	paths = ft_split(path + 5, ':');
 	cmd2 = ft_strjoin("/", cmd);
 	if (!paths || !cmd2)

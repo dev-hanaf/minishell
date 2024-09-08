@@ -23,7 +23,7 @@ void    remove_env_element(t_env **env, char *variable)
     temp = *env;
     while(temp)
     {
-        if (ft_strncmp(temp->key,variable, ft_strlen(variable)) == 0 && ft_strlen(temp->key) == ft_strlen(variable))
+        if (ft_strcmp(temp->key,variable) == 0)
         {
             if (temp->next && !temp->prev)
             {                

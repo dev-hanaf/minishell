@@ -35,7 +35,7 @@ int check_ambiguous(t_rdr *redir,int *file,char **str,int flag)
 		ft_putstr_fd(redir->value,2);
 		ft_putstr_fd(": ambiguous redirect\n",2);
 		if(flag)
-			exit(1);
+			clean_exit(1);
         get_ms()->execute = 1;
 		return 1;
 	}
@@ -55,11 +55,11 @@ void handle_rdr(t_rdr *redir,int flag)
 			check_ambiguous(redir,&file,&str,flag);
             if(file == -1)
             {
-				ft_putstr_fd("minishell: ",2);
+			   ft_putstr_fd("minishell: ",2);
                perror(str);
                get_ms()->execute = 1;
                if(flag)
-                    exit(1);
+                    clean_exit(1);
                 return ;
             };
             dup2(file,redir->dup);
@@ -80,12 +80,12 @@ void handle_rdr(t_rdr *redir,int flag)
 int check_builtin(char **args,int *status)
 {
     //TODO khdm liya hado unset bohdha li khdama
-    printf(GREEN"%s\n"NC, args[0]);
+    //printf(GREEN"%s\n"NC, args[0]);
     if(!args || !*args)
         return 0;
     if(!ft_strcmp(args[0],"export"))
     {
-        *status = _export(get_ms()->env_ld,++args);
+        _export(get_ms()->env_ld,++args);
         return 1;
     }
     else if(!ft_strcmp(args[0],"echo"))
@@ -125,12 +125,12 @@ void exec_cmd(t_list *args)
     int status;
     status = 0;
     if(!args)
-        exit(0);
+        clean_exit(0);
     char **nargs = ld_to_arr_and_expand(args);
     if(!nargs)
-        exit(0);
+        clean_exit(0);
     if(check_builtin(nargs,&status))
-        exit(status);
+        clean_exit(status);
     char **env = env_to_arr(*get_ms()->env_ld);
     char *path = get_cmd_path(nargs[0],env);
     execve(path,nargs,env);
@@ -203,7 +203,7 @@ int check_single_builtin(t_cmd *cmd)
             __exit(ld_to_arr_and_expand(cmd->args->next));
         }
         else if(!ft_strcmp(strs[0],"export"))
-            get_ms()->status = _export(get_ms()->env_ld,++strs);
+            _export(get_ms()->env_ld,++strs);
         dup2(std_in,STDIN_FILENO);
         dup2(std_out,STDOUT_FILENO);
         close(std_in);

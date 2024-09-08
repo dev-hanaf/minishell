@@ -200,6 +200,7 @@ void					print_export(t_env *env);
 void    				change_env(t_env **env, char *key, char *value);
 void    				remove_env_element(t_env **env, char *variable);
 void					display_environment(t_env **env);
+void clean_exit(int e);
 /*-------------------------- cmd utils --------------------------------------- */
 t_cmd* new_cmd(void);
 int  cmd_nbr(t_cmd *head);
@@ -207,7 +208,7 @@ void add_to_back_cmd(t_cmd **head, t_cmd *newCmd);
 t_cmd *get_last_cmd(t_cmd *head);
 int cmd_nbr(t_cmd *head);
 char **ld_to_arr(t_list *lst);
-/* pasing  */
+/*------------------------- parsing -----------------------------------------  */
 t_cmd *parse_cmds(t_tokenizer *tokens);
 void print_cmds(t_cmd *cmd_list);
 void print_args(t_list *arg,char *name);

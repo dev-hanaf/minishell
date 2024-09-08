@@ -8,7 +8,7 @@
 void sigHandler_hrdc(int sig)
 {
     write(1,"\n",1);
-	exit(sig + 128);
+	clean_exit(sig + 128);
 }
 t_rdr *get_last_hrdc(t_rdr *redir)
 {
@@ -66,16 +66,16 @@ int open_heredoc(t_rdr *heredocs,int *pipefd, int *status)
         }
         heredocs = heredocs->next;
     }
-	if(!isExpand)
-		str = expand_herdoc(*get_ms()->env_ld, str);
     if(!str)
 	{
         dprintf(2,"line empty \n");
 		close(pipefd[WRITE]);
 		close(pipefd[READ]);
-		exit(0);
+		clean_exit(0);
         return 0;
 	}
+	if(!isExpand)
+		str = expand_herdoc(*get_ms()->env_ld, str);
     if(!write(pipefd[WRITE],str,ft_strlen(str)))
 	{
 			dprintf(2,"error writing to pipe\n");
@@ -84,7 +84,7 @@ int open_heredoc(t_rdr *heredocs,int *pipefd, int *status)
     close_heredoc(get_ms()->cmd);
     close(pipefd[WRITE]);
 	close(pipefd[READ]);
-	exit(0);
+	clean_exit(0);
 	return 1;
 }
 

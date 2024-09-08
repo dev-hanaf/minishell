@@ -1,3 +1,4 @@
+#include "libft.h"
 #include "minishell.h"
 
 void print_export(t_env *env)
@@ -19,7 +20,7 @@ t_env **clone_env(t_env *env)
     if(!new)
     {
         perror("malloc"); //TODO add exit and free all
-        exit(1);
+        clean_exit(1);
     }
     *new = NULL;
     while(env)
@@ -65,7 +66,7 @@ void fill_key_value(char *str,char **key,char **value,int flag)
 	//check with the values passed should i be freed or not 
     if(ft_strchr(str,'='))
     {
-        *value = ft_strdup(ft_strchr(str,'=') + 1);
+        *value = ft_strdup_env(ft_strchr(str,'=') + 1);
         //printf("len = %ld\n",ft_strchr(str,'=') - str  - flag );
         *key = ft_substr(str,0,ft_strchr(str,'=') - str - flag);
         return;
@@ -76,6 +77,8 @@ void fill_key_value(char *str,char **key,char **value,int flag)
 void make_and_add(char *key,char *value,int concat)
 {
     t_env *node;
+	key = ft_strdup_env(key);
+	value = ft_strdup_env(value);
     node = get_env_ld(get_ms()->env_ld,key);
     if(!node)
     {
@@ -83,15 +86,15 @@ void make_and_add(char *key,char *value,int concat)
         return ;
     }
     if(concat)
-        value = ft_strjoin(node->value,value);
+        value = ft_strjoin_env(node->value,value);
     if(node)
     {
         if(value)
             node->value = value;
         return;
     }
-	dprintf(2,"key=%s\n",key);
-	dprintf(2,"value=%s\n",value);
+	//dprintf(2,"key=%s\n",key);
+	//dprintf(2,"value=%s\n",value);
     add_to_back_env(get_ms()->env_ld,new_env(key,value));
 }
 
@@ -109,6 +112,7 @@ int process_args(char *str)
      if(flag == 0)
      {
          dprintf(2,"ms: export: `%s': not a valid identifier\n",str);
+			update_status(1);
          return 0;//TODO handle exit status here mate
      }
      else
@@ -144,14 +148,14 @@ void process_nodes(t_env *env,char *arg)
 	}
 	if (!key ||  (key[0] == '\0'|| ft_strchr(key, '$')))
 	{
-		dprintf(2, "key ==> %s\t\t value ==> %s\n", key, value);
-		dprintf(2, RED"split ALL\n"NC);
+		//dprintf(2, "key ==> %s\t\t value ==> %s\n", key, value);
+		//dprintf(2, RED"split ALL\n"NC);
 		strs = expand(env, arg);
 	}
 	else
 	{
-		dprintf(2, "key ==> %s\t\t value ==> %s\n", key, value);
-		dprintf(2, GREEN"join ALL\n"NC);
+		//dprintf(2, "key ==> %s\t\t value ==> %s\n", key, value);
+		//dprintf(2, GREEN"join ALL\n"NC);
 		strs = catch_expand(arg, env, 1, 0);
 		int j = 0;
 		while (strs[j])
@@ -162,8 +166,12 @@ void process_nodes(t_env *env,char *arg)
 	}
     while(strs && *strs)
     {
-		printf("creating %s\n",*strs);
-        process_args(*strs);
+		//printf("creating %s\n",*strs);
+        if(!process_args(*strs))
+        {
+        	update_status(1);
+        	return;
+        }
 		strs++;
     }
 }
@@ -185,7 +193,7 @@ int     _export(t_env **env,char **args)
     status = 0;
     if(!args || !*args)
 	{
-        print_export(*env);
+        print_export(*get_ms()->env_ld);
 	}
 	export_v2(*env,args);
     if(!env)
