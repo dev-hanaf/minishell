@@ -1,32 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   gc.c                                               :+:      :+:    :+:   */
+/*   gc_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 13:23:42 by eouhrich          #+#    #+#             */
-/*   Updated: 2024/09/08 03:24:54 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/08 03:25:30 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-t_data	**get_data(void)
+
+t_data	**get_data_env(void)
 {
 	static t_data	*head;
 
 	return (&head);
 }
 
-void	add_list(t_data *new)
+void	add_list_env(t_data *new)
 {
 	t_data	*tmp;
 
-	tmp = *get_data();
+	tmp = *get_data_env();
 	if (!tmp)
 	{
-		*get_data() = new;
+		*get_data_env() = new;
 		return;
 	}
 	while (tmp)
@@ -38,7 +39,7 @@ void	add_list(t_data *new)
 	tmp->next = new;
 }
 
-void	*_malloc(size_t size)
+void	*tmalloc(size_t size)
 {
 	t_data	*node;
 	void	*ptr;
@@ -47,16 +48,16 @@ void	*_malloc(size_t size)
 	if (!node)
 		return (NULL);
 	ptr = node->ptr;
-	add_list(node);
+	add_list_env(node);
 	return (ptr);
 }
 
-void	_free(void)
+void	_free_env(void)
 {
 	t_data **head;
 	t_data *temp;
 	
-	head = get_data();
+	head = get_data_env();
 	if (!*head)
 		return;
 	while (*head)

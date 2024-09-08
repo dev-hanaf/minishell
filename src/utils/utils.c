@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 03:15:46 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/06 23:39:29 by zmourid          ###   ########.fr       */
+/*   Updated: 2024/09/07 22:02:08 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int expand_counter(t_list *lst)
 	int i = 0;
 	while(lst)
 	{
-		char **res = catch_expand((char *)lst->content , *get_ms()->env_ld, 0);
+		char **res = catch_expand((char *)lst->content , *get_ms()->env_ld, 0, 0);
 		i += ft_strlen_2d_array(res);
 		lst = lst->next;
 	}
@@ -98,18 +98,15 @@ char **ld_to_arr_and_expand(t_list *lst)
 	counter = expand_counter(lst);
 	if(!lst || counter == 0)
 		return NULL;
-	char **arr = ft_allocator(sizeof(char *) * (counter +  1),"parsing");
+	char **arr = _malloc(sizeof(char *) * (counter +  1));
 	int i = 0;
 	while(lst)
 	{
 		int j = 0;
-		char **res = catch_expand((char *)lst->content , *get_ms()->env_ld, 0);
+		char **res = catch_expand((char *)lst->content , *get_ms()->env_ld, 0, 0);
 		while (res[j])
 		{
 			arr[i] = handle_quotes(res[j]);
-	//		dprintf(2,"------------------------------------\n");
-	//		dprintf(2,"arr[%d]=%s\n",i,arr[i]);
-	//		dprintf(2,"------------------------------------\n");
 			i++;
 			j++;
 		}

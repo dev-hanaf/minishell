@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 14:53:58 by ahanaf            #+#    #+#             */
-/*   Updated: 2023/11/27 17:18:32 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/08 02:47:59 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,36 @@ char	*ft_itoa(int n)
 
 	num = n;
 	size = lenght_size(num);
-	str = ft_allocator(sizeof(char) * (size + 1), "itoa");
+	str = _malloc(sizeof(char) * (size + 1));
+	if (!str)
+		return (NULL);
+	if (num < 0)
+	{
+		str[0] = '-';
+		num = -num;
+	}
+	str[size] = '\0';
+	size--;
+	while (size >= 0)
+	{
+		if (str[0] == '-' && size == 0)
+			return (str);
+		str[size] = (num % 10) + 48;
+		num /= 10;
+		size--;
+	}
+	return (str);
+}
+
+char	*ft_itoa_env(int n)
+{
+	long	num;
+	long	size;
+	char	*str;
+
+	num = n;
+	size = lenght_size(num);
+	str = tmalloc(sizeof(char) * (size + 1));
 	if (!str)
 		return (NULL);
 	if (num < 0)

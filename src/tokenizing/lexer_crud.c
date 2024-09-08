@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 21:58:47 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/17 08:37:07 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/07 22:01:49 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_tokenizer	*new_token(char *value, int type)
 {
 	t_tokenizer	*new;
 
-	new = ft_allocator(sizeof(t_tokenizer), "new");
+	new = _malloc(sizeof(t_tokenizer));
 	if (!new)
 		return (NULL);
 	new->value = value;

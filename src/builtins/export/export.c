@@ -1,6 +1,4 @@
-#include "libft.h"
 #include "minishell.h"
-#include <stdio.h>
 
 void print_export(t_env *env)
 {
@@ -9,7 +7,7 @@ void print_export(t_env *env)
     {
         printf("declare -x %s",env->key);
         if(env->value)
-        printf("=\"%s\"",env->value);
+            printf("=\"%s\"",env->value);
         printf("\n");
         env = env->next;
     }
@@ -17,7 +15,7 @@ void print_export(t_env *env)
 t_env **clone_env(t_env *env)
 {
     t_env **new;
-    new = ft_allocator(sizeof(t_env *),"garbage");
+    new = _malloc(sizeof(t_env *));
     if(!new)
     {
         perror("malloc"); //TODO add exit and free all
@@ -154,7 +152,7 @@ void process_nodes(t_env *env,char *arg)
 	{
 		dprintf(2, "key ==> %s\t\t value ==> %s\n", key, value);
 		dprintf(2, GREEN"join ALL\n"NC);
-		strs = catch_expand(arg, env, 1);
+		strs = catch_expand(arg, env, 1, 0);
 		int j = 0;
 		while (strs[j])
 		{
@@ -169,32 +167,30 @@ void process_nodes(t_env *env,char *arg)
 		strs++;
     }
 }
-char **export_v2(t_env *env,t_list *args)
+
+char **export_v2(t_env *env,char  **args)
 {
-	while(args)
+    int i = 0;
+	while(args[i])
 	{
-		process_nodes(env,(char *)args->content);
-		args = args->next;
+		process_nodes(env,args[i]);
+        i++;
 	}
 	return NULL;
 }
-int     _export(t_env **env,t_list *args)
+
+int     _export(t_env **env,char **args)
 {
     int status;
     status = 0;
-	export_v2(*env,args);
-    if(!env)
-        return 0;// TODO i still need to check this
-    if(!args)
+    if(!args || !*args)
 	{
         print_export(*env);
 	}
-//    while(strs && *strs)
-//    {
-//		printf("creating %s\n",*strs);
-//        if(!process_args(*strs))
-//            status = 1;
-//		strs++;
-//    }
+	export_v2(*env,args);
+    if(!env)
+    {
+        return 0;// TODO i still need to check this
+    }
 	return status;
 }

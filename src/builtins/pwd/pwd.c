@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:35:13 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/22 05:11:22 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/07 22:04:30 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,5 @@ int _pwd(void)
     }   
     printf("%s\n", cwd);   
     free(cwd);
-    g_minishell.status = 0;
     return (0);
 }

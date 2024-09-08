@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/19 05:04:41 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/21 02:23:33 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/07 21:54:09 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	*get_word(char *str)
 	int		i;
 
 	data = getter();
-	data->word = ft_allocator((sizeof(char) * (data->end + 1)), "get_word");
+	data->word = _malloc((sizeof(char) * (data->end + 1)));
 	if (data->word == NULL)
 		return (NULL);
 	i = 0;
@@ -81,7 +81,7 @@ char	**ft_split(char *s, char c)
 		return (NULL);
 	data = getter();
 	word_count(s, c);
-	data->str = ft_allocator((sizeof(char *) * (data->wc + 1)), "split_2d");
+	data->str = _malloc((sizeof(char *) * (data->wc + 1)));
 	if (data->str == NULL)
 		return (NULL);
 	while (data->j < data->wc)
@@ -90,7 +90,7 @@ char	**ft_split(char *s, char c)
 		data->str[data->j] = get_word(s);
 		if (data->str[data->j] == NULL)
 		{
-			free_allocator();
+			_free();
 			return (NULL);
 		}
 		data->start += data->end;

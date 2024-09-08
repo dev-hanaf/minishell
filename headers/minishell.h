@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/31 15:33:36 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/08 07:07:28 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,11 @@
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdio.h>
-# include <string.h>
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdbool.h>
-#include <signal.h>
+
 
 # ifndef __O_DIRECTORY
 #define __O_DIRECTORY     0x00100000
@@ -93,6 +92,14 @@ typedef struct s_cmd
     struct s_cmd *next;
 } t_cmd;
 
+typedef struct s_exec
+{
+	pid_t *pids;
+	int pipefd[2];
+	int tmp;
+	int i;
+} t_exec;
+
 typedef struct s_minishell
 {
 	char 				*prompt;
@@ -100,12 +107,11 @@ typedef struct s_minishell
 	struct sigaction *old_act;
 	t_env               **env_ld;
 	char				*line;
+	bool				execute;
 	t_list				*heredoc_fds;
 	int					status;
 	t_cmd				*cmd;
 }						t_minishell;
-
-extern t_minishell		g_minishell;
 
 t_minishell *get_ms(void);
 
@@ -162,13 +168,6 @@ typedef struct s_expand
 	char	buffer[2];
 }		t_expand;
 
-typedef struct s_exec
-{
-	pid_t *pids;
-	int pipefd[2];
-	int tmp;
-	int i;
-} t_exec;
 
 t_expand	*var(void);
 t_tokenizer 			*expand_lexer(t_env *env, t_tokenizer **lexer);
@@ -179,13 +178,14 @@ void					add_to_back_expand(t_tokenizer **token, t_tokenizer *new);
 bool					 is_opend(char c , bool open);
 int						needs_expansion(const char *line);
 t_tokenizer				*new_token_expand(char *value, int type, bool expanded);
-char					**catch_expand(char *line, t_env *env, int flag);
+char					**catch_expand(char *line, t_env *env, int flag, int heredoc);
+char 					*expand_herdoc(t_env *env, char *line);
 int 					get_pid(void);
 int						var_need_expansion(const char *line);
 int 					valid_expansion_variable(char c);
 char 					**ft_split_whitespaces(char *str, char *seps);
-void	start_expanding(char *line, t_env *env, int flag);
-bool	open_or_close(char *line);
+void					start_expanding(char *line, t_env *env, int flag);
+bool					open_or_close(char *line);
 /*----------------------------- Initilize Envirement --------------------------*/
 t_env					*new_env(char *key, char *value);
 t_env					*last_env(t_env **env);
@@ -224,7 +224,7 @@ void handle_parent_signals(void);
 void handle_child_signals(void);
 void handle_signals(void);
 void update_status(int new_status);
-int     _export(t_env **env,t_list *args);
+int     _export(t_env **env,char **args);
 void print_strs(char **strs);
 int get_status(int status);
 #endif

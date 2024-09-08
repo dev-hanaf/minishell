@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 02:10:51 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/31 15:55:55 by zmourid          ###   ########.fr       */
+/*   Updated: 2024/09/08 07:16:14 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,28 +16,49 @@ t_env	**init_environment(char **env)
 {
 	t_env	**init_env;
 	size_t	i;
-	char	**split;
 	t_env	*new;
-
-	init_env = ft_allocator(sizeof(t_env*), "t_env");
+	char *key;
+	char *value;
+	char c[2];
+	int j;
+	init_env = tmalloc(sizeof(t_env*));
 	if (!init_env)
-		printf("error\n"); //TODO add the error handling function
+	{
+		perror("malloc"); //TODO add the error handling function
+		__exit(NULL);
+	}
 	*init_env = NULL;
 	i = 0;
-	new = new_env("$", ft_itoa(get_pid()));
-	wait(0);
-	add_to_back_env(init_env, new);
-	new = new_env("?", ft_itoa(g_minishell.status));
-	add_to_back_env(init_env, new);
-	new = new_env("0", "minishell");
-	add_to_back_env(init_env, new);
-	while (env[i])
+	// if (!get_env(get_ms()->env_ld, "$"))
+	// {
+	// 	new = new_env("$", ft_itoa_env(get_pid()));
+	// 	add_to_back_env(init_env, new);
+	// 	printf("i aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n\n\n\n\n");
+	// }
+	// else
+	// 	change_env(get_ms()->env_ld, "$", ft_itoa_env(get_pid()));
+	while (env && env[i])
 	{
-		split = ft_split(env[i], '=');
-		new = new_env(split[0], split[1]);
+		j = 0;
+		key = NULL;
+		value = NULL;
+		while (env && env[i][j] && env[i][j] != '=')
+		{
+			ft_strcpy(c, env[i][j]);
+			key = ft_strjoin_env(key, c);
+			j++;
+		}			
+		if (env && env[i][j] && env[i][j] == '=')
+			j++;
+		while (env && env[i][j])
+		{
+			ft_strcpy(c, env[i][j]);
+			value = ft_strjoin_env(value, c);
+			j++;
+		}
+		new = new_env(key, value);
 		add_to_back_env(init_env, new);
 		i++;
 	}
-
 	return (init_env);
 }

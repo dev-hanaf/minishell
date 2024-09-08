@@ -66,15 +66,16 @@ int open_heredoc(t_rdr *heredocs,int *pipefd, int *status)
         }
         heredocs = heredocs->next;
     }
+	if(!isExpand)
+		str = expand_herdoc(*get_ms()->env_ld, str);
     if(!str)
 	{
+        dprintf(2,"line empty \n");
 		close(pipefd[WRITE]);
 		close(pipefd[READ]);
 		exit(0);
         return 0;
 	}
-//	if(!isExpand)
-//		str = expand(*get_ms()->env_ld, str);
     if(!write(pipefd[WRITE],str,ft_strlen(str)))
 	{
 			dprintf(2,"error writing to pipe\n");

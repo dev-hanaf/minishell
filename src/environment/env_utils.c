@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_new_env.c                                     :+:      :+:    :+:   */
+/*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 02:05:52 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/21 02:08:30 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/08 01:39:26 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_env	*new_env(char *key, char *value)
 {
 	t_env	*new;
 
-	new = ft_allocator(sizeof(t_env), "new_env");
+	new = tmalloc(sizeof(t_env));
 	if (!new)
 		return (NULL);
 	new->key = key;

@@ -6,31 +6,12 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 12:53:51 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/06 23:03:30 by zmourid          ###   ########.fr       */
+/*   Updated: 2024/09/08 06:01:38 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_strrtrim(char const *s1, char const *set)
-{
-	int		len;
-	char	*res;
-
-	if (!s1 || !set)
-		return (0);
-	len = 0;
-	// while (*s1 && ft_strchr(set, *s1))
-	// 	s1++;
-	len = ft_strlen(s1);
-	while (len > 0 && ft_strchr(set, s1[len - 1]))
-		len--;
-	res = ft_allocator(len + 1, "strtrim");
-	if (!res)
-		return (0);
-	ft_strlcpy(res, s1, len + 1);
-	return (res);
-}
 
 void _echo(char **argumentes)
 {
@@ -38,7 +19,6 @@ void _echo(char **argumentes)
     bool lock;
     bool flag;
     int j;
-    // char *res = NULL;
     flag = false;
     lock = false;
     i = 0;

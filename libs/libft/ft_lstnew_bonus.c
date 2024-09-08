@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 22:55:24 by ahanaf            #+#    #+#             */
-/*   Updated: 2023/11/29 16:12:16 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/07 21:53:28 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_list	*ft_lstnew(void *content)
 {
 	t_list	*head;
 
-	head = (t_list *)ft_allocator(sizeof(t_list),"lst");
+	head = _malloc(sizeof(t_list));
 	if (!head)
 		return (NULL);
 	head->content = content;

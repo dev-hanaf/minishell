@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/19 01:28:35 by ahanaf            #+#    #+#             */
-/*   Updated: 2023/11/28 03:21:10 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/07 21:41:38 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (ft_strdup(""));
 	if (len > ft_strlen(s + start))
 		len = ft_strlen(s + start);
-	str = ft_allocator((len + 1) * sizeof(char), "substr");
+	str = _malloc((len + 1) * sizeof(char));
 	if (!str)
 		return (NULL);
 	while (i < len)

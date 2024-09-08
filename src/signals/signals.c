@@ -13,10 +13,22 @@ void handle_signals(void)
 	signal(SIGINT,sigHandler);
 	signal(SIGQUIT,SIG_IGN);
 }
+void sigChildHandler(int sig)
+{
+	if (sig == SIGINT)
+	{
+		ft_putstr_fd("\n", 2);
+		exit(2);
+	}
+	else if (sig == SIGQUIT)
+	{
+		ft_putstr_fd("Quit\n", 2);
+	}
+}
 void handle_child_signals(void)
 {
-	signal(SIGINT,SIG_DFL);
-	signal(SIGQUIT,SIG_DFL);
+	signal(SIGINT,sigChildHandler);
+	signal(SIGQUIT,sigChildHandler);
 }
 
 void sigHandler_parent(int sig)

@@ -12,7 +12,7 @@ void initial_vars(void)
 {
 	ft_bzero(var(), sizeof(t_expand));
 	// TODO allocate str dynamicaly
-	var()->str = ft_allocator(ALLOC * sizeof(char *), "expand");
+	var()->str = _malloc(ALLOC * sizeof(char *));
 	if (!var()->str)
 	{
 		perror("malloc");
@@ -38,15 +38,15 @@ void end_variable(char *line)
 	}
 }
 
-void parse_line(char *line, int *start, bool *open_close)
+void parse_line(char *line, int *start, bool *open_close, int heredoc)
 {
 	*start = var()->i;
 	*open_close = true;
-	if (line[var()->i] && line[var()->i + 1] && (line[var()->i] == '\'') && (line[var()->i + 1] == '\''))
+	if (!heredoc &&  line[var()->i] && line[var()->i + 1] && (line[var()->i] == '\'') && (line[var()->i + 1] == '\''))
 		var()->i++;
-	else if (line[var()->i] && line[var()->i + 1] && (line[var()->i] == '"') && (line[var()->i + 1] == '"'))
+	else if (!heredoc && line[var()->i] && line[var()->i + 1] && (line[var()->i] == '"') && (line[var()->i + 1] == '"'))
 		var()->i++;
-	else if (line[var()->i] && (line[var()->i] == '\'' || line[var()->i] == '"'))
+	else if (!heredoc && line[var()->i] && (line[var()->i] == '\'' || line[var()->i] == '"'))
 		*open_close = open_or_close(line);
 	else if (line[var()->i] && line[var()->i + 1] && line[var()->i] == '$' && (line[var()->i + 1] == '\'' || line[var()->i + 1] == '"'))
 		*start += 1;
@@ -54,18 +54,18 @@ void parse_line(char *line, int *start, bool *open_close)
 		end_variable(line);
 }
 
-char **catch_expand(char *line, t_env *env, int flag)
+char **catch_expand(char *line, t_env *env, int flag, int heredoc)
 {
 	char *str;
 	int start;
 	bool open_close;
 
+	open_close = true;
 	initial_vars();
 	while (line[var()->i])
 	{
-		parse_line(line, &start, &open_close);
+		parse_line(line, &start, &open_close, heredoc);
 		str = ft_substr(line, start, var()->i - start + 1);
-		// printf(GREEN"to be expanded %d \t\t%s\n"NC,open_close, str);
 		if (open_close && ft_strchr(str, '$') && ft_strlen(line) > 1)
 			start_expanding(str, env, flag);
 		else
@@ -83,11 +83,20 @@ char **expand(t_env *env, char *line)
 
 	res = NULL;
 	i = 0;
-	res = catch_expand(line, env, 0);
+	res = catch_expand(line, env, 0, 0);
 	while (res[i])
 	{
 		res[i] = handle_quotes(res[i]);
 		i++;
 	}
 	return (res);
+}
+
+char *expand_herdoc(t_env *env, char *line)
+{
+	char **res;
+
+	res = NULL;
+	res = catch_expand(line, env, 1, 1);
+	return (res[0]);
 }

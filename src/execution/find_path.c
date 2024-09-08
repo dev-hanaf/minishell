@@ -1,7 +1,10 @@
+#include "header.h"
 #include "minishell.h"
+
 void clean_exit(int e)
 {
-	dprintf(2,"khoya hani kankhroj \n");
+	_free();
+	_free_env();
     exit(e);
 }
 void	ms_error(char *str, int e)
@@ -66,13 +69,12 @@ char	*ft_look_in_path(char *cmd, char *path)
 		if (!access(cmd_path, F_OK))
 		{
 			if (!access(cmd_path, X_OK))
-				return (free_data(paths, cmd2), cmd_path);
+				return (cmd_path);
 			else
 				ms_error(cmd_path, 126);
 		}
-		free(cmd_path);
 	}
-	return (free_data(paths, cmd2), ms_error(cmd, 127), NULL);
+	return (ms_error(cmd, 127), NULL);
 }
 
 void	check_dir(char *cmd)
@@ -81,7 +83,10 @@ void	check_dir(char *cmd)
 
 	fd = open(cmd, __O_DIRECTORY);
 	if (fd != -1)
+	{
+		close(fd);
 		ms_error(cmd, 1026);
+	}
 	close(fd);
 }
 

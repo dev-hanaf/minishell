@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 19:43:49 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/13 13:23:18 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/07 21:52:36 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,8 @@ void	is_redirection(t_tokenizer **lexer, char *line, size_t *i, int *counter)
 void is_single_quote(char *line, size_t *i)
 {
 	(*i)++;
-	// printf(RED"line[%zu] %c\n"NC, *i, line[*i]);
 	while (line[*i] != '\0' && line[*i] != '\'')
 	{
-		// while (line[*i] != '\0' && line[*i] != '\'')
 			(*i)++;
 	}
 	if (line[*i] == '\'')
@@ -95,7 +93,6 @@ void is_double_quotes(char *line, size_t *i)
 	(*i)++;
 	while (line[*i] != '\0' && line[*i] != '\"')
 	{
-		// while (line[*i] != '\0' && line[*i] != '\"')
 			(*i)++;
 	}
 	if (line[*i] == '\"')
@@ -118,17 +115,18 @@ void	is_command(t_tokenizer **lexer, char *line, size_t *i)
 			{
 				if (line[*i] == '\"')
 					is_double_quotes(line, i);
-				 if(line[*i] == '\'')
+				if(line[*i] == '\'')
 					is_single_quote(line, i);
 				if (line[*i] == '\0' || line[*i] == ' ' || line[*i] == '>' || line[*i] == '<' || line[*i] == '|')
 					break;
 				(*i)++;
 			}
-		word = ft_allocator(sizeof(char) * (*i - start + 1), "word");
+		word = _malloc(sizeof(char) * (*i - start + 1));
 		if (!word)
 		{
+			//TODO exit or return || clean exit
 			perror("malloc");
-			exit(1);
+			return;
 		}
 		j = 0;
 		while (start < *i)
@@ -148,7 +146,7 @@ t_tokenizer	*tokenization(char *line)
 	if (!line)
 		return (NULL);
 	i = 0;
-	lexer = ft_allocator(sizeof(t_tokenizer), "lexer");
+	lexer = _malloc(sizeof(t_tokenizer));
 	if (!lexer)
 	{
 			perror("malloc");

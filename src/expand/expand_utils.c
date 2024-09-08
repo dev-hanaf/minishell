@@ -1,4 +1,3 @@
-#include "header.h"
 #include "minishell.h"
 
 void	add_to_back_expand(t_tokenizer **token, t_tokenizer *new)
@@ -78,7 +77,7 @@ t_tokenizer	*new_token_expand(char *value, int type, bool expanded)
 {
 	t_tokenizer	*new;
 
-	new = ft_allocator(sizeof(t_tokenizer), "new");
+	new = _malloc(sizeof(t_tokenizer));
 	if (!new)
 		return (NULL);
 	new->value = value;
@@ -161,7 +160,7 @@ char **ft_split_whitespaces(char *str, char *seps)
 	i = 0;
 	start = 0;
 	end = 0;
-	res = ft_allocator(sizeof(char *) * (counter(str, seps) + 1),"xxxx");
+	res = _malloc(sizeof(char *) * (counter(str, seps) + 1));
 	if (!res)
 		return (NULL);
 	while (i < counter(str, seps))

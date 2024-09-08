@@ -7,7 +7,7 @@ bool	is_space(char *exp)
 
 	spaces = false;
 	i = 0;
-	while (exp[i])
+	while (exp && exp[i])
 	{
 		if (is_whitespaces(exp[i]))
 			spaces = true;

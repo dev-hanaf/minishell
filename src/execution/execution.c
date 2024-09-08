@@ -6,20 +6,18 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 09:51:34 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/31 16:26:22 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/07 03:21:09by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "header.h"
 #include "minishell.h"
-#include <fcntl.h>
-#include <readline/readline.h>
-#include <stdio.h>
-#include <unistd.h>
+
 
 void update_status(int new_status)
 {
     get_ms()->status = new_status;
-    get_env_ld(get_ms()->env_ld,"?")->value = ft_itoa(new_status);
+    // get_env_ld(get_ms()->env_ld,"?")->value = ft_itoa(new_status);
 }
 int ft_close(int fd)
 {
@@ -38,6 +36,7 @@ int check_ambiguous(t_rdr *redir,int *file,char **str,int flag)
 		ft_putstr_fd(": ambiguous redirect\n",2);
 		if(flag)
 			exit(1);
+        get_ms()->execute = 1;
 		return 1;
 	}
 	*file = open(strs[0],redir->mode,redir->perm);
@@ -58,6 +57,7 @@ void handle_rdr(t_rdr *redir,int flag)
             {
 				ft_putstr_fd("minishell: ",2);
                perror(str);
+               get_ms()->execute = 1;
                if(flag)
                     exit(1);
                 return ;
@@ -77,40 +77,45 @@ void handle_rdr(t_rdr *redir,int flag)
     }
 }
 
-int check_builtin(t_list *args,int *status)
+int check_builtin(char **args,int *status)
 {
-    if(!ft_strcmp((char *)args->content,"export"))
+    //TODO khdm liya hado unset bohdha li khdama
+    printf(GREEN"%s\n"NC, args[0]);
+    if(!args || !*args)
+        return 0;
+    if(!ft_strcmp(args[0],"export"))
     {
-        *status = _export(get_ms()->env_ld,args->next);
+        *status = _export(get_ms()->env_ld,++args);
         return 1;
     }
-    else if(!ft_strcmp((char *)args->content,"echo"))
+    else if(!ft_strcmp(args[0],"echo"))
     {
-        _echo(ld_to_arr(args->next));
+        _echo(++args);
 		*status = 0;
         return 1;
     }
-    else if(!ft_strcmp((char *)args->content,"pwd"))
+    else if(!ft_strcmp(args[0],"pwd"))
     {
         _pwd();
 		*status = 0;
         return 1;
     }
-    else if(!ft_strcmp((char *)args->content,"exit"))
+    else if(!ft_strcmp(args[0],"exit"))
     {
-        __exit(ld_to_arr_and_expand(args->next));
+        __exit(++args);
 		//TODO handle it mate zmourid
         return 1;
     }
-    else if(!ft_strcmp((char *)args->content,"env"))
+    else if(!ft_strcmp(args[0],"env"))
     {
+        printf("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n\n\n");
         _env(*get_ms()->env_ld);
 		*status = 0;
         return 1;
     }
-	else if(!ft_strcmp((char *)args->content,"unset"))
+	else if(!ft_strcmp(args[0],"unset"))
 	{
-		*status = _unset(get_ms()->env_ld,ld_to_arr_and_expand(args->next));
+		*status = _unset(get_ms()->env_ld,++args);
 		return 1;
 	}
 	return 0;
@@ -121,12 +126,16 @@ void exec_cmd(t_list *args)
     status = 0;
     if(!args)
         exit(0);
-    if(check_builtin(args,&status))
-        exit(status);
     char **nargs = ld_to_arr_and_expand(args);
+    if(!nargs)
+        exit(0);
+    if(check_builtin(nargs,&status))
+        exit(status);
     char **env = env_to_arr(*get_ms()->env_ld);
     char *path = get_cmd_path(nargs[0],env);
     execve(path,nargs,env);
+    _free();
+    _free_env();
     //TODO handle failed execve
 }
 void exec_child(t_cmd *cmd,int in_fd,int out_fd[2])
@@ -161,13 +170,21 @@ int is_built_in(char *command)
 int check_single_builtin(t_cmd *cmd)
 {
 	//todo handle exit
-    if(cmd->args && is_built_in(cmd->args->content))
+    char **strs = ld_to_arr_and_expand(cmd->args);
+    if(!strs || !*strs)
+        return 0;
+    if(is_built_in(strs[0]))
     {
         int std_in = dup(STDIN_FILENO);
         int std_out = dup(STDOUT_FILENO);
         handle_rdr(cmd->redir,0);
-        if(!ft_strcmp((char *)cmd->args->content,"echo"))
+        if(get_ms()->execute)
+            return 1;
+        if(!ft_strcmp(strs[0],"echo"))
+        {
             _echo(ld_to_arr_and_expand(cmd->args->next));
+            update_status(0);
+        }
         else if(!ft_strcmp((char *)cmd->args->content,"cd"))
         {
             if(cmd->args->next)
@@ -179,14 +196,14 @@ int check_single_builtin(t_cmd *cmd)
             _pwd();
         else if(!ft_strcmp((char *)cmd->args->content,"env"))
             _env(*get_ms()->env_ld);
-        else if(!ft_strcmp((char *)cmd->args->content,"exit"))
+        else if(!ft_strcmp(strs[0],"exit"))
         {
             close(std_in);
             close(std_out);
             __exit(ld_to_arr_and_expand(cmd->args->next));
         }
-        else if(!ft_strcmp((char *)cmd->args->content,"export"))
-            get_ms()->status = _export(get_ms()->env_ld,cmd->args->next);
+        else if(!ft_strcmp(strs[0],"export"))
+            get_ms()->status = _export(get_ms()->env_ld,++strs);
         dup2(std_in,STDIN_FILENO);
         dup2(std_out,STDOUT_FILENO);
         close(std_in);
@@ -198,6 +215,8 @@ int check_single_builtin(t_cmd *cmd)
 void update_underscore(t_cmd *cmd)
 {
     t_list *arg;
+    t_env *underscore;
+    underscore = NULL;
     while(cmd->next)
         cmd = cmd->next;
     arg = cmd->args;
@@ -208,6 +227,14 @@ void update_underscore(t_cmd *cmd)
         arg = arg->next;
 	}
 	char **strs = expand(*get_ms()->env_ld,(char *)arg->content);
+    if(!strs || !*strs)
+        return ;
+    underscore = get_env_ld(get_ms()->env_ld," ");
+    if(!underscore)
+    {
+        add_to_back_env(get_ms()->env_ld,new_env("_",strs[ft_strlen_2d_array(strs) - 1]));
+        return ;
+    }
     get_env_ld(get_ms()->env_ld,"_")->value = strs[ft_strlen_2d_array(strs) - 1];
 }
 int get_status(int status)
@@ -223,12 +250,12 @@ t_exec *init_exec(t_cmd *cmd)
     t_exec *exec;
     if(!cmd)
         return NULL;
-    if(!cmd->next)
-        update_underscore(cmd);
+    //if(!cmd->next)
+    //    update_underscore(cmd);
     if(!cmd->next && check_single_builtin(cmd))
         return NULL;
-    exec = ft_allocator(sizeof(t_exec),"execution");
-    exec->pids = (pid_t *)ft_allocator(sizeof(pid_t) * (cmd_nbr(cmd)),"execution");
+    exec = _malloc(sizeof(t_exec));
+    exec->pids = (pid_t *)_malloc(sizeof(pid_t) * (cmd_nbr(cmd)));
     exec->pipefd[READ] = 0;
     exec->pipefd[WRITE] = 1;
     exec->tmp = STDIN_FILENO;

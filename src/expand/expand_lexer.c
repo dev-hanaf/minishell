@@ -31,7 +31,7 @@ void	expansion_controller(t_env *env, t_tokenizer *lexer, t_tokenizer **head)
 {
 	char	**res;
 
-	res = catch_expand(lexer->value, env, 0);
+	res = catch_expand(lexer->value, env, 0, 0);
 	expanded(head, res, lexer);
 }
 

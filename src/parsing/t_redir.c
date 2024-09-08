@@ -32,7 +32,7 @@ int get_dup(int type)
 t_rdr *ft_redirnew(char *value,int type)
 {
    t_rdr *new;
-  new = ft_allocator((sizeof(t_rdr)),"parsing");
+  new = _malloc((sizeof(t_rdr)));
   if(!new)
       return NULL;
   new->value = ft_strdup(value);

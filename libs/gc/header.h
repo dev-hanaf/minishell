@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 13:20:14 by eouhrich          #+#    #+#             */
-/*   Updated: 2024/05/10 07:24:52 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/08 03:25:16 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,21 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdint.h>
+#include "limits.h"
+
 
 typedef struct s_data
 {
 	void			*ptr;
-	size_t			size;
-	int				index;
-	char			*description;
 	struct s_data	*next;
 }					t_data;
 
-void				recursive_free(t_data *list);
-void				*ft_allocator(size_t size, char *description);
-void				free_allocator(void);
 
+t_data				*ft_gc_lstnew(void *ptr);
+void				*tmalloc(size_t size);
+void				*_malloc(size_t size);
+void				_free(void);
+void				_free_env(void);
+void				*ft_calloc(size_t nmemb, size_t size);
 #endif

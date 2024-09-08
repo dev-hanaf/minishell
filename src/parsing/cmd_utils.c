@@ -1,7 +1,7 @@
 #include "minishell.h"
 // Function to create a new command
 t_cmd* new_cmd() {
-    t_cmd *newCmd = (t_cmd*)ft_allocator(sizeof(t_cmd),"parsing");
+    t_cmd *newCmd = (t_cmd*)_malloc(sizeof(t_cmd));
     if (!newCmd) return NULL;
     newCmd->args = NULL; // Copy the name
     newCmd->next = NULL;
@@ -48,7 +48,7 @@ char **ld_to_arr(t_list *lst)
 {
 	if(!lst)
 		return NULL;
-	char **arr = ft_allocator(sizeof(char *) * (ft_lstsize(lst) + 1),"parsing");
+	char **arr = _malloc(sizeof(char *) * (ft_lstsize(lst) + 1));
 	int i = 0;
 	while(lst)
 	{
@@ -66,16 +66,10 @@ char **env_to_arr(t_env *env)
     temp = NULL;
 	if(!env)
 		return NULL;
-	char **arr = ft_allocator(sizeof(char *) * (env_size(env) + 1),"parsing");
+	char **arr = _malloc(sizeof(char *) * (env_size(env) + 1));
 	int i = 0;
 	while(env)
 	{
-        //dprintf(2,"env//%s=%s\n",env->key,env->value);
-        // if(!env->value)
-        // {
-        //     env = env->next;
-        //     continue;
-        // }
         temp = ft_strjoin(ft_strdup(env->key),"=");
         temp = ft_strjoin(temp,ft_strdup(env->value));
         if(!temp)//TODO check why there is a problem here
