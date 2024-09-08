@@ -25,7 +25,7 @@ int _unset(t_env **env, char **variables)
 	}
 	// puts("------------------------------- new env ----------------------------");
 	// _env(*env);
-	get_ms()->env_ld = env;
+	//get_ms()->env_ld = env;
 	// puts("------------------------------- new env ----------------------------");
 	_env(*get_ms()->env_ld);
     return (0);

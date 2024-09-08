@@ -108,7 +108,6 @@ int check_builtin(char **args,int *status)
     }
     else if(!ft_strcmp(args[0],"env"))
     {
-        printf("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n\n\n");
         _env(*get_ms()->env_ld);
 		*status = 0;
         return 1;
@@ -134,6 +133,7 @@ void exec_cmd(t_list *args)
     char **env = env_to_arr(*get_ms()->env_ld);
     char *path = get_cmd_path(nargs[0],env);
     execve(path,nargs,env);
+	perror("execve");
     _free();
     _free_env();
     //TODO handle failed execve
@@ -163,6 +163,8 @@ int is_built_in(char *command)
     if(!ft_strcmp(command,"export"))
         return 1;
     if(!ft_strcmp(command,"env"))
+        return 1;
+    if(!ft_strcmp(command,"unset"))
         return 1;
     return 0;
 }
@@ -194,8 +196,10 @@ int check_single_builtin(t_cmd *cmd)
         }
         else if(!ft_strcmp((char *)cmd->args->content,"pwd"))
             _pwd();
-        else if(!ft_strcmp((char *)cmd->args->content,"env"))
+        else if(!ft_strcmp(strs[0],"env"))
+		{
             _env(*get_ms()->env_ld);
+		}
         else if(!ft_strcmp(strs[0],"exit"))
         {
             close(std_in);
@@ -203,7 +207,13 @@ int check_single_builtin(t_cmd *cmd)
             __exit(ld_to_arr_and_expand(cmd->args->next));
         }
         else if(!ft_strcmp(strs[0],"export"))
+		{
             _export(get_ms()->env_ld,++strs);
+		}
+		else if(!ft_strcmp(strs[0],"unset"))
+		{
+			_unset(get_ms()->env_ld,++strs);
+		};
         dup2(std_in,STDIN_FILENO);
         dup2(std_out,STDOUT_FILENO);
         close(std_in);

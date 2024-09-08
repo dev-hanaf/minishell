@@ -18,11 +18,12 @@ void sigChildHandler(int sig)
 	if (sig == SIGINT)
 	{
 		ft_putstr_fd("\n", 2);
-		exit(2);
+		clean_exit(2);
 	}
 	else if (sig == SIGQUIT)
 	{
 		ft_putstr_fd("Quit\n", 2);
+		clean_exit(2);
 		//exit(3);
 	}
 }

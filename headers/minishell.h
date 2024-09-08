@@ -173,6 +173,7 @@ t_expand	*var(void);
 t_tokenizer 			*expand_lexer(t_env *env, t_tokenizer **lexer);
 char 					**expand(t_env *env, char *line);
 char					**ld_to_arr_and_expand(t_list *lst);
+char					**make_child_env(t_list *lst);
 char					*handle_quotes(char *line);
 void					add_to_back_expand(t_tokenizer **token, t_tokenizer *new);
 bool					 is_opend(char c , bool open);

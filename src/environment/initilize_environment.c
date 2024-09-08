@@ -10,8 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "minishell.h"
-
+t_env **create_myenv(t_env **env)
+{
+	add_to_back_env(env, new_env(ft_strdup_env("SHLVL"), ft_strdup_env("0")));
+	add_to_back_env(env, new_env("PWD", getcwd(NULL, 0)));
+	add_to_back_env(env, new_env("OLDPWD", getcwd(NULL, 0)));
+	return (env);
+}
 t_env	**init_environment(char **env)
 {
 	t_env	**init_env;
@@ -37,6 +44,9 @@ t_env	**init_environment(char **env)
 	// }
 	// else
 	// 	change_env(get_ms()->env_ld, "$", ft_itoa_env(get_pid()));
+	printf("env = %p\n", env);
+	if(!*env)
+		return create_myenv(init_env);
 	while (env && env[i])
 	{
 		j = 0;

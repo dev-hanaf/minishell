@@ -115,4 +115,28 @@ char **ld_to_arr_and_expand(t_list *lst)
 	arr[i] = NULL;
 	return arr;
 }
+char **make_child_env(t_list *lst)
+{
+	int counter = 0;
+	counter = expand_counter(lst);
+	if(!lst || counter == 0)
+		return NULL;
+	char **arr = _malloc(sizeof(char *) * (counter +  1));
+	int i = 0;
+	while(lst)
+	{
+		int j = 0;
+		char **res = catch_expand((char *)lst->content , *get_ms()->env_ld, 0, 0);
+		while (res[j])
+		{
+			printf("res[j]=%s\n",res[j]);
+			arr[i] = handle_quotes(res[j]);
+			i++;
+			j++;
+		}
+		lst = lst->next;
+	}
+	arr[i] = NULL;
+	return arr;
+}
 

@@ -9,6 +9,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "libft.h"
 
 t_minishell *get_ms(void)
 {
@@ -51,7 +52,9 @@ void loop()
 		if (!line)
 		{
 			printf("exit\n");
-			clean_exit(0);
+			_free();
+			_free_env();
+			exit(0);
 		}
 		else if ((line && line[0] == '\0' )|| line[0] == '\n')
 			continue;
@@ -74,6 +77,7 @@ int	main(int ac, char **av, char **envp)
 	//TODO add args check
 	t_env **env;
 	t_minishell *ms;
+	int shlvl;
 	ms = get_ms();
 	if (ac > 1)
 		return(1);
@@ -82,6 +86,15 @@ int	main(int ac, char **av, char **envp)
 	ms->env = envp;
 	env = init_environment(envp);
 	ms->env_ld = env;
+	if(get_env_ld(ms->env_ld, "SHLVL"))
+	{
+		shlvl = ft_atoi(get_env_ld(ms->env_ld, "SHLVL")->value);
+		if(shlvl >= 999)
+			shlvl = 1;
+		else
+			shlvl++;
+		get_env_ld(ms->env_ld, "SHLVL")->value = ft_itoa_env(shlvl);
+	}
     // add_to_back_env(ms->env_ld,new_env("Aloha","ls -la"));
 	loop();
 	_free_env();

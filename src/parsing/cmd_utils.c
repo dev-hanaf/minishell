@@ -60,6 +60,21 @@ char **ld_to_arr(t_list *lst)
 	return arr;
 }
 
+int	env_size_val(t_env *env)
+{
+	int		size;
+
+	if (!env)
+		return (0);
+	size = 0;
+	while (env != NULL)
+	{
+		env = env->next;
+		if(env->value)
+			size++;
+	}
+	return (size);
+}
 char **env_to_arr(t_env *env)
 {
     char *temp;
@@ -70,10 +85,15 @@ char **env_to_arr(t_env *env)
 	int i = 0;
 	while(env)
 	{
+		if(env->value == NULL)
+		{
+			env = env->next;
+			continue;
+		}
         temp = ft_strjoin(ft_strdup(env->key),"=");
         temp = ft_strjoin(temp,ft_strdup(env->value));
-        if(!temp)//TODO check why there is a problem here
-            temp = ft_strdup("");
+        //if(!temp)//TODO check why there is a problem here
+        //    temp = ft_strdup("");
         arr[i] = temp;
         env = env->next;
 		i++;

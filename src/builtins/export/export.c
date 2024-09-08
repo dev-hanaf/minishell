@@ -13,7 +13,34 @@ void print_export(t_env *env)
         env = env->next;
     }
 }
-t_env **clone_env(t_env *env)
+
+t_env *sort_list(t_env* lst) {
+    char *key;
+	char *value;
+	key = NULL;
+	value = NULL;
+    t_env *start;
+
+    start = lst;
+
+    while (lst != NULL && lst->next != NULL)
+    {
+        if (ft_strcmp(lst->key, lst->next->key) >= 0)
+		{
+            key = lst->key;
+			value = lst->value;
+			lst->key = lst->next->key;
+			lst->value = lst->next->value;
+			lst->next->key = key;
+			lst->next->value = value;
+			lst = start;
+        }
+	else
+		lst = lst->next;
+    }
+    return (start);
+}
+t_env *clone_env(t_env *env)
 {
     t_env **new;
     new = _malloc(sizeof(t_env *));
@@ -28,7 +55,7 @@ t_env **clone_env(t_env *env)
         add_to_back_env(new,new_env(env->key,env->value));
         env = env->next;
     }
-    return new;
+    return sort_list(*new);
 }
 int key_is_valid(char *str)
 {
@@ -156,11 +183,18 @@ void process_nodes(t_env *env,char *arg)
 	{
 		//dprintf(2, "key ==> %s\t\t value ==> %s\n", key, value);
 		//dprintf(2, GREEN"join ALL\n"NC);
+        char *res = NULL;
+        ft_strcpy(c, '"');
+        res = ft_strjoin(res, c);
 		strs = catch_expand(arg, env, 1, 0);
-		int j = 0;
+        int j = 0;
 		while (strs[j])
 		{
-			strs[j] = handle_quotes(strs[j]);
+            res = ft_strjoin(res, strs[j]);
+            res = ft_strjoin(res, c);
+            //printf("res = %s\n",res);
+            res = handle_quotes(res);
+            strs[j] = res;
 			j++;
 		}
 	}
@@ -193,7 +227,7 @@ int     _export(t_env **env,char **args)
     status = 0;
     if(!args || !*args)
 	{
-        print_export(*get_ms()->env_ld);
+        print_export(sort_list(clone_env(*env)));
 	}
 	export_v2(*env,args);
     if(!env)
