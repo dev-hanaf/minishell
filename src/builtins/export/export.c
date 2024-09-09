@@ -175,24 +175,30 @@ void process_nodes(t_env *env,char *arg)
 	}
 	if (!key ||  (key[0] == '\0'|| ft_strchr(key, '$')))
 	{
-		//dprintf(2, "key ==> %s\t\t value ==> %s\n", key, value);
-		//dprintf(2, RED"split ALL\n"NC);
+		dprintf(2, "key ==> %s\t\t value ==> %s\n", key, value);
+		dprintf(2, RED"split ALL\n"NC);
 		strs = expand(env, arg);
 	}
 	else
 	{
-		//dprintf(2, "key ==> %s\t\t value ==> %s\n", key, value);
-		//dprintf(2, GREEN"join ALL\n"NC);
+		dprintf(2, "key ==> %s\t\t value ==> %s\n", key, value);
+		dprintf(2, GREEN"join ALL\n"NC);
         char *res = NULL;
         ft_strcpy(c, '"');
         res = ft_strjoin(res, c);
 		strs = catch_expand(arg, env, 1, 0);
+		int z = 0;
+		while(strs[z])
+		{
+			printf("test strs[%d] = %s\n",z,strs[z]);
+			z++;
+		}
         int j = 0;
 		while (strs[j])
 		{
             res = ft_strjoin(res, strs[j]);
             res = ft_strjoin(res, c);
-            //printf("res = %s\n",res);
+            printf("res = %s\n",res);
             res = handle_quotes(res);
             strs[j] = res;
 			j++;

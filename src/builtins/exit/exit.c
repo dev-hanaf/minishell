@@ -97,7 +97,7 @@ void multiple_arguments(char **args, int num)
 		print_and_free_alpha(2, "bash: exit: ", args[0],": numeric argument required\n");
 	else
 	{
-		ft_putstr_fd("exit\n",1);
+		ft_putstr_fd("exit\n",2);
 		ft_putstr_fd("bash: exit: too many arguments\n", 2);
 		get_ms()->status = 1;
 	}

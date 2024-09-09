@@ -16,7 +16,7 @@ t_minishell *get_ms(void)
 	static t_minishell ms;
 	return &ms;
 }
-// https://42-cursus.gitbook.io/guide/rank-03/minishell/functions
+
 
 void close_heredoc(t_cmd *cmd)
 {
@@ -34,13 +34,15 @@ void close_heredoc(t_cmd *cmd)
 		}
 		cmd = cmd->next;
 	}
+	get_ms()->cmd = NULL;
 }
 
-
-void loop()
+void	loop(void)
 {
-	char *line;
-	char *prompt = NULL;
+	char	*line;
+	char	*prompt;
+
+	prompt = NULL;
 	while (true)
 	{
 		handle_signals();
@@ -52,9 +54,7 @@ void loop()
 		if (!line)
 		{
 			printf("exit\n");
-			_free();
-			_free_env();
-			exit(0);
+			clean_exit(get_ms()->status);
 		}
 		else if ((line && line[0] == '\0' )|| line[0] == '\n')
 			continue;
@@ -70,19 +70,12 @@ void loop()
 		_free();
 	}
 }
-
-int	main(int ac, char **av, char **envp)
+void init_minishell(char **envp)
 {
-	(void)av;
-	//TODO add args check
 	t_env **env;
 	t_minishell *ms;
 	int shlvl;
 	ms = get_ms();
-	if (ac > 1)
-		return(1);
-	if(!envp || !*envp)
-		printf("error\n"); //TODO add the error handling function
 	ms->env = envp;
 	env = init_environment(envp);
 	ms->env_ld = env;
@@ -95,7 +88,13 @@ int	main(int ac, char **av, char **envp)
 			shlvl++;
 		get_env_ld(ms->env_ld, "SHLVL")->value = ft_itoa_env(shlvl);
 	}
-    // add_to_back_env(ms->env_ld,new_env("Aloha","ls -la"));
+}
+int	main(int ac, char **av, char **envp)
+{
+	(void)av;
+	if (ac > 1)
+		return (1);
+	init_minishell(envp);
 	loop();
 	_free_env();
 	return (0);

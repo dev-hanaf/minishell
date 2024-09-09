@@ -1,6 +1,7 @@
 #include "libft.h"
 #include "minishell.h"
 #include <fcntl.h>
+#include <signal.h>
 #include <stdio.h>
 #include <unistd.h>
 //todo parse the line and execute the command
@@ -30,6 +31,20 @@ char *handle_quotes_v2(char *eof,int *expand)
 		*expand = 1;
 	return handle_quotes(eof);
 }
+
+void	sigHerdoc(int sig)
+{
+	if (sig == SIGINT)
+	{
+		ft_putstr_fd("\n", 2);
+		clean_exit(130);
+	}
+	else if (sig == SIGQUIT)
+	{
+		ft_putstr_fd("Quit\n", 2);
+		clean_exit(131);
+	}
+}
 int open_heredoc(t_rdr *heredocs,int *pipefd, int *status)
 {
     char *str = NULL;
@@ -40,11 +55,13 @@ int open_heredoc(t_rdr *heredocs,int *pipefd, int *status)
     char *eof;
 	if(pid != CHILD)
 	{
-        handle_parent_signals();
+		signal(SIGINT,SIG_IGN);
+		signal(SIGQUIT,SIG_IGN);
 		waitpid(pid,status,0);
 		return *status;//	struct sigaction sa; //	sa.sa_flags = -1;
 	}
-	signal(SIGINT,SIG_DFL);
+	signal(SIGINT,sigHerdoc);
+	signal(SIGQUIT,SIG_IGN);
     while(heredocs)
     {
         if(heredocs->type != HERDOC)
@@ -137,7 +154,6 @@ t_cmd *parse_cmds(t_tokenizer *tokens)
             tokens = tokens->next->next;
             continue;
         }
-        //if(tokens->value)//TODO this should be handled in parsing
          ft_lstadd_back(&curr_cmd->args, ft_lstnew(tokens->value));
         tokens = tokens->next;
     }

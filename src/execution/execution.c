@@ -290,7 +290,9 @@ void execute_cmds(t_cmd *cmd,int nbr)
             exec_child(cmd,exec->tmp,exec->pipefd);
         else
         {
-            handle_parent_signals();
+            //handle_parent_signals();
+			signal(SIGINT,SIG_IGN);
+			signal(SIGQUIT,SIG_IGN);
             ft_close(exec->pipefd[WRITE]);
             ft_close(exec->tmp);
             exec->tmp = exec->pipefd[READ];

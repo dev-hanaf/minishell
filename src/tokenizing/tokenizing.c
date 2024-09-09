@@ -60,7 +60,7 @@ void	is_redirection(t_tokenizer **lexer, char *line, size_t *i, int *counter)
 			if (*counter == 17)
 			{
 				printf("minishell: maximum here-document count exceeded\n");
-				exit(1);
+				clean_exit(1);
 			}
 			token = new_token("<<", HERDOC);
 			add_to_back(lexer, token);
