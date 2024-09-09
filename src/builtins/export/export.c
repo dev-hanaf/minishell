@@ -187,13 +187,8 @@ void process_nodes(t_env *env,char *arg)
         ft_strcpy(c, '"');
         res = ft_strjoin(res, c);
 		strs = catch_expand(arg, env, 1, 0);
-		int z = 0;
-		while(strs[z])
-		{
-			printf("test strs[%d] = %s\n",z,strs[z]);
-			z++;
-		}
-        int j = 0;
+        printf("strs[0] = %s\n",strs[0]);
+		int j = 0;
 		while (strs[j])
 		{
             res = ft_strjoin(res, strs[j]);
@@ -231,6 +226,9 @@ int     _export(t_env **env,char **args)
 {
     int status;
     status = 0;
+	if(!args)
+		return 0;
+	args = args + 1;
     if(!args || !*args)
 	{
         print_export(sort_list(clone_env(*env)));

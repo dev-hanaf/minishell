@@ -208,7 +208,7 @@ int check_single_builtin(t_cmd *cmd)
         }
         else if(!ft_strcmp(strs[0],"export"))
 		{
-            _export(get_ms()->env_ld,++strs);
+            _export(get_ms()->env_ld,ld_to_arr(cmd->args));
 		}
 		else if(!ft_strcmp(strs[0],"unset"))
 		{
