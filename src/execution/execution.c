@@ -43,7 +43,7 @@ int check_ambiguous(t_rdr *redir,int *file,char **str,int flag)
 	*str = strs[0];
 	return 0;
 }
-void handle_rdr(t_rdr *redir,int flag)
+int handle_rdr(t_rdr *redir,int flag)
 {
     int file;
 	char *str;
@@ -60,7 +60,7 @@ void handle_rdr(t_rdr *redir,int flag)
                get_ms()->execute = 1;
                if(flag)
                     clean_exit(1);
-                return ;
+                return -1;
             };
             dup2(file,redir->dup);
             close(file);
@@ -75,6 +75,7 @@ void handle_rdr(t_rdr *redir,int flag)
             }
         redir = redir->next;
     }
+	return 0;
 }
 
 int check_builtin(char **args,int *status)
@@ -102,6 +103,7 @@ int check_builtin(char **args,int *status)
     }
     else if(!ft_strcmp(args[0],"exit"))
     {
+		get_ms()->pExit = 0;
         __exit(++args);
 		//TODO handle it mate zmourid
         return 1;
@@ -173,16 +175,24 @@ int check_single_builtin(t_cmd *cmd)
 {
 	//todo handle exit
     char **strs = ld_to_arr_and_expand(cmd->args);
+	int flag;
+	flag =0;
     if(!strs || !*strs)
         return 0;
     if(is_built_in(strs[0]))
     {
         int std_in = dup(STDIN_FILENO);
         int std_out = dup(STDOUT_FILENO);
-        handle_rdr(cmd->redir,0);
-        if(get_ms()->execute)
-            return 1;
-        if(!ft_strcmp(strs[0],"echo"))
+        flag= handle_rdr(cmd->redir,0);
+		if(flag == -1)
+		{
+			dup2(std_in,STDIN_FILENO);
+			dup2(std_out,STDOUT_FILENO);
+			close(std_in);
+			close(std_out);
+			return 1;
+		}
+        if(!ft_strcmp(strs[0],"echo") && flag != -1)
         {
             _echo(ld_to_arr_and_expand(cmd->args->next));
             update_status(0);
@@ -204,6 +214,7 @@ int check_single_builtin(t_cmd *cmd)
         {
             close(std_in);
             close(std_out);
+			get_ms()->pExit = 1;
             __exit(ld_to_arr_and_expand(cmd->args->next));
         }
         else if(!ft_strcmp(strs[0],"export"))

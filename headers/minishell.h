@@ -113,6 +113,7 @@ typedef struct s_minishell
 	t_list				*heredoc_fds;
 	int					status;
 	t_cmd				*cmd;
+	int					pExit;
 }						t_minishell;
 
 t_minishell *get_ms(void);

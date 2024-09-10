@@ -1,2 +1,5 @@
 1. to redirect a message wrotes on stderr use 2>.
 2.Parts of a Shell Program The shell implementation is divided into three parts: The Parser, The Executor, and Shell Subsystems.  
+
+3.Handle SIGPIPE (DONE)
+4. $_ should not be displayed on export ,always last at env ,can't be unsetted

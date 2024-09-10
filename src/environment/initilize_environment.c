@@ -44,7 +44,7 @@ t_env	**init_environment(char **env)
 	// }
 	// else
 	// 	change_env(get_ms()->env_ld, "$", ft_itoa_env(get_pid()));
-	printf("env = %p\n", env);
+	//printf("env = %p\n", env);
 	if(!*env)
 		return create_myenv(init_env);
 	while (env && env[i])
