@@ -59,13 +59,14 @@ char **catch_expand(char *line, t_env *env, int flag, int heredoc)
 	char *str;
 	int start;
 	bool open_close;
-
+	start = 0;
 	open_close = true;
 	initial_vars();
 	while (line[var()->i])
 	{
 		parse_line(line, &start, &open_close, heredoc);
 		str = ft_substr(line, start, var()->i - start + 1);
+		// printf(GREEN"parse line --> %s\n"NC, str);
 		if (open_close && ft_strchr(str, '$') && ft_strlen(line) > 1)
 			start_expanding(str, env, flag);
 		else
@@ -73,6 +74,7 @@ char **catch_expand(char *line, t_env *env, int flag, int heredoc)
 		if (line[var()->i] != '\0')
 			var()->i++;
 	}
+	// __exit(NULL);
 	return (var()->str);
 }
 

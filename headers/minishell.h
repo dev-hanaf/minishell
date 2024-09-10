@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/08 07:07:28 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/10 09:16:01 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@
 	Enum is short for "enumerations", which means "specifically listed".
 The typedef is a keyword that is used to provide existing data types with a new name.The C typedef keyword is used to redefine the name of already existing data types.
 */
+
+# define ESCAPE 1
 
 enum					e_type
 {
@@ -166,6 +168,8 @@ typedef struct s_expand
 	bool	space;
 	bool 	open;
 	char	buffer[2];
+	bool	is_first;
+	int 	xxx;
 }		t_expand;
 
 

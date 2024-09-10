@@ -16,58 +16,30 @@ bool	is_space(char *exp)
 	return (spaces);
 }
 
-//void	whitspaces_in_var(char *exp, char *line)
-//{
-//	bool	spaces;
-//
-//	spaces = is_space(exp);
-//	if (spaces && (line[0] != '"'))
-//	{
-//		var()->spilted = ft_split_whitespaces(var()->exp, " \t\n\v\f\r");
-//		var()->x = 0;
-//		ft_strcpy(var()->buffer, '"');
-//		while (var()->spilted[var()->x])
-//		{
-//			var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-//			var()->buffer);
-//			var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-//			var()->spilted[var()->x]);
-//			if (var()->spilted[var()->x + 1] != NULL)
-//				var()->y++;
-//			var()->x++;
-//			var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-//			var()->buffer);
-//		}
-//	}
-//	else
-//	{
-//		var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-//			var()->buffer);
-//		var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-//			var()->exp);
-//		var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-//		var()->buffer);
-//	}
-//}
-
 void	whitspaces_in_var(char *exp, char *line)
 {
 	bool	spaces;
+	bool 	there_is_space;
 
+	there_is_space = false;
 	spaces = is_space(exp);
 	if (spaces && (line[0] != '"'))
 	{
+		if (is_whitespaces(var()->exp[0]))
+			there_is_space = true;
 		var()->spilted = ft_split_whitespaces(var()->exp, " \t\n\v\f\r");
 		var()->x = 0;
+		if (!var()->is_first && there_is_space)
+			var()->y++;
 		while (var()->spilted[var()->x])
 		{
-			ft_strcpy(var()->buffer, '"');
-			var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-				var()->buffer);
+			//ft_strcpy(var()->buffer, '"');
+			//var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
+				//var()->buffer);
 			var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
 				var()->spilted[var()->x]);
-			var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-				var()->buffer);
+			//var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
+				//var()->buffer);
 			if (var()->spilted[var()->x + 1] != NULL)
 				var()->y++;
 			var()->x++;
@@ -75,16 +47,49 @@ void	whitspaces_in_var(char *exp, char *line)
 	}
 	else
 	{	 
-		ft_strcpy(var()->buffer, '"');
-		var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-			var()->buffer);
+		//ft_strcpy(var()->buffer, '"');
+		//var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
+			//	var()->buffer);
 		var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
 			var()->exp);
-		var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-			var()->buffer);	
+		//var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
+			//var()->buffer);	
 	}
 }
 
+char	*add_escape_character(char *var)
+{
+	int		len;
+	int		idx;
+	int		jdx;
+	char	*new_var;
+
+	len = 0;
+	while (var[len])
+	{
+		if (var[len] == '"' || var[len] == '\'')
+			len++;
+		len++;
+	}
+	new_var = _malloc(sizeof(char) * (len + 1));
+	if (new_var == NULL)
+	{
+		//TODO: do something
+		__exit(NULL);
+	}
+	idx = 0;
+	jdx = 0;
+	while (var[idx])
+	{
+		if (var[idx] == '"' || var[idx] == '\'')
+			new_var[jdx++] = ESCAPE;
+		new_var[jdx] = var[idx];
+		jdx++;
+		idx++;
+	}
+	new_var[jdx] = '\0';
+	return (new_var);
+}
 
 void	expansion_valid(char *line, int *i, t_env **env, int flag)
 {
@@ -102,6 +107,8 @@ void	expansion_valid(char *line, int *i, t_env **env, int flag)
 			(*i)++;
 	var()->exp = ft_substr(line, start, *i - start);
 	var()->exp = get_env(env, var()->exp);
+	//TODO: test
+	var()->exp = add_escape_character(var()->exp);
 	if (var()->exp)
 	{
 		if (flag)
@@ -119,8 +126,13 @@ void	start_expanding(char *line, t_env *env, int flag)
 	i = 0;
 	while (line[i])
 	{
+		//N$var$var"$var"
 		if (line[i] == '$' && line[i + 1] && var_need_expansion(line))
 		{
+			
+			if (i == 0 && var()->xxx == 0)
+				var()->is_first = true;
+			// printf(YELLOW"is first %s --->  %d -----> line[%d]=%c  && var()->xxx = %d\n\n\n\n"NC, line, var()->is_first, i , line[i], var()->xxx);
 			i++;
 			expansion_valid(line, &i, &env, flag);
 			continue ;
@@ -134,6 +146,7 @@ void	start_expanding(char *line, t_env *env, int flag)
 		if (line[i] != '\0')
 			i++;
 	}
+	var()->xxx++;
 }
 
 bool	open_or_close(char *line)

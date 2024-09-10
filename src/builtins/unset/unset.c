@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 06:50:22 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/08 07:33:46 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/10 03:23:53 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,6 @@ int _unset(t_env **env, char **variables)
 	// _env(*env);
 	//get_ms()->env_ld = env;
 	// puts("------------------------------- new env ----------------------------");
-	_env(*get_ms()->env_ld);
+	// _env(*get_ms()->env_ld);
     return (0);
 }

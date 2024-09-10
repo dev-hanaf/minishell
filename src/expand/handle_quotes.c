@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 04:44:08 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/08/31 16:12:23 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/10 09:26:53 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@ static char	*is_qquotes(char *line, char *buffer, int *i)
 	char	c[2];
 
 	(*i)++;
-	while (line[*i] && line[*i] != '"')
+	//printf("1>> %s\n", &line[*i]);
+	while (line[*i] && (line[*i] != '"' || (line[*i] == '"' && line[*i - 1] == ESCAPE)))
 	{
 		ft_strcpy(c, line[*i]);
 		buffer = ft_strjoin(buffer, c);
 		(*i)++;
 	}
+	//printf("2>> %s\n", &line[*i]);
 	return (buffer);
 }
 
@@ -31,12 +33,14 @@ static char	*is_squotes(char *line, char *buffer, int *i)
 	char	c[2];
 
 	(*i)++;
-	while (line[*i] && line[*i] != '\'')
+	//printf("1>> %s\n", &line[*i]);
+	while (line[*i] && (line[*i] != '\'' || (line[*i] == '\'' && line[*i - 1] == ESCAPE)))
 	{
 		ft_strcpy(c, line[*i]);
 		buffer = ft_strjoin(buffer, c);
 		(*i)++;
 	}
+	//printf("2>> %s\n", &line[*i]);
 	return (buffer);
 }
 
@@ -61,18 +65,19 @@ char	*handle_quotes(char *line)
 {
 	char	*buffer;
 	int		i;
-
+	
+	//printf("line: %s\n", line);
 	buffer = NULL;
 	buffer = vars_init(buffer, line, &i);
 	while (line && line[i])
 	{
-		if (line[i] && line[i] == '\"')
+		if (line[i] && line[i] == '\"' && ((i != 0 && line[i - 1] != ESCAPE) || i == 0))
 		{
 			buffer = is_qquotes(line, buffer, &i);
 			if (line[i] == '\0')
 				return (buffer);
 		}
-		else if (line[i] && line[i] == '\'')
+		else if (line[i] && line[i] == '\'' && ((i != 0 && line[i - 1] != ESCAPE) || i == 0))
 		{
 			buffer = is_squotes(line, buffer, &i);
 			if (line[i] == '\0')
@@ -82,5 +87,7 @@ char	*handle_quotes(char *line)
 			buffer = none(line, buffer, &i);
 		i++;
 	}
+	//TODO remmove ESCAPE character
+	//printf("line: %s\n", line);
 	return (buffer);
 }
