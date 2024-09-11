@@ -21,7 +21,7 @@ void update_status(int new_status)
 }
 int ft_close(int fd)
 {
-    if(fd != 0 && fd != 1)
+    if(fd != 0 && fd != 1 && fd != -1)
         return close(fd);
     return -1;
 }
@@ -80,8 +80,6 @@ int handle_rdr(t_rdr *redir,int flag)
 
 int check_builtin(char **args,int *status)
 {
-    //TODO khdm liya hado unset bohdha li khdama
-    //printf(GREEN"%s\n"NC, args[0]);
     if(!args || !*args)
         return 0;
     if(!ft_strcmp(args[0],"export"))
@@ -138,7 +136,7 @@ void exec_cmd(t_list *args)
 	perror("execve");
     _free();
     _free_env();
-    //TODO handle failed execve
+	exit(1);
 }
 void exec_child(t_cmd *cmd,int in_fd,int out_fd[2])
 {
@@ -170,68 +168,46 @@ int is_built_in(char *command)
         return 1;
     return 0;
 }
-
+void restore_fds(int *std_in,int *std_out)
+{
+	dup2(*std_in,STDIN_FILENO);
+	dup2(*std_out,STDOUT_FILENO);
+	close(*std_in);
+	close(*std_out);
+}
 int check_single_builtin(t_cmd *cmd)
 {
 	//todo handle exit
     char **strs = ld_to_arr_and_expand(cmd->args);
-	int flag;
-	flag =0;
-    if(!strs || !*strs)
+    if(!strs || !*strs || !is_built_in(strs[0]))
         return 0;
-    if(is_built_in(strs[0]))
+    int std_in = dup(STDIN_FILENO);
+    int std_out = dup(STDOUT_FILENO);
+	if(handle_rdr(cmd->redir,0) == -1)
+	{
+		restore_fds(&std_in,&std_out);
+		return 1;
+	}
+    if(!ft_strcmp(strs[0],"echo"))
+        get_ms()->status = _echo(++strs);
+    else if(!ft_strcmp(strs[0],"pwd"))
+        get_ms()->status = _pwd();
+    else if(!ft_strcmp(strs[0],"env"))
+        get_ms()->status = _env(*get_ms()->env_ld);
+    else if(!ft_strcmp(strs[0],"export"))
+        _export(get_ms()->env_ld,ld_to_arr(cmd->args));
+	else if(!ft_strcmp(strs[0],"unset"))
+		_unset(get_ms()->env_ld,++strs);
+    else if(!ft_strcmp(strs[0],"cd"))
+		get_ms()->status = _cd(++strs,get_ms()->env_ld);
+    else if(!ft_strcmp(strs[0],"exit"))
     {
-        int std_in = dup(STDIN_FILENO);
-        int std_out = dup(STDOUT_FILENO);
-        flag= handle_rdr(cmd->redir,0);
-		if(flag == -1)
-		{
-			dup2(std_in,STDIN_FILENO);
-			dup2(std_out,STDOUT_FILENO);
-			close(std_in);
-			close(std_out);
-			return 1;
-		}
-        if(!ft_strcmp(strs[0],"echo") && flag != -1)
-        {
-            _echo(ld_to_arr_and_expand(cmd->args->next));
-            update_status(0);
-        }
-        else if(!ft_strcmp((char *)cmd->args->content,"cd"))
-        {
-            if(cmd->args->next)
-                update_status(_cd(ld_to_arr_and_expand(cmd->args->next),get_ms()->env_ld));
-            else
-                update_status(_cd(NULL,get_ms()->env_ld));
-        }
-        else if(!ft_strcmp((char *)cmd->args->content,"pwd"))
-            _pwd();
-        else if(!ft_strcmp(strs[0],"env"))
-		{
-            _env(*get_ms()->env_ld);
-		}
-        else if(!ft_strcmp(strs[0],"exit"))
-        {
-            close(std_in);
-            close(std_out);
-			get_ms()->pExit = 1;
-            __exit(ld_to_arr_and_expand(cmd->args->next));
-        }
-        else if(!ft_strcmp(strs[0],"export"))
-		{
-            _export(get_ms()->env_ld,ld_to_arr(cmd->args));
-		}
-		else if(!ft_strcmp(strs[0],"unset"))
-		{
-			_unset(get_ms()->env_ld,++strs);
-		};
-        dup2(std_in,STDIN_FILENO);
-        dup2(std_out,STDOUT_FILENO);
-        close(std_in);
-        close(std_out);
-        return 1;
+		restore_fds(&std_in,&std_out);
+		get_ms()->pExit = 1;
+        __exit(ld_to_arr_and_expand(cmd->args->next));
     }
-    return 0;
+	restore_fds(&std_in,&std_out);
+    return 1;
 }
 void update_underscore(t_cmd *cmd)
 {
@@ -250,7 +226,7 @@ void update_underscore(t_cmd *cmd)
 	char **strs = expand(*get_ms()->env_ld,(char *)arg->content);
     if(!strs || !*strs)
         return ;
-    underscore = get_env_ld(get_ms()->env_ld," ");
+    underscore = get_env_ld(get_ms()->env_ld,"_");
     if(!underscore)
     {
         add_to_back_env(get_ms()->env_ld,new_env("_",strs[ft_strlen_2d_array(strs) - 1]));

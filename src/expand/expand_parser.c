@@ -65,6 +65,8 @@ char	*add_escape_character(char *var)
 	char	*new_var;
 
 	len = 0;
+	if (!var)
+		return (NULL);
 	while (var[len])
 	{
 		if (var[len] == '"' || var[len] == '\'')

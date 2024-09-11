@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void    _env(t_env *env)
+int    _env(t_env *env)
 {
     while (env)
     {
@@ -23,4 +23,5 @@ void    _env(t_env *env)
         }
         env = env->next;
     }
+	return 0;
 }

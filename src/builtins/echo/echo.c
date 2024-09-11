@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 
-void _echo(char **argumentes)
+int		_echo(char **argumentes)
 {
     int i;
     bool lock;
@@ -49,6 +49,9 @@ void _echo(char **argumentes)
         i++;
     }
     if (!lock)
+	{
         ft_putstr_fd("\n",1);
+	}
+	return 0;
 }
 

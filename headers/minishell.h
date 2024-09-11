@@ -148,8 +148,8 @@ void					display_tokens(t_tokenizer *tokens);
 int						_cd(char **paths, t_env **env);
 int 					_pwd(void);
 int 					_unset(t_env **env, char **variables);
-void    				_env(t_env *env);
-void 					_echo(char **argumentes);
+int						_env(t_env *env);
+int						_echo(char **argumentes);
 void					__exit(char **args);
 
 
@@ -216,6 +216,7 @@ int cmd_nbr(t_cmd *head);
 char **ld_to_arr(t_list *lst);
 /*------------------------- parsing -----------------------------------------  */
 t_cmd *parse_cmds(t_tokenizer *tokens);
+int 	handle_heredoc(t_cmd *cmd);
 void print_cmds(t_cmd *cmd_list);
 void print_args(t_list *arg,char *name);
 /*t_rdr */
