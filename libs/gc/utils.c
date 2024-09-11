@@ -50,3 +50,12 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	ft_bzero(ptr, nmemb * size);
 	return (ptr);
 }
+
+
+void	init_vars(int *is_ok, long *result, int *signe, int *i)
+{
+	*is_ok = 0;
+	*result = 0;
+	*signe = 1;
+	*i = 0;
+}

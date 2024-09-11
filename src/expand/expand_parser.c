@@ -33,28 +33,16 @@ void	whitspaces_in_var(char *exp, char *line)
 			var()->y++;
 		while (var()->spilted[var()->x])
 		{
-			//ft_strcpy(var()->buffer, '"');
-			//var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-				//var()->buffer);
 			var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
 				var()->spilted[var()->x]);
-			//var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-				//var()->buffer);
 			if (var()->spilted[var()->x + 1] != NULL)
 				var()->y++;
 			var()->x++;
 		}
 	}
 	else
-	{	 
-		//ft_strcpy(var()->buffer, '"');
-		//var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-			//	var()->buffer);
 		var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
 			var()->exp);
-		//var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-			//var()->buffer);	
-	}
 }
 
 char	*add_escape_character(char *var)
@@ -109,7 +97,6 @@ void	expansion_valid(char *line, int *i, t_env **env, int flag)
 			(*i)++;
 	var()->exp = ft_substr(line, start, *i - start);
 	var()->exp = get_env(env, var()->exp);
-	//TODO: test
 	var()->exp = add_escape_character(var()->exp);
 	if (var()->exp)
 	{
@@ -128,13 +115,11 @@ void	start_expanding(char *line, t_env *env, int flag)
 	i = 0;
 	while (line[i])
 	{
-		//N$var$var"$var"
 		if (line[i] == '$' && line[i + 1] && var_need_expansion(line))
 		{
 			
 			if (i == 0 && var()->xxx == 0)
 				var()->is_first = true;
-			// printf(YELLOW"is first %s --->  %d -----> line[%d]=%c  && var()->xxx = %d\n\n\n\n"NC, line, var()->is_first, i , line[i], var()->xxx);
 			i++;
 			expansion_valid(line, &i, &env, flag);
 			continue ;

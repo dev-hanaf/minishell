@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/10 09:16:01 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/11 07:42:27 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ enum					e_type
 # define WRITE 1
 # define READ 0
 # define CHILD 0
-#define ALLOC 20
+#define ALLOC 100
 
 typedef struct s_tokenizer
 {
@@ -214,6 +214,7 @@ void add_to_back_cmd(t_cmd **head, t_cmd *newCmd);
 t_cmd *get_last_cmd(t_cmd *head);
 int cmd_nbr(t_cmd *head);
 char **ld_to_arr(t_list *lst);
+void	init_vars(int *is_ok, long *result, int *signe, int *i);
 /*------------------------- parsing -----------------------------------------  */
 t_cmd *parse_cmds(t_tokenizer *tokens);
 int 	handle_heredoc(t_cmd *cmd);

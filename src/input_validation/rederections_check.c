@@ -18,30 +18,6 @@ bool is_next_a_word(t_tokenizer *lexer)
     return (false);
 }
 
-/* int	rederections_check(t_tokenizer *lexer)
-{
-	if (ft_strncmp(lexer->value, ">", 1) == 0 && ft_strlen(lexer->value) == 1)
-	{
-        is_next_a_word(lexer);
-	}
-	else if (ft_strncmp(lexer->value, "<", 1) == 0 && ft_strlen(lexer->value) == 1)
-	{
-        is_next_a_word(lexer);
-
-	}
-	else if (ft_strncmp(lexer->value, ">>", 2) == 0 && ft_strlen(lexer->value) == 2)
-	{
-        is_next_a_word(lexer);
-
-	}
-	else if (ft_strncmp(lexer->value, "<<", 2) == 0 && ft_strlen(lexer->value) == 2)
-	{
-        is_next_a_word(lexer);
-
-	}
-	return (0);
-} */
-
 bool	rederections_check(t_tokenizer *lexer)
 {
 	if (lexer->type == REDIR_IN)
@@ -58,6 +34,7 @@ bool	rederections_check(t_tokenizer *lexer)
 	}
 	else if (lexer->type == HERDOC)
 	{
+		//TODO count 16 herdoc and remove it from tokenizer
         return (is_next_a_word(lexer));
 	}
 	return (false);

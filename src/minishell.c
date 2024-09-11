@@ -78,6 +78,10 @@ void init_minishell(char **envp)
 	ms = get_ms();
 	ms->env = envp;
 	env = init_environment(envp);
+	if (!get_env(env , "$"))
+		add_to_back_env(env, new_env("$", ft_itoa_env(get_pid())));
+	else
+		change_env(env , "$",ft_itoa_env(get_pid()));
 	ms->env_ld = env;
 	if(get_env_ld(ms->env_ld, "SHLVL"))
 	{
@@ -89,6 +93,7 @@ void init_minishell(char **envp)
 		get_env_ld(ms->env_ld, "SHLVL")->value = ft_itoa_env(shlvl);
 	}
 }
+
 int	main(int ac, char **av, char **envp)
 {
 	(void)av;

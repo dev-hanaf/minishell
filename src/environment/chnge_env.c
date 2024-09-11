@@ -12,22 +12,22 @@
 
 #include "minishell.h"
 
-void    change_env(t_env **env, char *key, char *value)
+void	change_env(t_env **env, char *key, char *value)
 {
-    t_env   *temp;
-    size_t  len;
-    
-    if (!*env || !key || !value )
-        return;
-    temp = *env;
-    len = ft_strlen(key);
-    while(temp)
-    {
-        if (ft_strncmp(key, temp->key, len) == 0 && len == ft_strlen(temp->key))
-        {
-            temp->value = ft_strdup(value);
-            return;
-        }
-         temp =  temp->next;
-    }    
+	t_env	*temp;
+	size_t	len;
+
+	if (!*env || !key || !value)
+		return ;
+	temp = *env;
+	len = ft_strlen(key);
+	while (temp)
+	{
+		if (ft_strncmp(key, temp->key, len) == 0 && len == ft_strlen(temp->key))
+		{
+			temp->value = ft_strdup(value);
+			return ;
+		}
+		temp = temp->next;
+	}
 }
