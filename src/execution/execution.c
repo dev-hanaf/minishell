@@ -198,7 +198,7 @@ int check_single_builtin(t_cmd *cmd)
     else if(!ft_strcmp(strs[0],"export"))
         _export(get_ms()->env_ld,ld_to_arr(cmd->args));
 	else if(!ft_strcmp(strs[0],"unset"))
-		_unset(get_ms()->env_ld,++strs);
+		get_ms()->status =_unset(get_ms()->env_ld,++strs);
     else if(!ft_strcmp(strs[0],"cd"))
 		get_ms()->status = _cd(++strs,get_ms()->env_ld);
     else if(!ft_strcmp(strs[0],"exit"))

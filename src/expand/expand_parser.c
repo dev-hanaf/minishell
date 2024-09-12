@@ -1,86 +1,44 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_parser.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/12 16:22:07 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/09/12 16:54:55 by ahanaf           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-bool	is_space(char *exp)
+
+char	*add_escape_character(char *exp)
 {
-	int		i;
-	bool	spaces;
-
-	spaces = false;
-	i = 0;
-	while (exp && exp[i])
-	{
-		if (is_whitespaces(exp[i]))
-			spaces = true;
-		i++;
-	}
-	return (spaces);
-}
-
-void	whitspaces_in_var(char *exp, char *line)
-{
-	bool	spaces;
-	bool 	there_is_space;
-
-	there_is_space = false;
-	spaces = is_space(exp);
-	if (spaces && (line[0] != '"'))
-	{
-		if (is_whitespaces(var()->exp[0]))
-			there_is_space = true;
-		var()->spilted = ft_split_whitespaces(var()->exp, " \t\n\v\f\r");
-		var()->x = 0;
-		if (!var()->is_first && there_is_space)
-			var()->y++;
-		while (var()->spilted[var()->x])
-		{
-			if (var()->y == ALLOC)
-				return;
-			var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-				var()->spilted[var()->x]);
-			if (var()->spilted[var()->x + 1] != NULL)
-				var()->y++;
-			var()->x++;
-		}
-	}
-	else
-		var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-			var()->exp);
-}
-
-char	*add_escape_character(char *var)
-{
-	int		len;
-	int		idx;
-	int		jdx;
-	char	*new_var;
-
-	len = 0;
-	if (!var)
+	var()->idx = 0;
+	var()->jdx = 0;
+	var()->len = 0;
+	if (!exp)
 		return (NULL);
-	while (var[len])
+	while (exp[var()->len])
 	{
-		if (var[len] == '"' || var[len] == '\'')
-			len++;
-		len++;
+		if (exp[var()->len] == '"' || exp[var()->len] == '\'')
+			var()->len++;
+		var()->len++;
 	}
-	new_var = _malloc(sizeof(char) * (len + 1));
-	if (new_var == NULL)
+	var()->new_exp = _malloc(sizeof(char) * (var()->len + 1));
+	if (var()->new_exp == NULL)
+		__exit(NULL);//TODO: do something;
+	while (exp[var()->idx])
 	{
-		//TODO: do something
-		__exit(NULL);
+		if (exp[var()->idx] == '"' || exp[var()->idx] == '\'')
+			var()->new_exp[var()->jdx++] = ESCAPE;
+		var()->new_exp[var()->jdx] = exp[var()->idx];
+		var()->jdx++;
+		var()->idx++;
 	}
-	idx = 0;
-	jdx = 0;
-	while (var[idx])
-	{
-		if (var[idx] == '"' || var[idx] == '\'')
-			new_var[jdx++] = ESCAPE;
-		new_var[jdx] = var[idx];
-		jdx++;
-		idx++;
-	}
-	new_var[jdx] = '\0';
-	return (new_var);
+	var()->new_exp[var()->jdx] = '\0';
+	return (var()->new_exp);
 }
 
 void	expansion_valid(char *line, int *i, t_env **env, int flag)
@@ -164,4 +122,29 @@ bool	open_or_close(char *line)
 			i++;
 	}
 	return (true);
+}
+
+char **expand(t_env *env, char *line)
+{
+	char **res;
+	int i;
+
+	res = NULL;
+	i = 0;
+	res = catch_expand(line, env, 0, 0);
+	while (res[i])
+	{
+		res[i] = handle_quotes(res[i]);
+		i++;
+	}
+	return (res);
+}
+
+char *expand_herdoc(t_env *env, char *line)
+{
+	char **res;
+
+	res = NULL;
+	res = catch_expand(line, env, 1, 1);
+	return (res[0]);
 }

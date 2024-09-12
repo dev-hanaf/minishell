@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/12 09:40:34 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/12 16:45:48 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,9 @@ void					add_to_front(t_tokenizer **token, t_tokenizer *new);
 int						stack_size(t_tokenizer **token);
 t_tokenizer				*tokenization(char *line);
 void					display_tokens(t_tokenizer *tokens);
-
+void					is_redirection(t_tokenizer **lexer, char *line, size_t *i);
+void	skip_whitespaces( char *line, size_t *i);
+void	is_pipe(t_tokenizer **lexer, char *line, size_t *i);
 /*----------------------------- Built-in --------------------------*/
 int						_cd(char **paths, t_env **env);
 int 					_pwd(void);
@@ -175,11 +177,16 @@ typedef struct s_expand
 	char	buffer[2];
 	bool	is_first;
 	int 	xxx;
+	int					idx;
+	char		*new_exp;
+	int		len;
+	int					jdx;
+	bool	spaces;
+	bool 	there_is_space;
 }		t_expand;
 
 
 t_expand	*var(void);
-t_tokenizer 			*expand_lexer(t_env *env, t_tokenizer **lexer);
 char 					**expand(t_env *env, char *line);
 char					**ld_to_arr_and_expand(t_list *lst);
 char					**make_child_env(t_list *lst);
@@ -196,6 +203,7 @@ int 					valid_expansion_variable(char c);
 char 					**ft_split_whitespaces(char *str, char *seps);
 void					start_expanding(char *line, t_env *env, int flag);
 bool					open_or_close(char *line);
+void					whitspaces_in_var(char *exp, char *line);
 /*----------------------------- Initilize Envirement --------------------------*/
 t_env					*new_env(char *key, char *value);
 t_env					*last_env(t_env **env);
