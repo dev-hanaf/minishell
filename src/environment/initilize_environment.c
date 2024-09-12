@@ -6,16 +6,26 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 02:10:51 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/12 01:57:55 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/12 16:02:41 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <wchar.h>
 
 t_env	**create_myenv(t_env **env)
 {
+	char *cwd;
+	add_to_back_env(env, new_env("OLDPWD", NULL));
 	add_to_back_env(env, new_env(ft_strdup_env("SHLVL"), ft_strdup_env("0")));
-	add_to_back_env(env, new_env("PWD", getcwd(NULL, 0)));
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+	{
+		ft_putstr_fd("shell-init: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n", 2);
+		return (env);
+	}
+	add_to_back_env(env, new_env("PWD", ft_strdup_env(cwd)));
+	free(cwd);
 	return (env);
 }
 

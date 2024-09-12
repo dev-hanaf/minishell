@@ -52,7 +52,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 }
 
 
-void	init_vars(int *is_ok, long *result, int *signe, int *i)
+void	init_vars(int *is_ok, size_t *result, int *signe, int *i)
 {
 	*is_ok = 0;
 	*result = 0;

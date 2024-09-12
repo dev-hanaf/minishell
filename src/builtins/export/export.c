@@ -3,10 +3,13 @@
 
 void print_export(t_env *env)
 {
-
     while(env)
     {
-        printf("declare -x %s",env->key);
+		if (!ft_strcmp(env->key, "$"))
+		{
+			env = env->next;
+			continue ;
+		}        printf("declare -x %s",env->key);
         if(env->value)
             printf("=\"%s\"",env->value);
         printf("\n");

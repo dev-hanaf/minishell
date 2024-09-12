@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/12 01:54:17 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/12 09:40:34 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,10 @@ typedef struct s_minishell
 	t_cmd				*cmd;
 	int					pExit;
 	int					pipefd[2];
+	int					pwd_islocal;
+	int					oldpwd_islocal;
+	char				*pwd;
+	char				*oldpwd;
 }						t_minishell;
 
 t_minishell *get_ms(void);
@@ -214,7 +218,7 @@ void add_to_back_cmd(t_cmd **head, t_cmd *newCmd);
 t_cmd *get_last_cmd(t_cmd *head);
 int cmd_nbr(t_cmd *head);
 char **ld_to_arr(t_list *lst);
-void	init_vars(int *is_ok, long *result, int *signe, int *i);
+void	init_vars(int *is_ok, size_t *result, int *signe, int *i);
 /*------------------------- parsing -----------------------------------------  */
 t_cmd *parse_cmds(t_tokenizer *tokens);
 int 	handle_heredoc(t_cmd *cmd);

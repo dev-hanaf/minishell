@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 15:45:50 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/07 22:19:46 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/12 06:53:41 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ char				*ft_strnstr(const char *big, const char *little,
 void				*ft_calloc(size_t nmemb, size_t size);
 char				*ft_strdup(const char *s);
 char				*ft_strdup_env(const char *s);
+char				*cd_ft_strdup(const char *s);
 char				*ft_substr(char const *s, unsigned int start, size_t len);
 char				*ft_strjoin(char  *s1, char  *s2);
 char				*ft_strjoin_env(char  *s1, char  *s2);

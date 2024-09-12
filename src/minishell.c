@@ -94,6 +94,8 @@ void init_minishell(char **envp)
 			shlvl++;
 		get_env_ld(ms->env_ld, "SHLVL")->value = ft_itoa_env(shlvl);
 	}
+	// get_ms()->pwd = ft_strdup_env(get_env(env, "PWD"));
+	// get_ms()->oldpwd = ft_strdup_env(get_env(env, "OLDPWD"));
 }
 
 int	main(int ac, char **av, char **envp)

@@ -6,15 +6,26 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 05:16:00 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/12 01:51:59 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/12 09:49:03 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	atoi_exit(char *str, int *valid, int *is_ok)
+void	print_and_free_alpha(int e, char *str, char *str2, char *str3)
 {
-	long	result;
+	ft_putstr_fd("exit\n", 1);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd(str2, 2);
+	ft_putstr_fd(str3, 2);
+	_free_env();
+	_free();
+	exit(e);
+}
+
+size_t	atoi_exit(char *str, int *valid, int *is_ok)
+{
+	size_t	result;
 	int		signe;
 	int		i;
 
@@ -32,7 +43,8 @@ int	atoi_exit(char *str, int *valid, int *is_ok)
 	{
 		*is_ok = 1;
 		result = result * 10 + (str[i++] - 48);
-		//TODO if result > size_t 
+		if ((result > 9223372036854775807ULL  && signe == 1) || ((result > 9223372036854775808ULL  && signe == -1)))
+			print_and_free_alpha(2, "bash: exit: ", str, " numeric argument required\n");
 	}
 	if (str[i] != '\0')
 		*valid = 0;
@@ -47,16 +59,6 @@ void	print_and_free_digit(int e)
 	exit(e);
 }
 
-void	print_and_free_alpha(int e, char *str, char *str2, char *str3)
-{
-	ft_putstr_fd("exit\n", 1);
-	ft_putstr_fd(str, 2);
-	ft_putstr_fd(str2, 2);
-	ft_putstr_fd(str3, 2);
-	_free_env();
-	_free();
-	exit(e);
-}
 
 void	multiple_arguments(char **args)
 {

@@ -6,6 +6,8 @@ void clean_exit(int e)
 	close_heredoc(get_ms()->cmd);
 	_free();
 	_free_env();
+	// free(get_ms()->oldpwd);
+	// free(get_ms()->pwd);
     exit(e);
 }
 void	ms_error(char *str, int e)
