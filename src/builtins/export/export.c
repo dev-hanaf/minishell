@@ -174,45 +174,15 @@ void process_nodes(t_env *env,char *arg)
 		i++;
 	}
 	if (!key ||  (key[0] == '\0'|| ft_strchr(key, '$')))
-	{
-		//dprintf(2, "key ==> %s\t\t value ==> %s\n", key, value);
-		//dprintf(2, RED"split ALL\n"NC);
 		strs = expand(env, arg);
-	}
 	else
 	{
-		//dprintf(2, "key ==> %s\t\t value ==> %s\n", key, value);
-		//dprintf(2, GREEN"join ALL\n"NC);
-        char *res = NULL;
-        //ft_strcpy(c, '"');
         strs = catch_expand(arg, env, 1, 0);
         if (strs && strs[0])
-        {
-          //  char **temp = catch_expand(value, env, 1, 0);
-           // if(*temp)
-           // {
-             //   printf("temp %s\n", temp[0]);
-           // }
-            // int j= 0;
-            // while (strs && strs[0][j])
-            // {
-                // ft_strcpy(c)
-                // res = ft_strjoin(res, )
-            // }
-            //printf("strs[0] = %s\n",strs[0]);
-            // res = ft_strjoin(res, c);
-            res = ft_strjoin(res, strs[0]);
-            // res = ft_strjoin(res, c);
-            //printf("res = %s\n",res);
-            //if (temp[0][0] != '\'')
-            res = handle_quotes(res);
-            strs[0] = res;
-           // printf("strs[0] = %s\n",strs[0]);
-        }
+            strs[0] = handle_quotes(strs[0]);
 	}
     while(strs && *strs)
     {
-		//printf("creating %s\n",*strs);
         if(!process_args(*strs))
         {
         	update_status(1);

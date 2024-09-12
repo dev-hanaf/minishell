@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 09:43:40 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/11 07:38:59 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/12 01:41:45 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,6 @@ bool	input_validation(t_tokenizer *lexer)
 		if (check_quotes(lexer))
 		{
 			printf("syntax error unclosed quotes\n");
-			update_status(2);
-			// exit(241) ;
-			return true;
-		}
-		else if (forbidden_inputs(lexer))
-		{
 			update_status(2);
 			return true;
 		}

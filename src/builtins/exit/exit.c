@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 05:16:00 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/11 06:13:12 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/12 01:51:59 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int	atoi_exit(char *str, int *valid, int *is_ok)
 	{
 		*is_ok = 1;
 		result = result * 10 + (str[i++] - 48);
+		//TODO if result > size_t 
 	}
 	if (str[i] != '\0')
 		*valid = 0;

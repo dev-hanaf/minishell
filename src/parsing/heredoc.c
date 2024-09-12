@@ -31,13 +31,16 @@ void	sigHerdoc(int sig)
 	if (sig == SIGINT)
 	{
 		ft_putstr_fd("\n", 2);
+		//ft_putstr_fd("ok lesggo\n",2);
+		close(get_ms()->pipefd[0]);
+		close(get_ms()->pipefd[1]);
 		clean_exit(130);
 	}
-	else if (sig == SIGQUIT)
-	{
-		ft_putstr_fd("Quit\n", 2);
-		clean_exit(131);
-	}
+	// else if (sig == SIGQUIT)
+	// {
+	// 	ft_putstr_fd("Quit\n", 2);
+	// 	clean_exit(131);
+	// }
 }
 int open_heredoc(t_rdr *heredocs,int *pipefd, int *status)
 {
@@ -49,8 +52,7 @@ int open_heredoc(t_rdr *heredocs,int *pipefd, int *status)
     char *eof;
 	if(pid != CHILD)
 	{
-		signal(SIGINT,SIG_IGN);
-		signal(SIGQUIT,SIG_IGN);
+		handle_parent_signals();
 		waitpid(pid,status,0);
 		return *status;//	struct sigaction sa; //	sa.sa_flags = -1;
 	}
@@ -86,11 +88,7 @@ int open_heredoc(t_rdr *heredocs,int *pipefd, int *status)
 	}
 	if(!isExpand)
 		str = expand_herdoc(*get_ms()->env_ld, str);
-    if(!write(pipefd[WRITE],str,ft_strlen(str)))
-	{
-			dprintf(2,"error writing to pipe\n");
-			return 0;
-	}
+    write(pipefd[WRITE],str,ft_strlen(str));
     close_heredoc(get_ms()->cmd);
     close(pipefd[WRITE]);
 	close(pipefd[READ]);
@@ -100,7 +98,7 @@ int open_heredoc(t_rdr *heredocs,int *pipefd, int *status)
 
 int  handle_heredoc(t_cmd *cmd)
 {
-    int pipefd[2];
+    //int pipefd[2];
 	int status;
 	t_rdr *last;
     while(cmd)
@@ -108,17 +106,17 @@ int  handle_heredoc(t_cmd *cmd)
 		last = get_last_hrdc(cmd->redir);
 		if(last)
 		{
-            pipe(pipefd);
-			open_heredoc(cmd->redir,pipefd,&status);
-			close(pipefd[WRITE]);
+            pipe(get_ms()->pipefd);
+			open_heredoc(cmd->redir,get_ms()->pipefd,&status);
+			close(get_ms()->pipefd[WRITE]);
 			if(status != 0)
 			{
-                close(pipefd[READ]);
+                close(get_ms()->pipefd[READ]);
 				get_ms()->status = status;
 				update_status(get_status(status));
 				return status;
 			}
-			last->fd = pipefd[READ];
+			last->fd = get_ms()->pipefd[READ];
 		}
       cmd = cmd->next;
     }

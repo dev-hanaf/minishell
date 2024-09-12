@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/11 07:42:27 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/12 01:54:17 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ typedef struct s_env
 	struct s_env		*prev;
 }						t_env;
 
-// TODO replace the lists in t_cmd by this
 typedef struct s_rdr
 {
     char *value;
@@ -114,6 +113,7 @@ typedef struct s_minishell
 	int					status;
 	t_cmd				*cmd;
 	int					pExit;
+	int					pipefd[2];
 }						t_minishell;
 
 t_minishell *get_ms(void);
@@ -232,6 +232,7 @@ int	ft_strcmp(const char *s1, const char *s2);
 void handle_parent_signals(void);
 void handle_child_signals(void);
 void handle_signals(void);
+void handle_parent_in_childs(void);
 void update_status(int new_status);
 int     _export(t_env **env,char **args);
 void print_strs(char **strs);

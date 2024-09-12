@@ -1,2 +1,1 @@
-//TODO remove exit printf if child
 //TODO replace all dprintf by ft_putstr_fd

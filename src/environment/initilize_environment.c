@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 02:10:51 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/11 06:36:06 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/12 01:57:55 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ t_env	**create_myenv(t_env **env)
 {
 	add_to_back_env(env, new_env(ft_strdup_env("SHLVL"), ft_strdup_env("0")));
 	add_to_back_env(env, new_env("PWD", getcwd(NULL, 0)));
-	/*TODO Replace OLDPWD WITH _
-	add_to_back_env(env, new_env("OLDPWD", getcwd(NULL, 0)));*/
 	return (env);
 }
 

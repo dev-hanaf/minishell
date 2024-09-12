@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 03:54:18 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/05/21 19:20:50 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/12 01:37:32 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	change_env(t_env **env, char *key, char *value)
 	{
 		if (ft_strncmp(key, temp->key, len) == 0 && len == ft_strlen(temp->key))
 		{
-			temp->value = ft_strdup(value);
+			temp->value = ft_strdup_env(value);
 			return ;
 		}
 		temp = temp->next;

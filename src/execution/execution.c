@@ -17,14 +17,15 @@
 void update_status(int new_status)
 {
     get_ms()->status = new_status;
-    // get_env_ld(get_ms()->env_ld,"?")->value = ft_itoa(new_status);
 }
+
 int ft_close(int fd)
 {
     if(fd != 0 && fd != 1 && fd != -1)
         return close(fd);
     return -1;
 }
+
 int check_ambiguous(t_rdr *redir,int *file,char **str,int flag)
 {
 	char **strs;
@@ -43,6 +44,7 @@ int check_ambiguous(t_rdr *redir,int *file,char **str,int flag)
 	*str = strs[0];
 	return 0;
 }
+
 int handle_rdr(t_rdr *redir,int flag)
 {
     int file;
@@ -78,25 +80,25 @@ int handle_rdr(t_rdr *redir,int flag)
 	return 0;
 }
 
-int check_builtin(char **args,int *status)
+int check_builtin(char **args, t_list *targs)
 {
     if(!args || !*args)
         return 0;
     if(!ft_strcmp(args[0],"export"))
     {
-        _export(get_ms()->env_ld,++args);
+        _export(get_ms()->env_ld,ld_to_arr(targs));
         return 1;
     }
     else if(!ft_strcmp(args[0],"echo"))
     {
         _echo(++args);
-		*status = 0;
+		get_ms()->status = 0;
         return 1;
     }
     else if(!ft_strcmp(args[0],"pwd"))
     {
-        _pwd();
-		*status = 0;
+        _pwd();	
+        get_ms()->status = 0;
         return 1;
     }
     else if(!ft_strcmp(args[0],"exit"))
@@ -109,27 +111,26 @@ int check_builtin(char **args,int *status)
     else if(!ft_strcmp(args[0],"env"))
     {
         _env(*get_ms()->env_ld);
-		*status = 0;
+        get_ms()->status = 0;
         return 1;
     }
 	else if(!ft_strcmp(args[0],"unset"))
 	{
-		*status = _unset(get_ms()->env_ld,++args);
-		return 1;
+		_unset(get_ms()->env_ld,++args);
+		get_ms()->status = 0;
+        return 1;
 	}
 	return 0;
 }
 void exec_cmd(t_list *args)
 {
-    int status;
-    status = 0;
     if(!args)
         clean_exit(0);
     char **nargs = ld_to_arr_and_expand(args);
     if(!nargs)
         clean_exit(0);
-    if(check_builtin(nargs,&status))
-        clean_exit(status);
+    if(check_builtin(nargs, args))
+        clean_exit(get_ms()->status);
     char **env = env_to_arr(*get_ms()->env_ld);
     char *path = get_cmd_path(nargs[0],env);
     execve(path,nargs,env);
@@ -277,9 +278,7 @@ void execute_cmds(t_cmd *cmd,int nbr)
             exec_child(cmd,exec->tmp,exec->pipefd);
         else
         {
-            //handle_parent_signals();
-			signal(SIGINT,SIG_IGN);
-			signal(SIGQUIT,SIG_IGN);
+            handle_parent_in_childs();
             ft_close(exec->pipefd[WRITE]);
             ft_close(exec->tmp);
             exec->tmp = exec->pipefd[READ];

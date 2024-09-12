@@ -75,6 +75,8 @@ void init_minishell(char **envp)
 	t_env **env;
 	t_minishell *ms;
 	int shlvl;
+
+	env = NULL;
 	ms = get_ms();
 	ms->env = envp;
 	env = init_environment(envp);

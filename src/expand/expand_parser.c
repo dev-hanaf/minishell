@@ -33,6 +33,8 @@ void	whitspaces_in_var(char *exp, char *line)
 			var()->y++;
 		while (var()->spilted[var()->x])
 		{
+			if (var()->y == ALLOC)
+				return;
 			var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
 				var()->spilted[var()->x]);
 			if (var()->spilted[var()->x + 1] != NULL)
@@ -117,7 +119,6 @@ void	start_expanding(char *line, t_env *env, int flag)
 	{
 		if (line[i] == '$' && line[i + 1] && var_need_expansion(line))
 		{
-			
 			if (i == 0 && var()->xxx == 0)
 				var()->is_first = true;
 			i++;

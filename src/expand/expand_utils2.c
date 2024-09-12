@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 07:37:57 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/11 07:38:10 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/11 21:47:48 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	get_pid(void)
 	pid = fork();
 	if (pid == CHILD)
 	{
-		exit(0);
+		clean_exit(0);
 	}
 	wait(0);
 	return (pid - 2);

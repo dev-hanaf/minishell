@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/12 01:46:34 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/09/12 02:16:42 by ahanaf           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -11,7 +23,6 @@ t_expand *var(void)
 void initial_vars(void)
 {
 	ft_bzero(var(), sizeof(t_expand));
-	// TODO allocate str dynamicaly
 	var()->str = _malloc(ALLOC * sizeof(char *));
 	if (!var()->str)
 	{

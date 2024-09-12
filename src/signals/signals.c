@@ -22,12 +22,12 @@ void sigChildHandler(int sig)
 	ft_putstr_fd("handling child", 2);
 	if (sig == SIGINT)
 	{
-		ft_putstr_fd("\n", 2);
+		//ft_putstr_fd("\n", 2);
 		clean_exit(130);
 	}
 	else if (sig == SIGQUIT)
 	{
-		ft_putstr_fd("Quit2\n", 2);
+		//ft_putstr_fd("Quit2\n", 2);
 		clean_exit(2);
 		//exit(3);
 	}
@@ -37,22 +37,33 @@ void handle_child_signals(void)
 	signal(SIGINT,sigChildHandler);
 	signal(SIGQUIT,sigChildHandler);
 }
+void parentSig(int sig)
+{	
+	if (sig == SIGINT)
+	{
+		ft_putstr_fd("\n", 2);
+	}
+	else if (sig == SIGQUIT)
+	{
+		ft_putstr_fd("Quit (core dumped) \n", 2);
+		//exit(3);
+	}
+}
 
 void sigHandler_parent(int sig)
 {
 	if (sig == SIGINT)
 	{
-		ft_putstr_fd("\n", 2);
 		update_status(130);
 	}
-	else if (sig == SIGQUIT)
-	{
-		ft_putstr_fd("Quit\n", 2);
-	}
 }
-
+void handle_parent_in_childs(void)
+{
+	signal(SIGINT,parentSig);
+	signal(SIGQUIT,parentSig);
+}
 void handle_parent_signals(void)
 {
 	signal(SIGINT, sigHandler_parent);
-	signal(SIGQUIT, sigHandler_parent);
+	signal(SIGQUIT, SIG_IGN);
 }

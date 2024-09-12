@@ -88,7 +88,6 @@ void	check_dir(char *cmd)
 		close(fd);
 		ms_error(cmd, 1026);
 	}
-	close(fd);
 }
 
 char	*get_cmd_path(char *cmd, char **env)
