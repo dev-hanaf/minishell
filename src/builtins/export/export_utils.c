@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 22:39:26 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/14 22:47:16 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/15 08:50:30 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*is_key(char *arg, int *i)
 char	*is_value(char *arg, int *i)
 {
 	char	c[2];
-	char *value;
+	char	*value;
 
 	value = NULL;
 	while (arg && arg[*i])
@@ -58,18 +58,15 @@ void	process_args_wraper(char **strs)
 void	process_nodes(t_env *env, char *arg)
 {
 	char	*key;
-	//char	*value;
 	int		i;
 	char	**strs;
 
 	key = NULL;
-	//value = NULL;
 	strs = NULL;
 	i = 0;
 	key = is_key(arg, &i);
 	if (arg && arg[i] == '=')
 		i++;
-	//value = is_value(arg, &i);
 	if (!key || (key[0] == '\0' || ft_strchr(key, '$')))
 		strs = expand(env, arg);
 	else

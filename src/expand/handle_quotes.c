@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 04:44:08 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/15 01:36:45 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/15 08:48:35 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ static char	*is_qquotes(char *line, char *buffer, int *i)
 	char	c[2];
 
 	(*i)++;
-	while (line[*i] && (line[*i] != '"' || (line[*i] == '"' && line[*i
-		- 1] == ESCAPE)))
+	while (line[*i] && (line[*i] != '"' || (line[*i] == '"'
+				&& line[*i - 1] == ESCAPE)))
 	{
 		ft_strcpy(c, line[*i]);
 		buffer = ft_strjoin(buffer, c);
@@ -32,8 +32,8 @@ static char	*is_squotes(char *line, char *buffer, int *i)
 	char	c[2];
 
 	(*i)++;
-	while (line[*i] && (line[*i] != '\'' || (line[*i] == '\'' && line[*i
-		- 1] == ESCAPE)))
+	while (line[*i] && (line[*i] != '\'' || (line[*i] == '\''
+				&& line[*i - 1] == ESCAPE)))
 	{
 		ft_strcpy(c, line[*i]);
 		buffer = ft_strjoin(buffer, c);

@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/15 01:37:26 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/15 10:10:18 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,7 @@ typedef struct s_expand
 	int					jdx;
 	bool				spaces;
 	bool				there_is_space;
+	bool				espace_in_the_end;
 }						t_expand;
 
 t_expand				*var(void);

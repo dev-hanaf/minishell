@@ -6,15 +6,16 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:48:11 by zmourid           #+#    #+#             */
-/*   Updated: 2024/09/14 23:22:38 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/15 08:49:23 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void print_strs(char **args)
+void	print_strs(char **args)
 {
 	int	i;
+
 	i = 0;
 	while (args[i])
 	{
@@ -22,6 +23,7 @@ void print_strs(char **args)
 		i++;
 	}
 }
+
 char	**export_v2(t_env *env, char **args)
 {
 	int	i;

@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 01:46:34 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/15 01:03:56 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/15 08:53:07 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,20 @@ char	**catch_expand(char *line, t_env *env, int flag, int heredoc)
 			var()->i++;
 	}
 	return (var()->str);
+}
+
+char	**expand(t_env *env, char *line)
+{
+	char	**res;
+	int		i;
+
+	res = NULL;
+	i = 0;
+	res = catch_expand(line, env, 0, 0);
+	while (res[i])
+	{
+		res[i] = handle_quotes(res[i]);
+		i++;
+	}
+	return (res);
 }

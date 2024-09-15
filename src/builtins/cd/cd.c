@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 18:23:55 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/14 22:51:39 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/15 11:05:27 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	go_to_path(char *save, t_env **env, char **path, char *cwd)
 		ft_putstr_fd(": No such file or directory\n", 2);
 		return (1);
 	}
-	return (perror(path[0]), 1);
+	return (perror(path[0]), free(cwd), 1);
 }
 
 int	go_to_home(char *save, t_env **env, char **path)

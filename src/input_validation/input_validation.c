@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 09:43:40 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/15 01:00:08 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/15 11:17:10 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ bool	input_validation(t_tokenizer *lexer)
 			return (true);
 		}
 		else if (rederections_check(lexer, &counter))
-			update_status_and_return_true();
+			return (update_status_and_return_true());
 		else if (pipes_check(lexer))
-			update_status_and_return_true();
+			return (update_status_and_return_true());
 		lexer = lexer->next;
 	}
 	return (false);
