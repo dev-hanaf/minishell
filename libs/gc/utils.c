@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/13 21:20:47 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/09/13 21:21:08 by ahanaf           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "header.h"
 
 t_data	*ft_gc_lstnew(void *ptr)
 {
-	t_data		*node;
+	t_data	*node;
 
 	if (!ptr)
 		return (NULL);
@@ -32,7 +44,6 @@ static void	ft_bzero(void *s, size_t n)
 	ft_memset(s, 0, n);
 }
 
-
 void	*ft_calloc(size_t nmemb, size_t size)
 {
 	void	*ptr;
@@ -49,13 +60,4 @@ void	*ft_calloc(size_t nmemb, size_t size)
 		return (NULL);
 	ft_bzero(ptr, nmemb * size);
 	return (ptr);
-}
-
-
-void	init_vars(int *is_ok, size_t *result, int *signe, int *i)
-{
-	*is_ok = 0;
-	*result = 0;
-	*signe = 1;
-	*i = 0;
 }

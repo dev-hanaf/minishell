@@ -12,7 +12,6 @@
 
 #include "header.h"
 
-
 t_data	**get_data_env(void)
 {
 	static t_data	*head;
@@ -28,7 +27,7 @@ void	add_list_env(t_data *new)
 	if (!tmp)
 	{
 		*get_data_env() = new;
-		return;
+		return ;
 	}
 	while (tmp)
 	{
@@ -44,7 +43,7 @@ void	*tmalloc(size_t size)
 	t_data	*node;
 	void	*ptr;
 
-	node = ft_gc_lstnew(ft_calloc(1,size));
+	node = ft_gc_lstnew(ft_calloc(1, size));
 	if (!node)
 		return (NULL);
 	ptr = node->ptr;
@@ -54,12 +53,12 @@ void	*tmalloc(size_t size)
 
 void	_free_env(void)
 {
-	t_data **head;
-	t_data *temp;
-	
+	t_data	**head;
+	t_data	*temp;
+
 	head = get_data_env();
 	if (!*head)
-		return;
+		return ;
 	while (*head)
 	{
 		temp = (*head)->next;

@@ -1,8 +1,0 @@
-// TODO replace all dprintf by ft_putstr_fd
-// ms: usnet: command not found
-//minishell(127)$ unset OLDPWD
-//minishell(127)$ echo $?
-//127
-//===========> should return  0
-//
-

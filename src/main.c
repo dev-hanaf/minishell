@@ -1,26 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_gc.c                                          :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/10 07:24:14 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/08 01:39:39 by ahanaf           ###   ########.fr       */
+/*   Created: 2024/09/14 23:40:45 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/09/14 23:40:55 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "minishell.h"
 
-void	recursive_free(t_data *list)
+int	main(int ac, char **av, char **envp)
 {
-	t_data	*tmp;
+	char	*cwd;
 
-	free(list->ptr);
-	tmp = list->next;
-	if (list->index != 0)
-		free(list);
-	if (tmp == NULL)
-		return ;
-	recursive_free(tmp);
+	(void)av;
+	if (ac > 1)
+		return (1);
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+	{
+		ft_putstr_fd("shell-init: error retrieving current directory: ", 2);
+		ft_putstr_fd("getcwd: cannot access parent directories: "\
+		"No such file or directory\n", 2);
+	}
+	free(cwd);
+	init_minishell(envp);
+	loop();
+	_free_env();
+	return (0);
 }

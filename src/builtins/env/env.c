@@ -25,8 +25,8 @@ int	_env(t_env *env)
 			printf("%s", env->key);
 		if (env->value)
 		{
-			printf("=%s",env->value);
-	        printf("\n");
+			printf("=%s", env->value);
+			printf("\n");
 		}
 		env = env->next;
 	}

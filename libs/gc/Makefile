@@ -1,7 +1,7 @@
 CC  = cc
 CFLAGS = -Wall -Wextra -Werror 
 AR = ar -rcs
-SRC = gc.c	 gc_env.c utils.c
+SRC = gc.c gc_env.c utils.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -21,5 +21,3 @@ fclean: clean
 	rm -rf $(NAME)
 
 re : fclean all
-
-.SECONDARY: $(OBJ)

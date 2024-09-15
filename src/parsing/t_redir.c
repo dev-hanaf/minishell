@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   t_redir.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zmourid <zmourid@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/14 20:48:52 by zmourid           #+#    #+#             */
+/*   Updated: 2024/09/14 20:48:53 by zmourid          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	get_mode(int type)
@@ -10,6 +22,7 @@ int	get_mode(int type)
 		return (O_APPEND | O_RDWR | O_CREAT);
 	return (-1);
 }
+
 int	get_perm(int type)
 {
 	if (type == REDIR_IN)
@@ -20,6 +33,7 @@ int	get_perm(int type)
 		return (0644);
 	return (-1);
 }
+
 int	get_dup(int type)
 {
 	if (type == REDIR_IN)
@@ -30,6 +44,7 @@ int	get_dup(int type)
 		return (STDOUT_FILENO);
 	return (-1);
 }
+
 t_rdr	*ft_redirnew(char *value, int type)
 {
 	t_rdr	*new;
@@ -46,8 +61,11 @@ t_rdr	*ft_redirnew(char *value, int type)
 	new->perm = get_perm(type);
 	return (new);
 }
+
 void	ft_rdraddback(t_rdr **rdr, t_rdr *new)
 {
+	t_rdr	*temp;
+
 	if (!rdr)
 		return ;
 	if (!*rdr)
@@ -55,7 +73,7 @@ void	ft_rdraddback(t_rdr **rdr, t_rdr *new)
 		*rdr = new;
 		return ;
 	}
-	t_rdr *temp = *rdr;
+	temp = *rdr;
 	while (temp->next)
 		temp = temp->next;
 	temp->next = new;

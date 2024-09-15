@@ -6,7 +6,7 @@ BLUE = \033[0;34m
 NC = \033[0m
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address 
+CFLAGS = -Wall -Wextra -Werror -g3 #-fsanitize=address 
 NAME = minishell
 
 LIBFT = ./libs/libft
@@ -43,7 +43,7 @@ fclean: clean
 re: fclean all
 dev:
 	while inotifywait -q . ; do echo -e '\n\n'; make; done
-sup:
+sup: all
 	valgrind --suppressions=readline.supp --leak-check=full --show-leak-kinds=all --track-fds=yes ./minishell
 
 

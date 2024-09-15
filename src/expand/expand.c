@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 01:46:34 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/12 17:06:38 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/15 01:03:56 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,6 @@ t_expand	*var(void)
 	static t_expand	head;
 
 	return (&head);
-}
-
-void	initial_vars(void)
-{
-	ft_bzero(var(), sizeof(t_expand));
-	var()->str = _malloc(ALLOC * sizeof(char *));
-	if (!var()->str)
-	{
-		perror("malloc");
-		return ;
-	}
-	while (var()->i < ALLOC)
-		var()->str[(var()->i)++] = NULL;
-	var()->i = 0;
 }
 
 void	end_variable(char *line)
@@ -59,7 +45,7 @@ void	parse_line(char *line, int *start, bool *open_close, int heredoc)
 		&& (line[var()->i] == '"') && (line[var()->i + 1] == '"'))
 		var()->i++;
 	else if (!heredoc && line[var()->i] && (line[var()->i] == '\''
-		|| line[var()->i] == '"'))
+			|| line[var()->i] == '"'))
 		*open_close = open_or_close(line);
 	else if (line[var()->i] && line[var()->i + 1] && line[var()->i] == '$'
 		&& (line[var()->i + 1] == '\'' || line[var()->i + 1] == '"'))

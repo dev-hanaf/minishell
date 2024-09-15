@@ -6,17 +6,19 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 15:45:50 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/12 06:53:41 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/14 09:53:56 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
+# include "../gc/header.h"
 # include <limits.h>
 # include <stdint.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include "../gc/header.h"
+
+# define ALLOC 300
 
 typedef struct s_list
 {
@@ -62,8 +64,8 @@ char				*ft_strdup(const char *s);
 char				*ft_strdup_env(const char *s);
 char				*cd_ft_strdup(const char *s);
 char				*ft_substr(char const *s, unsigned int start, size_t len);
-char				*ft_strjoin(char  *s1, char  *s2);
-char				*ft_strjoin_env(char  *s1, char  *s2);
+char				*ft_strjoin(char *s1, char *s2);
+char				*ft_strjoin_env(char *s1, char *s2);
 char				*ft_strtrim(const char *s1, const char *set);
 char				**ft_split(char *s, char c);
 char				*ft_itoa(int n);

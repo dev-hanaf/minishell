@@ -6,22 +6,23 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 02:10:51 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/12 16:02:41 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/15 01:23:30 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <wchar.h>
 
 t_env	**create_myenv(t_env **env)
 {
-	char *cwd;
+	char	*cwd;
+
 	add_to_back_env(env, new_env("OLDPWD", NULL));
 	add_to_back_env(env, new_env(ft_strdup_env("SHLVL"), ft_strdup_env("0")));
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 	{
-		ft_putstr_fd("shell-init: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n", 2);
+		ft_putstr_fd("shell-init: error retrieving current directory: getcwd:"\
+		"cannot access parent directories: No such file or directory\n", 2);
 		return (env);
 	}
 	add_to_back_env(env, new_env("PWD", ft_strdup_env(cwd)));
@@ -64,10 +65,7 @@ t_env	**init_environment(char **env)
 
 	init_env = tmalloc(sizeof(t_env *));
 	if (!init_env)
-	{
-		perror("malloc");/*TODO add the error handling function */
-		__exit(NULL);
-	}
+		exiter(1, "malloc");
 	*init_env = NULL;
 	if (!*env)
 		return (create_myenv(init_env));

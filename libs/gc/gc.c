@@ -27,7 +27,7 @@ void	add_list(t_data *new)
 	if (!tmp)
 	{
 		*get_data() = new;
-		return;
+		return ;
 	}
 	while (tmp)
 	{
@@ -43,7 +43,7 @@ void	*_malloc(size_t size)
 	t_data	*node;
 	void	*ptr;
 
-	node = ft_gc_lstnew(ft_calloc(1,size));
+	node = ft_gc_lstnew(ft_calloc(1, size));
 	if (!node)
 		return (NULL);
 	ptr = node->ptr;
@@ -53,12 +53,12 @@ void	*_malloc(size_t size)
 
 void	_free(void)
 {
-	t_data **head;
-	t_data *temp;
-	
+	t_data	**head;
+	t_data	*temp;
+
 	head = get_data();
 	if (!*head)
-		return;
+		return ;
 	while (*head)
 	{
 		temp = (*head)->next;

@@ -6,12 +6,11 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:22:07 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/12 16:54:55 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/14 10:19:16 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 char	*add_escape_character(char *exp)
 {
@@ -20,32 +19,30 @@ char	*add_escape_character(char *exp)
 	var()->len = 0;
 	if (!exp)
 		return (NULL);
-	while (exp[var()->len])
+	while (exp[var()->idx])
 	{
-		if (exp[var()->len] == '"' || exp[var()->len] == '\'')
+		if (exp[var()->idx] == '"' || exp[var()->idx] == '\'')
 			var()->len++;
 		var()->len++;
+		var()->idx++;
 	}
 	var()->new_exp = _malloc(sizeof(char) * (var()->len + 1));
 	if (var()->new_exp == NULL)
 		__exit(NULL);//TODO: do something;
-	while (exp[var()->idx])
+	var()->idx = -1;
+	while (exp[++var()->idx])
 	{
 		if (exp[var()->idx] == '"' || exp[var()->idx] == '\'')
 			var()->new_exp[var()->jdx++] = ESCAPE;
 		var()->new_exp[var()->jdx] = exp[var()->idx];
 		var()->jdx++;
-		var()->idx++;
 	}
 	var()->new_exp[var()->jdx] = '\0';
 	return (var()->new_exp);
 }
 
-void	expansion_valid(char *line, int *i, t_env **env, int flag)
+void	ft_skip(char *line, int *i)
 {
-	int	start;
-
-	start = *i;
 	if (line[*i] && line[*i] == '$')
 		(*i)++;
 	else if (line[*i] && line[*i] == '?')
@@ -55,14 +52,26 @@ void	expansion_valid(char *line, int *i, t_env **env, int flag)
 	else if (line[*i] && (ft_isalnum(line[*i]) || line[*i] == '_'))
 		while (line[*i] && (ft_isalnum(line[*i]) || line[*i] == '_'))
 			(*i)++;
+}
+
+void	expansion_valid(char *line, int *i, t_env **env, int flag)
+{
+	int		start;
+	char	*y;
+
+	start = *i;
+	y = var()->str[var()->y];
+	ft_skip(line, i);
 	var()->exp = ft_substr(line, start, *i - start);
 	var()->exp = get_env(env, var()->exp);
 	var()->exp = add_escape_character(var()->exp);
 	if (var()->exp)
 	{
 		if (flag)
-			var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-				var()->exp);
+		{
+			y = ft_strjoin(y, var()->exp);
+			var()->str[var()->y] = y;
+		}
 		else
 			whitspaces_in_var(var()->exp, line);
 	}
@@ -70,7 +79,7 @@ void	expansion_valid(char *line, int *i, t_env **env, int flag)
 
 void	start_expanding(char *line, t_env *env, int flag)
 {
-	int	i;
+	int		i;
 
 	i = 0;
 	while (line[i])
@@ -86,8 +95,7 @@ void	start_expanding(char *line, t_env *env, int flag)
 		else
 		{
 			ft_strcpy(var()->buffer, line[i]);
-			var()->str[var()->y] = ft_strjoin(var()->str[var()->y],
-				var()->buffer);
+			var()->str[var()->y] = ft_strjoin(var()->str[var()->y], var()->buffer);
 		}
 		if (line[i] != '\0')
 			i++;
@@ -124,10 +132,10 @@ bool	open_or_close(char *line)
 	return (true);
 }
 
-char **expand(t_env *env, char *line)
+char	**expand(t_env *env, char *line)
 {
-	char **res;
-	int i;
+	char	**res;
+	int		i;
 
 	res = NULL;
 	i = 0;
@@ -140,9 +148,9 @@ char **expand(t_env *env, char *line)
 	return (res);
 }
 
-char *expand_herdoc(t_env *env, char *line)
+char	*expand_herdoc(t_env *env, char *line)
 {
-	char **res;
+	char	**res;
 
 	res = NULL;
 	res = catch_expand(line, env, 1, 1);

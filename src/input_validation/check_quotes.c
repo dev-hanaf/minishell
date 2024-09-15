@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 05:58:00 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/11 23:30:31 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/15 00:52:53 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,4 @@ bool	check_quotes(t_tokenizer *lexer)
 	if (flag)
 		return (true);
 	return (false);
- }
+}

@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 05:39:31 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/11 05:36:57 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/13 14:21:57 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,10 @@ void	remove_env_element(t_env **env, char *variable)
 	{
 		if (ft_strcmp(temp->key, variable) == 0)
 		{
+			if (!ft_strcmp(variable, "PWD"))
+				get_ms()->pwd_islocal = 0;
+			else if (!ft_strcmp(variable, "OLDPWD"))
+				get_ms()->oldpwd_islocal = 0;
 			delete_node(env, temp);
 			break ;
 		}

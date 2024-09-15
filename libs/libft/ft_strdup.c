@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 09:02:25 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/12 06:53:02 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/14 22:30:20 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ char	*ft_strdup(const char *s)
 	char	*str;
 	size_t	i;
 	size_t	s_len;
+
 	if (!s)
 		return (NULL);
 	s_len = ft_strlen(s);
@@ -38,6 +39,7 @@ char	*ft_strdup_env(const char *s)
 	char	*str;
 	size_t	i;
 	size_t	s_len;
+
 	if (!s)
 		return (NULL);
 	s_len = ft_strlen(s);
@@ -59,6 +61,7 @@ char	*cd_ft_strdup(const char *s)
 	char	*str;
 	size_t	i;
 	size_t	s_len;
+
 	if (!s)
 		return (NULL);
 	s_len = ft_strlen(s);

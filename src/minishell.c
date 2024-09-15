@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/14 23:37:30 by ahanaf            #+#    #+#             */
+/*   Updated: 2024/09/15 01:07:01 by ahanaf           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
@@ -9,26 +21,26 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "libft.h"
 
-t_minishell *get_ms(void)
+t_minishell	*get_ms(void)
 {
-	static t_minishell ms;
-	return &ms;
+	static t_minishell	ms;
+
+	return (&ms);
 }
 
-
-void close_heredoc(t_cmd *cmd)
+void	close_heredoc(t_cmd *cmd)
 {
-	t_rdr *temp;
-	if(!cmd)
-		return;
-	while(cmd)
+	t_rdr	*temp;
+
+	if (!cmd)
+		return ;
+	while (cmd)
 	{
 		temp = cmd->redir;
-		while(temp)
+		while (temp)
 		{
-			if(temp->type == HERDOC && temp->fd != -1)
+			if (temp->type == HERDOC && temp->fd != -1)
 				close(temp->fd);
 			temp = temp->next;
 		}
@@ -37,74 +49,65 @@ void close_heredoc(t_cmd *cmd)
 	get_ms()->cmd = NULL;
 }
 
+void	run_minishell(t_tokenizer *lexer)
+{
+	t_cmd	*cmd_list;
+
+	cmd_list = parse_cmds(lexer, NULL);
+	execute_cmds(cmd_list, cmd_nbr(cmd_list));
+	close_heredoc(cmd_list);
+}
+
 void	loop(void)
 {
-	char	*line;
-	char	*prompt;
+	char		*line;
+	char		*prompt;
+	t_tokenizer	*lexer;
 
 	prompt = NULL;
 	while (true)
 	{
 		handle_signals();
-		prompt = ft_strjoin("minishell(", ft_itoa(get_ms()->status));
-		prompt = ft_strjoin(prompt,")$ ");
-		if(!prompt)
-			printf("error\n"); //TODO add the error handling function
+		prompt = "$>";
 		line = readline(prompt);
 		if (!line)
 		{
-			printf("exit\n");
+			ft_putstr_fd("exit\n", 2);
 			clean_exit(get_ms()->status);
 		}
-		else if ((line && line[0] == '\0' )|| line[0] == '\n')
-			continue;
-		t_tokenizer *lexer = tokenization(line);
+		else if ((line && line[0] == '\0') || line[0] == '\n')
+			continue ;
+		lexer = tokenization(line);
 		if (!input_validation(lexer))
-		{	
-			t_cmd *cmd_list = parse_cmds((lexer));
-			execute_cmds(cmd_list,cmd_nbr(cmd_list));
-			close_heredoc(cmd_list);
-		}
+			run_minishell(lexer);
 		add_history(line);
 		free(line);
 		_free();
 	}
 }
-void init_minishell(char **envp)
+
+void	init_minishell(char **envp)
 {
-	t_env **env;
-	t_minishell *ms;
-	int shlvl;
+	t_env		**env;
+	t_minishell	*ms;
+	int			shlvl;
 
 	env = NULL;
 	ms = get_ms();
 	ms->env = envp;
 	env = init_environment(envp);
-	if (!get_env(env , "$"))
+	if (!get_env(env, "$"))
 		add_to_back_env(env, new_env("$", ft_itoa_env(get_pid())));
 	else
-		change_env(env , "$",ft_itoa_env(get_pid()));
+		change_env(env, "$", ft_itoa_env(get_pid()));
 	ms->env_ld = env;
-	if(get_env_ld(ms->env_ld, "SHLVL"))
+	if (get_env_ld(ms->env_ld, "SHLVL"))
 	{
 		shlvl = ft_atoi(get_env_ld(ms->env_ld, "SHLVL")->value);
-		if(shlvl >= 999)
+		if (shlvl >= 999)
 			shlvl = 1;
 		else
 			shlvl++;
 		get_env_ld(ms->env_ld, "SHLVL")->value = ft_itoa_env(shlvl);
 	}
-	// get_ms()->pwd = ft_strdup_env(get_env(env, "PWD"));
-	// get_ms()->oldpwd = ft_strdup_env(get_env(env, "OLDPWD"));
-}
-
-int	main(int ac, char **av, char **envp)
-{
-	(void)av;
-	if (ac > 1)
-		return (1);
-	init_minishell(envp);
-	loop();
-	_free_env();
-	return (0);
 }
