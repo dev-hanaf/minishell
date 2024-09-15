@@ -12,6 +12,16 @@
 
 #include "minishell.h"
 
+void print_strs(char **args)
+{
+	int	i;
+	i = 0;
+	while (args[i])
+	{
+		printf("args[%d] = %s\n", i, args[i]);
+		i++;
+	}
+}
 char	**export_v2(t_env *env, char **args)
 {
 	int	i;

@@ -18,7 +18,7 @@ static char	*is_qquotes(char *line, char *buffer, int *i)
 
 	(*i)++;
 	while (line[*i] && (line[*i] != '"' || (line[*i] == '"' && line[*i
-			- 1] == ESCAPE)))
+		- 1] == ESCAPE)))
 	{
 		ft_strcpy(c, line[*i]);
 		buffer = ft_strjoin(buffer, c);
@@ -33,7 +33,7 @@ static char	*is_squotes(char *line, char *buffer, int *i)
 
 	(*i)++;
 	while (line[*i] && (line[*i] != '\'' || (line[*i] == '\'' && line[*i
-			- 1] == ESCAPE)))
+		- 1] == ESCAPE)))
 	{
 		ft_strcpy(c, line[*i]);
 		buffer = ft_strjoin(buffer, c);

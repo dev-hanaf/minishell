@@ -12,28 +12,34 @@
 
 #include "minishell.h"
 
-void	is_key(char *arg, int *i, char *key)
+char	*is_key(char *arg, int *i)
 {
 	char	c[2];
+	char	*key;
 
+	key = NULL;
 	while (arg && arg[*i] && arg[*i] != '=')
 	{
 		ft_strcpy(c, arg[*i]);
 		key = ft_strjoin(key, c);
 		(*i)++;
 	}
+	return (key);
 }
 
-void	id_value(char *arg, int *i, char *value)
+char	*is_value(char *arg, int *i)
 {
 	char	c[2];
+	char *value;
 
+	value = NULL;
 	while (arg && arg[*i])
 	{
 		ft_strcpy(c, arg[*i]);
 		value = ft_strjoin(value, c);
 		(*i)++;
 	}
+	return (value);
 }
 
 void	process_args_wraper(char **strs)
@@ -52,18 +58,18 @@ void	process_args_wraper(char **strs)
 void	process_nodes(t_env *env, char *arg)
 {
 	char	*key;
-	char	*value;
+	//char	*value;
 	int		i;
 	char	**strs;
 
 	key = NULL;
-	value = NULL;
+	//value = NULL;
 	strs = NULL;
 	i = 0;
-	is_key(arg, &i, key);
+	key = is_key(arg, &i);
 	if (arg && arg[i] == '=')
 		i++;
-	id_value(arg, &i, value);
+	//value = is_value(arg, &i);
 	if (!key || (key[0] == '\0' || ft_strchr(key, '$')))
 		strs = expand(env, arg);
 	else

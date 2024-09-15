@@ -66,6 +66,7 @@ void	cd_change_env(t_env **env, char *save)
 	cwd = getcwd(NULL, 0);
 	get_ms()->pwd_pwd = ft_strdup_env(cwd);
 	free(cwd);
+	cwd = NULL;
 	get_ms()->oldpwd_islocal = 1;
 	while (temp)
 	{
