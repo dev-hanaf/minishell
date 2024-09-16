@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zmourid <zmourid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:49:07 by zmourid           #+#    #+#             */
-/*   Updated: 2024/09/14 23:57:39 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/16 02:29:16 by zmourid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ void	exec_child(t_cmd *cmd, int in_fd, int out_fd[2])
 	exec_cmd(cmd->args);
 }
 
-// if(!cmd->next)
-//    update_underscore(cmd);
 t_exec	*init_exec(t_cmd *cmd)
 {
 	t_exec	*exec;

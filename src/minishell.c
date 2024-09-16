@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zmourid <zmourid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 23:37:30 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/15 01:07:01 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/16 01:23:42 by zmourid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	loop(void)
 	prompt = NULL;
 	while (true)
 	{
+		get_ms()->cmd = NULL;
 		handle_signals();
 		prompt = "$>";
 		line = readline(prompt);

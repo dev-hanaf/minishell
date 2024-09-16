@@ -3,14 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zmourid <zmourid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:48:41 by zmourid           #+#    #+#             */
-/*   Updated: 2024/09/15 00:39:36 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/16 02:35:35 by zmourid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*strjoin_and_nl(char *str, char *line)
+{
+	str = ft_strjoin(str, line);
+	str = ft_strjoin(str, "\n");
+	return (str);
+}
 
 char	*heredoc_while(t_rdr *heredocs, char *str, int *isexpand)
 {
@@ -31,11 +38,10 @@ char	*heredoc_while(t_rdr *heredocs, char *str, int *isexpand)
 			if (line == NULL || !ft_strcmp(line, eof))
 				break ;
 			if (get_last_hrdc(heredocs) == heredocs)
-			{
-				str = ft_strjoin(str, line);
-				str = ft_strjoin(str, "\n");
-			}
+				str = strjoin_and_nl(str, line);
+			free(line);
 		}
+		free(line);
 		heredocs = heredocs->next;
 	}
 	return (str);
@@ -56,7 +62,7 @@ int	open_heredoc(t_rdr *heredocs, int *pipefd, int *status)
 	signal(SIGQUIT, SIG_IGN);
 	str = heredoc_while(heredocs, str, &isexpand);
 	if (!str)
-		heredoc_clean_exit2(pipefd, 0);
+		heredoc_clean_exit(pipefd, 0);
 	if (!isexpand)
 		str = expand_herdoc(*get_ms()->env_ld, str);
 	ft_write(pipefd[WRITE], str, ft_strlen(str));
@@ -69,6 +75,7 @@ int	handle_heredoc(t_cmd *cmd)
 	int		status;
 	t_rdr	*last;
 
+	status = 0;
 	while (cmd)
 	{
 		last = get_last_hrdc(cmd->redir);

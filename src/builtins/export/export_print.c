@@ -6,7 +6,7 @@
 /*   By: zmourid <zmourid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:50:23 by zmourid           #+#    #+#             */
-/*   Updated: 2024/09/14 20:50:24 by zmourid          ###   ########.fr       */
+/*   Updated: 2024/09/15 22:38:41 by zmourid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	print_export(t_env *env)
 	clone = sort_list(clone_env(env));
 	while (clone)
 	{
-		if (!ft_strcmp(clone->key, "$"))
+		if (!ft_strcmp(clone->key, "$") || !ft_strcmp(clone->key, "_"))
 		{
 			clone = clone->next;
 			continue ;
