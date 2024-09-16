@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   printing.c                                         :+:      :+:    :+:   */
+/*   .printing.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zmourid <zmourid@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:48:49 by zmourid           #+#    #+#             */
-/*   Updated: 2024/09/14 20:48:50 by zmourid          ###   ########.fr       */
+/*   Updated: 2024/09/16 11:46:38 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,14 @@ int is_last(t_rdr *redir)
 //     }
 // }
 
-void print_rdr(t_rdr *redir) { while(redir) {
-        if(redir->type == REDIR_IN)
-            dprintf(2, "Redirection: \033[0;36mIN\033[0m \t Value: \033[0;35m%s\033[0m\n", redir->value);
-        if(redir->type == REDIR_OUT)
-            dprintf(2, "Redirection: \033[0;36mOUT\033[0m \t Value: \033[0;35m%s\033[0m\n", redir->value);
-        redir = redir->next;
-    }
-}
+// void print_rdr(t_rdr *redir) { while(redir) {
+//         if(redir->type == REDIR_IN)
+//             dprintf(2, "Redirection: \033[0;36mIN\033[0m \t Value: \033[0;35m%s\033[0m\n", redir->value);
+//         if(redir->type == REDIR_OUT)
+//             dprintf(2, "Redirection: \033[0;36mOUT\033[0m \t Value: \033[0;35m%s\033[0m\n", redir->value);
+//         redir = redir->next;
+//     }
+// }
 
 void print_args(t_list *arg, char *name) {
     if (!arg)
