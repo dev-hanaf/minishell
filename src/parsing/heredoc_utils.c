@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:48:39 by zmourid           #+#    #+#             */
-/*   Updated: 2024/09/16 09:47:12 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/16 11:26:30 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,5 @@ int	heredoc_parent_wait(int child, int *status)
 	handle_parent_signals();
 	waitpid(child, status, 0);
 	*status = get_status(*status);
-	dprintf(2, "status heredoc =%d\n", *status);
 	return (*status);
 }

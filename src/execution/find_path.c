@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zmourid <zmourid@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:49:10 by zmourid           #+#    #+#             */
-/*   Updated: 2024/09/14 20:49:11 by zmourid          ###   ########.fr       */
+/*   Updated: 2024/09/16 11:27:07 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ char	*ft_look_in_path(char *cmd, char *path)
 	int		i;
 
 	i = -1;
-	if (!cmd || !path || ft_strcmp(cmd, ".") == 0 || ft_strcmp(cmd, "..") == 0)
+	if (!cmd || !path || !*path || ft_strcmp(cmd, ".") == 0
+		|| ft_strcmp(cmd, "..") == 0)
 		ms_error(cmd, 127);
 	paths = ft_split(path + 5, ':');
 	cmd2 = ft_strjoin("/", cmd);
@@ -100,7 +101,7 @@ char	*get_cmd_path(char *cmd)
 	char	*path;
 
 	path = get_env(get_ms()->env_ld, "PATH");
-	if (!cmd)
+	if (!cmd || !path)
 		clean_exit(0);
 	if (!*cmd)
 		ms_error(cmd, 127);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zmourid <zmourid@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:53:48 by zmourid           #+#    #+#             */
-/*   Updated: 2024/09/14 20:53:49 by zmourid          ###   ########.fr       */
+/*   Updated: 2024/09/16 11:28:29 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,8 @@ int	process_args(char *str)
 		return (0);
 	if (flag == 0)
 	{
-		dprintf(2, "ms: export: `%s': not a valid identifier\n", str);
+		ft_putstr_fd( "ms: export: `%s': not a valid identifier\n", 2);
+		ft_putstr_fd(str, 2);
 		update_status(1);
 		return (0);
 	}
