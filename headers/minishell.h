@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 19:01:32 by ahanaf            #+#    #+#             */
-/*   Updated: 2024/09/15 10:10:18 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/16 09:29:09 by ahanaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,6 +240,9 @@ char					*handle_quotes_v2(char *eof, int *expand);
 int						heredoc_clean_exit(int *pipefd, int status);
 int						heredoc_clean_exit2(int *pipefd, int status);
 int						heredoc_parent_wait(int child, int *status);
+char					*is_dq_sq(char *res, int *i, char *del, char q);
+char					*is_dollar_quote(char *res, int *i, char *del, char q);
+char					*characters(char *res, char car);
 /*t_rdr */
 t_rdr					*ft_redirnew(char *value, int type);
 void					ft_rdraddback(t_rdr **rdr, t_rdr *new);
