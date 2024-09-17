@@ -6,7 +6,7 @@
 /*   By: ahanaf <ahanaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 20:49:10 by zmourid           #+#    #+#             */
-/*   Updated: 2024/09/16 11:27:07 by ahanaf           ###   ########.fr       */
+/*   Updated: 2024/09/17 21:51:15 by zmourid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	*ft_look_in_path(char *cmd, char *path)
 	if (!cmd || !path || !*path || ft_strcmp(cmd, ".") == 0
 		|| ft_strcmp(cmd, "..") == 0)
 		ms_error(cmd, 127);
-	paths = ft_split(path + 5, ':');
+	paths = ft_split(path, ':');
 	cmd2 = ft_strjoin("/", cmd);
 	if (!paths || !cmd2)
 		ms_error("split", 1);
@@ -101,11 +101,11 @@ char	*get_cmd_path(char *cmd)
 	char	*path;
 
 	path = get_env(get_ms()->env_ld, "PATH");
-	if (!cmd || !path)
+	if (!cmd)
 		clean_exit(0);
 	if (!*cmd)
 		ms_error(cmd, 127);
-	if (ft_strchr(cmd, '/') || !path)
+	if (ft_strchr(cmd, '/') || !path || !*path)
 	{
 		if (!access(cmd, F_OK))
 		{
